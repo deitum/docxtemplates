@@ -1,3 +1,6 @@
+## Unreleased
+* Add `ELSE-IF` and `ELSE` commands, so that `IF`…`END-IF` blocks can define alternative branches. Only the contents of the first branch whose condition is truthy are rendered; commands in the other branches are not evaluated.
+
 ## 4.15.0 (2025-12-03)
 * [#432](https://github.com/guigrpa/docx-templates/pull/432): add `indentXml`, `preserveSpace` and `compressionLevel` options to let users trade readability for smaller file size when generating reports.
 * [#426](https://github.com/guigrpa/docx-templates/pull/426): allow `IMAGE` commands to emit empty Alt Text values instead of forcing the placeholder `"desc"`.

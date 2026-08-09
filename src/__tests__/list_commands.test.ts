@@ -163,6 +163,19 @@ describe('listCommands', () => {
     `);
   });
 
+  it('handles IF / ELSE-IF / ELSE', async () => {
+    const template = await fs.promises.readFile(
+      path.join(__dirname, 'fixtures', 'ifElseIf.docx')
+    );
+    expect(await listCommands(template)).toEqual([
+      { raw: 'IF value > 10', code: 'value > 10', type: 'IF' },
+      { raw: 'ELSE-IF value > 5', code: 'value > 5', type: 'ELSE-IF' },
+      { raw: 'ELSE-IF value > 0', code: 'value > 0', type: 'ELSE-IF' },
+      { raw: 'ELSE', code: '', type: 'ELSE' },
+      { raw: 'END-IF', code: '', type: 'END-IF' },
+    ]);
+  });
+
   it('handles custom delimiter', async () => {
     const template = await fs.promises.readFile(
       path.join(__dirname, 'fixtures', 'for1customDelimiter.docx')
