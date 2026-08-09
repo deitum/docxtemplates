@@ -237,6 +237,18 @@ export type LoopStatus = {
   loopOver: Array<VarValue>;
   idx: number;
   isIf?: boolean;
+
+  // The following fields are only used by IF loops, to support
+  // IF / ELSE-IF / ELSE / END-IF constructs.
+
+  /** Index of the branch that is currently being walked (0 is the IF branch). */
+  ifCurrentBranch?: number;
+  /** Index of the branch whose condition evaluated truthy (-1 if none). */
+  ifActiveBranch?: number;
+  /** Whether one of the branches has already been selected. */
+  ifBranchTaken?: boolean;
+  /** Index of the final (unconditional) ELSE branch, if it has been seen already. */
+  ifElseBranch?: number;
 };
 
 export type ImagePars = {
@@ -301,6 +313,8 @@ export const BUILT_IN_COMMANDS = [
   'FOR',
   'END-FOR',
   'IF',
+  'ELSE-IF',
+  'ELSE',
   'END-IF',
   'INS',
   'EXEC',

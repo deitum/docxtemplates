@@ -93,20 +93,39 @@ const getCurLoop = (ctx: Context) => {
   return ctx.loops[ctx.loops.length - 1];
 };
 
+// Whether we're walking through a branch of an IF construct (IF / ELSE-IF / ELSE)
+// that has not been selected. Its contents must not be rendered, in exactly the
+// same way as during an exploration pass.
+const isIfBranchSuppressed = (loop: LoopStatus) =>
+  loop.isIf === true &&
+  loop.ifCurrentBranch != null &&
+  loop.ifActiveBranch != null &&
+  loop.ifCurrentBranch !== loop.ifActiveBranch;
+
+// Whether the contents inside the given loop must be skipped, either because
+// the loop is being explored (first pass) or because it's an IF construct and
+// the branch being walked is not the selected one.
+const isLoopSkippingOutput = (loop: LoopStatus) =>
+  loop.idx < 0 || isIfBranchSuppressed(loop);
+
 const isLoopExploring = (ctx: Context) => {
   const curLoop = getCurLoop(ctx);
-  return curLoop != null && curLoop.idx < 0;
+  return curLoop != null && isLoopSkippingOutput(curLoop);
 };
 
 const logLoop = (loops: Array<LoopStatus>) => {
   if (!loops.length) return;
   const level = loops.length - 1;
-  const { varName, idx, loopOver, isIf } = loops[level];
+  const { varName, idx, loopOver, isIf, ifCurrentBranch, ifActiveBranch } =
+    loops[level];
   const idxStr = idx >= 0 ? idx + 1 : 'EXPLORATION';
+  const branchStr = isIf
+    ? ` [branch ${ifCurrentBranch}, selected: ${ifActiveBranch}]`
+    : '';
   logger.debug(
     `${isIf ? 'IF' : 'FOR'} loop ` +
       `on ${level}:${varName}` +
-      `${idxStr}/${loopOver.length}`
+      `${idxStr}/${loopOver.length}${branchStr}`
   );
 };
 
@@ -122,5 +141,6 @@ export {
   addChild,
   getCurLoop,
   isLoopExploring,
+  isLoopSkippingOutput,
   logLoop,
 };

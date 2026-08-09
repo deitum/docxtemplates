@@ -11,7 +11,7 @@ Template-based docx report creation for both Node and the browser. ([See the blo
 * **Insert the result of JavaScript snippets** in your document (`INS`, `=` or just *nothing*)
 * **Embed images, hyperlinks and even HTML dynamically** (`IMAGE`, `LINK`, `HTML`). Dynamic images can be great for on-the-fly QR codes, downloading photos straight to your reports, charts… even maps!
 * Add **loops** with `FOR`/`END-FOR` commands, with support for table rows, nested loops, and JavaScript processing of elements (filter, sort, etc)
-* Include contents **conditionally**, `IF` a certain JavaScript expression is truthy
+* Include contents **conditionally**, `IF` a certain JavaScript expression is truthy, with support for alternative branches (`ELSE-IF`, `ELSE`)
 * Define custom **aliases** for some commands (`ALIAS`) — useful for writing table templates!
 * Run all JavaScript in a **separate Node VM** or a user-provided sandbox.
 * Include **literal XML**
@@ -40,7 +40,7 @@ Contributions are welcome!
     - [`LINK`](#link)
     - [`HTML`](#html)
     - [`FOR` and `END-FOR`](#for-and-end-for)
-    - [`IF` and `END-IF`](#if-and-end-if)
+    - [`IF`, `ELSE-IF`, `ELSE` and `END-IF`](#if-else-if-else-and-end-if)
     - [`ALIAS` (and alias resolution with `*`)](#alias-and-alias-resolution-with-)
   - [Inserting literal XML](#inserting-literal-xml)
 - [Error handling](#error-handling)
@@ -554,7 +554,7 @@ Finally, you can nest loops (this example assumes a different data set):
 +++END-FOR company+++
 ```
 
-### `IF` and `END-IF`
+### `IF`, `ELSE-IF`, `ELSE` and `END-IF`
 
 Include contents conditionally (depending on the evaluation of a JavaScript expression):
 
@@ -564,9 +564,42 @@ Include contents conditionally (depending on the evaluation of a JavaScript expr
 +++END-IF+++
 ```
 
+Alternative branches can be added with `ELSE-IF` (which takes a JavaScript expression, just like `IF`)
+and `ELSE` (which takes no expression). Only the contents of the first branch whose expression is
+truthy are included in the document; if none of them is truthy, the contents of the `ELSE` branch
+(if there is one) are included instead:
+
+```
++++IF person.age >= 65+++
+Senior
++++ELSE-IF person.age >= 18+++
+Adult
++++ELSE-IF person.age >= 3+++
+Child
++++ELSE+++
+Toddler
++++END-IF+++
+```
+
+A few notes on `ELSE-IF`/`ELSE`:
+
+* You can add as many `ELSE-IF` branches as you want, but at most one `ELSE`, and it must be the last branch.
+* The expressions of the branches following the selected one are not evaluated at all, and neither are the commands they contain.
+* An `ELSE-IF`/`ELSE` command outside of an `IF`…`END-IF` block raises an `InvalidCommandError`.
+
 Similarly to the `FOR` command, it also works over table rows. You can also nest `IF` commands
 and mix & match `IF` and `FOR` commands. In fact, for the technically inclined: the `IF` command
 is implemented as a `FOR` command with 1 or 0 iterations, depending on the expression value.
+
+A complete `IF`…`END-IF` block, including its `ELSE-IF`/`ELSE` branches, can also live inside a
+single paragraph or table cell:
+
+```
+Status: +++IF ok+++fine+++ELSE+++not so fine+++END-IF+++
+```
+
+(as was already the case for `IF`…`END-IF`, such inline blocks cannot be nested within the same
+paragraph or table row.)
 
 ### `ALIAS` (and alias resolution with `*`)
 

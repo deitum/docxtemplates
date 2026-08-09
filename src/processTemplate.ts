@@ -5,6 +5,7 @@ import {
   newTextNode,
   getCurLoop,
   isLoopExploring,
+  isLoopSkippingOutput,
   logLoop,
 } from './reportUtils';
 import { runUserJsAndGetRaw } from './jsSandbox';
@@ -23,6 +24,7 @@ import {
   BUILT_IN_COMMANDS,
   ImageExtensions,
   NonTextNode,
+  LoopStatus,
 } from './types';
 import {
   isError,
@@ -661,6 +663,11 @@ const processCmd: CommandProcessor = async (
     } else if (cmdName === 'FOR' || cmdName === 'IF') {
       await processForIf(data, node, ctx, cmd, cmdName, cmdRest);
 
+      // ELSE-IF <expression>
+      // ELSE
+    } else if (cmdName === 'ELSE-IF' || cmdName === 'ELSE') {
+      await processElse(data, ctx, cmd, cmdName, cmdRest);
+
       // END-FOR
       // END-IF
     } else if (cmdName === 'END-FOR' || cmdName === 'END-IF') {
@@ -842,7 +849,11 @@ const processForIf = async (
 
   // Have we already seen this node or is it the start of a new FOR loop?
   const curLoop = getCurLoop(ctx);
-  if (!(curLoop && curLoop.varName === varName)) {
+  if (curLoop && curLoop.varName === varName) {
+    // We're revisiting the IF command on the second pass (the one that renders
+    // the selected branch); start again from the first branch.
+    if (isIf) restartIfBranches(curLoop);
+  } else {
     // Check whether we already started a nested IF without and END-IF for this p or tr tag
     if (isIf) {
       const parentPorTrNode = findParentPorTrNode(node);
@@ -879,13 +890,22 @@ const processForIf = async (
 
     const parentLoopLevel = ctx.loops.length - 1;
     const fParentIsExploring =
-      parentLoopLevel >= 0 && ctx.loops[parentLoopLevel].idx === -1;
+      parentLoopLevel >= 0 && isLoopSkippingOutput(ctx.loops[parentLoopLevel]);
     let loopOver: unknown[];
+    // For IF loops, the branch that gets rendered (if any) is only known once
+    // all ELSE-IF/ELSE branches have been explored, i.e. when the END-IF command
+    // is reached; that's where `loopOver` gets filled in.
+    let ifBranchTaken = false;
+    let ifActiveBranch = -1;
     if (fParentIsExploring) {
       loopOver = [];
+      // Nothing inside this IF must be rendered (nor any of its branches
+      // selected), since the parent is not rendering its contents either.
+      if (isIf) ifBranchTaken = true;
     } else if (isIf) {
-      const shouldRun = !!(await runUserJsAndGetRaw(data, cmdRest, ctx));
-      loopOver = shouldRun ? [1] : [];
+      loopOver = [];
+      ifBranchTaken = !!(await runUserJsAndGetRaw(data, cmdRest, ctx));
+      if (ifBranchTaken) ifActiveBranch = 0;
     } else {
       if (!forMatch) throw new InvalidCommandError('Invalid FOR command', cmd);
       loopOver = await runUserJsAndGetRaw(data, forMatch[2], ctx);
@@ -904,7 +924,75 @@ const processForIf = async (
       // run through the loop once first, without outputting anything
       // (if we don't do it like this, we could not run empty loops!)
       idx: -1,
+      ...(isIf
+        ? {
+            ifCurrentBranch: 0,
+            ifActiveBranch,
+            ifBranchTaken,
+          }
+        : {}),
     });
+  }
+  logLoop(ctx.loops);
+};
+
+// Prepare an IF loop for a new pass through its branches (the branch that was
+// selected during the exploration pass is kept, of course)
+const restartIfBranches = (loop: LoopStatus) => {
+  loop.ifCurrentBranch = 0;
+  loop.ifElseBranch = undefined;
+};
+
+// ELSE-IF <expression>
+// ELSE
+const processElse = async (
+  data: ReportData | undefined,
+  ctx: Context,
+  cmd: string,
+  cmdName: string,
+  cmdRest: string
+): Promise<void> => {
+  const isElseIf = cmdName === 'ELSE-IF';
+  const curLoop = getCurLoop(ctx);
+  if (!curLoop || !curLoop.isIf)
+    throw new InvalidCommandError(
+      `Unexpected ${cmdName} outside of IF statement context`,
+      cmd
+    );
+  if (isElseIf && !cmdRest)
+    throw new InvalidCommandError(
+      'Invalid ELSE-IF command (missing condition)',
+      cmd
+    );
+  if (curLoop.ifElseBranch != null)
+    throw new InvalidCommandError(
+      `Unexpected ${cmdName} after an ELSE command`,
+      cmd
+    );
+
+  // Move on to the next branch of the IF construct
+  const branch = (curLoop.ifCurrentBranch ?? 0) + 1;
+  curLoop.ifCurrentBranch = branch;
+  if (!isElseIf) curLoop.ifElseBranch = branch;
+
+  // Conditions are only evaluated during the exploration pass; the second pass
+  // simply walks the tree again, rendering the branch that was selected.
+  if (curLoop.idx < 0 && !curLoop.ifBranchTaken) {
+    let shouldRun = true;
+    if (isElseIf) {
+      // Evaluate the expression as if we were outside of the IF loop, so that
+      // e.g. `$idx` refers to the enclosing FOR loop, just like in an IF command
+      const ifLoop = ctx.loops.pop();
+      try {
+        shouldRun = !!(await runUserJsAndGetRaw(data, cmdRest, ctx));
+      } finally {
+        if (ifLoop) ctx.loops.push(ifLoop);
+      }
+    }
+    if (shouldRun) {
+      curLoop.ifBranchTaken = true;
+      curLoop.ifActiveBranch = branch;
+    }
   }
   logLoop(ctx.loops);
 };
@@ -963,6 +1051,12 @@ const processEndForIf = (
     throw new InvalidCommandError('Invalid command', cmd);
   }
 
+  // All branches of the IF construct have now been explored: if one of them was
+  // selected, run a second pass through the construct to render it
+  if (isIf && curLoop.idx < 0) {
+    curLoop.loopOver = (curLoop.ifActiveBranch ?? -1) >= 0 ? [1] : [];
+  }
+
   // Get the next item in the loop
   const nextIdx = curLoop.idx + 1;
   const nextItem = curLoop.loopOver[nextIdx];
@@ -972,6 +1066,8 @@ const processEndForIf = (
     ctx.vars[varName] = nextItem;
     ctx.fJump = true;
     curLoop.idx = nextIdx;
+    // Restart from the first branch of the IF construct
+    if (isIf) restartIfBranches(curLoop);
   } else {
     // loop finished
     ctx.loops.pop();
