@@ -1,4 +1,5 @@
 ## Unreleased
+* Add `commandAliases` and `operatorAliases` options, so templates can use alternative names for the built-in commands (e.g. `ЕСЛИ` for `IF`) and for JS operators and keywords (e.g. `больше` for `>`, `ИЗ` for the `IN` of `FOR` loops). `listCommands` accepts the same aliases as a third argument.
 * Add `ELSE-IF` and `ELSE` commands, so that `IF`…`END-IF` blocks can define alternative branches. Only the contents of the first branch whose condition is truthy are rendered; commands in the other branches are not evaluated.
 
 ## 4.15.0 (2025-12-03)

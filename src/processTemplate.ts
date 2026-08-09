@@ -9,7 +9,9 @@ import {
   logLoop,
 } from './reportUtils';
 import { runUserJsAndGetRaw } from './jsSandbox';
+import { resolveCommandAlias, substituteAliases } from './aliases';
 import {
+  AliasList,
   Node,
   TextNode,
   ReportData,
@@ -633,9 +635,9 @@ const processCmd: CommandProcessor = async (
   node: Node,
   ctx: Context
 ): Promise<undefined | string | Error> => {
-  const cmd = getCommand(ctx.cmd, ctx.shorthands, ctx.options.fixSmartQuotes);
+  const cmd = getCommand(ctx.cmd, ctx.shorthands, ctx.options);
   ctx.cmd = ''; // flush the context
-  const { cmdName, cmdRest } = splitCommand(cmd);
+  const { cmdName, cmdRest } = splitCommand(cmd, ctx.options.operatorAliases);
   try {
     if (cmdName !== 'CMD_NODE') logger.debug(`Processing cmd: ${cmd}`);
     // Seeking query?
@@ -777,7 +779,7 @@ const notBuiltIns = (cmd: string) =>
 export function getCommand(
   command: string,
   shorthands: Context['shorthands'],
-  fixSmartQuotes: boolean
+  options: Pick<CreateReportOptions, 'fixSmartQuotes' | 'commandAliases'>
 ): string {
   // Get a cleaned version of the command
 
@@ -788,16 +790,20 @@ export function getCommand(
       throw new InvalidCommandError('Unknown alias', cmd);
     cmd = shorthands[aliasName];
     logger.debug(`Alias for: ${cmd}`);
+    cmd = resolveCommandAlias(cmd, options.commandAliases) ?? cmd;
   } else if (cmd[0] === '=') {
     cmd = `INS ${cmd.slice(1).trim()}`;
   } else if (cmd[0] === '!') {
     cmd = `EXEC ${cmd.slice(1).trim()}`;
-  } else if (notBuiltIns(cmd)) {
-    cmd = `INS ${cmd.trim()}`;
+  } else {
+    // A user-defined name for a built-in command (e.g. `\u0415\u0421\u041B\u0418` for `IF`)?
+    const aliased = resolveCommandAlias(cmd, options.commandAliases);
+    if (aliased != null) cmd = aliased;
+    else if (notBuiltIns(cmd)) cmd = `INS ${cmd.trim()}`;
   }
 
   //replace 'smart' quotes with straight quotes
-  if (fixSmartQuotes) {
+  if (options.fixSmartQuotes) {
     cmd = cmd
       .replace(/[\u201C\u201D\u201E]/g, '"')
       .replace(/[\u2018\u2019\u201A]/g, "'");
@@ -806,7 +812,20 @@ export function getCommand(
   return cmd.trim();
 }
 
-export function splitCommand(cmd: string) {
+// Commands whose payload is a JS expression, and hence the only ones in which
+// operator aliases (e.g. `\u0431\u043E\u043B\u044C\u0448\u0435` for `>`) get substituted.
+const EXPRESSION_COMMANDS: string[] = [
+  'FOR',
+  'IF',
+  'ELSE-IF',
+  'INS',
+  'EXEC',
+  'IMAGE',
+  'LINK',
+  'HTML',
+];
+
+export function splitCommand(cmd: string, operatorAliases?: AliasList) {
   // Extract command name
   const cmdNameMatch = /^(\S+)\s*/.exec(cmd);
   let cmdName;
@@ -814,6 +833,9 @@ export function splitCommand(cmd: string) {
   if (cmdNameMatch != null) {
     cmdName = cmdNameMatch[1].toUpperCase();
     cmdRest = cmd.slice(cmdName.length).trim();
+    if (operatorAliases?.length && EXPRESSION_COMMANDS.includes(cmdName)) {
+      cmdRest = substituteAliases(cmdRest, operatorAliases);
+    }
   }
 
   return { cmdName, cmdRest };

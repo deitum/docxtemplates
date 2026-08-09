@@ -22,6 +22,7 @@ import {
   BuiltInCommand,
 } from './types';
 import { addChild, newNonTextNode } from './reportUtils';
+import { compileAliases, compileCommandAliases } from './aliases';
 import JSZip from 'jszip';
 import { TemplateParseError } from './errors';
 import { logger } from './debug';
@@ -166,6 +167,8 @@ async function createReport(
     indentXml: options.indentXml ?? true,
     preserveSpace: options.preserveSpace ?? true,
     compressionLevel: options.compressionLevel ?? 1,
+    commandAliases: compileCommandAliases(options.commandAliases),
+    operatorAliases: compileAliases(options.operatorAliases),
   };
   const xmlOptions = {
     literalXmlDelimiter,
@@ -330,13 +333,17 @@ async function createReport(
  *
  * @param template the docx template as a Buffer-like object
  * @param delimiter the command delimiter (defaults to ['+++', '+++'])
+ * @param aliasOptions the command/operator aliases used by the template, if any
  */
 export async function listCommands(
   template: ArrayBuffer,
-  delimiter?: string | [string, string]
+  delimiter?: string | [string, string],
+  aliasOptions?: Pick<UserOptions, 'commandAliases' | 'operatorAliases'>
 ): Promise<CommandSummary[]> {
   const opts: CreateReportOptions = {
     cmdDelimiter: getCmdDelimiter(delimiter),
+    commandAliases: compileCommandAliases(aliasOptions?.commandAliases),
+    operatorAliases: compileAliases(aliasOptions?.operatorAliases),
 
     // Otherwise unused but mandatory options
     literalXmlDelimiter: DEFAULT_LITERAL_XML_DELIMITER,
@@ -365,13 +372,12 @@ export async function listCommands(
     );
     const ctx = newContext(opts);
     await walkTemplate(undefined, prepped, ctx, async (data, node, ctx) => {
-      const raw = getCommand(
-        ctx.cmd,
-        ctx.shorthands,
-        ctx.options.fixSmartQuotes
-      );
+      const raw = getCommand(ctx.cmd, ctx.shorthands, ctx.options);
       ctx.cmd = ''; // flush the context
-      const { cmdName, cmdRest: code } = splitCommand(raw);
+      const { cmdName, cmdRest: code } = splitCommand(
+        raw,
+        ctx.options.operatorAliases
+      );
       const type = cmdName as BuiltInCommand;
       if (type != null && type !== 'CMD_NODE') {
         commands.push({

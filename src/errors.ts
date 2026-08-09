@@ -53,6 +53,18 @@ export class InvalidCommandError extends Error {
   }
 }
 
+/**
+ * Thrown when the `commandAliases` or `operatorAliases` options are invalid.
+ */
+export class InvalidAliasError extends Error {
+  alias: string;
+  constructor(msg: string, alias: string) {
+    super(`${msg}: ${alias}`);
+    Object.setPrototypeOf(this, InvalidAliasError.prototype);
+    this.alias = alias;
+  }
+}
+
 export class CommandExecutionError extends Error {
   command: string;
   err: Error;

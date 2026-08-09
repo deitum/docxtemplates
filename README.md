@@ -42,6 +42,7 @@ Contributions are welcome!
     - [`FOR` and `END-FOR`](#for-and-end-for)
     - [`IF`, `ELSE-IF`, `ELSE` and `END-IF`](#if-else-if-else-and-end-if)
     - [`ALIAS` (and alias resolution with `*`)](#alias-and-alias-resolution-with-)
+  - [Localizing commands and operators](#localizing-commands-and-operators)
   - [Inserting literal XML](#inserting-literal-xml)
 - [Error handling](#error-handling)
   - [Error types](#error-types)
@@ -161,6 +162,18 @@ const report = await createReport({
    * (Default: 1)
    */
   compressionLevel?: number;
+
+  /**
+   * Alternative names for the built-in commands, so templates can be written in
+   * the template author's own language. See "Localizing commands and operators".
+   */
+  commandAliases: { ЕСЛИ: 'IF', 'КОНЕЦ ЕСЛИ': 'END-IF' },
+
+  /**
+   * Alternative names for the operators/keywords used inside command expressions.
+   * See "Localizing commands and operators".
+   */
+  operatorAliases: { больше: '>', 'больше или равно': '>=' },
 });
 ```
 
@@ -621,6 +634,86 @@ Define a name for a complete command (especially useful for formatting tables):
 ----------------------------------------------------------
 ```
 
+## Localizing commands and operators
+
+Command names and JS operators can be given alternative names, so that people who
+write the templates can use words from their own language instead of `IF`, `>=`,
+`&&`, and so on. Two options control this:
+
+- `commandAliases` maps an alias to one of the built-in commands (`QUERY`, `ALIAS`,
+  `FOR`, `END-FOR`, `IF`, `ELSE-IF`, `ELSE`, `END-IF`, `INS`, `EXEC`, `IMAGE`,
+  `LINK`, `HTML`). It is applied to the **command name**, i.e. the first word(s) of
+  a command.
+- `operatorAliases` maps an alias to the JS snippet that replaces it. It is applied
+  to the **expression** of the commands that take one (`FOR`, `IF`, `ELSE-IF`,
+  `INS`, `EXEC`, `IMAGE`, `LINK` and `HTML`), which also makes it the place to
+  rename the `IN` keyword of `FOR` loops.
+
+Aliases may consist of several words, are matched case-insensitively, and are only
+matched as whole words. When several aliases match at the same place, the longest
+one wins, so `больше или равно` is not mistaken for `больше`. Operator aliases are
+never substituted inside string literals.
+
+Given this template:
+
+```
++++ЕСЛИ значение больше или равно 10+++
+Большое значение
++++ИНАЧЕ ЕСЛИ значение больше 5+++
+Среднее значение
++++ИНАЧЕ+++
+Маленькое значение
++++КОНЕЦ ЕСЛИ+++
+
++++ДЛЯ товар ИЗ товары+++
++++$товар.название+++
++++КОНЕЦ ДЛЯ товар+++
+```
+
+…the report is created like this:
+
+```js
+const report = await createReport({
+  template,
+  data: { значение: 42, товары: [{ название: 'Стол' }] },
+  commandAliases: {
+    ЕСЛИ: 'IF',
+    'ИНАЧЕ ЕСЛИ': 'ELSE-IF',
+    ИНАЧЕ: 'ELSE',
+    'КОНЕЦ ЕСЛИ': 'END-IF',
+    ДЛЯ: 'FOR',
+    'КОНЕЦ ДЛЯ': 'END-FOR',
+  },
+  operatorAliases: {
+    'больше или равно': '>=',
+    'меньше или равно': '<=',
+    'не равно': '!==',
+    больше: '>',
+    меньше: '<',
+    равно: '===',
+    и: '&&',
+    или: '||',
+    ИЗ: 'IN',
+  },
+});
+```
+
+Operator aliases work in any command, so a bare comparison also does the trick:
+
+```
++++значение1 больше значение2+++
+```
+
+`listCommands` accepts the same aliases as a third argument, so that it reports
+built-in command names for templates that use aliases:
+
+```js
+const commands = await listCommands(template, undefined, {
+  commandAliases,
+  operatorAliases,
+});
+```
+
 ## Inserting literal XML
 You can also directly insert Office Open XML markup into the document using the `literalXmlDelimiter`, which is by default set to `||`.
 
@@ -671,6 +764,7 @@ NullishCommandResultError // thrown when rejectNullish is set to true and a comm
 ObjectCommandResultError // thrown when the result of an `INS` command is an Object. This ensures you don't accidentally put `'[object Object]'` in your report.
 CommandSyntaxError
 InvalidCommandError
+InvalidAliasError // thrown when the commandAliases or operatorAliases options are invalid
 CommandExecutionError
 ImageError
 InternalError
