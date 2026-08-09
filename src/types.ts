@@ -145,7 +145,49 @@ export type UserOptions = {
    * (Default: 1)
    */
   compressionLevel?: number;
+
+  /**
+   * Alternative names for the built-in commands, so that templates can be written
+   * in the template author's own language. Keys are the aliases (they may contain
+   * several words and are matched case-insensitively), values must be one of the
+   * built-in commands (`IF`, `FOR`, `END-FOR`, `INS`, ...).
+   *
+   * ```js
+   * commandAliases: {
+   *   'ЕСЛИ': 'IF',
+   *   'ИНАЧЕ ЕСЛИ': 'ELSE-IF',
+   *   'ИНАЧЕ': 'ELSE',
+   *   'КОНЕЦ ЕСЛИ': 'END-IF',
+   * }
+   * ```
+   */
+  commandAliases?: { [alias: string]: string };
+
+  /**
+   * Alternative names for the operators and keywords used inside command
+   * expressions, so that e.g. `+++значение1 больше значение2+++` can be written
+   * instead of `+++значение1 > значение2+++`. Keys are the aliases (they may
+   * contain several words and are matched case-insensitively), values are the
+   * JS snippet they get replaced with. Aliases are only substituted when they
+   * appear as whole words outside of string literals.
+   *
+   * ```js
+   * operatorAliases: {
+   *   'больше или равно': '>=',
+   *   'больше': '>',
+   *   'равно': '===',
+   *   'и': '&&',
+   * }
+   * ```
+   */
+  operatorAliases?: { [alias: string]: string };
 };
+
+/**
+ * A user-provided alias map, compiled for matching: the alias is split into
+ * lowercased words, and the list is sorted longest-alias-first.
+ */
+export type AliasList = Array<{ tokens: string[]; replacement: string }>;
 
 export type CreateReportOptions = {
   cmdDelimiter: [string, string];
@@ -163,6 +205,8 @@ export type CreateReportOptions = {
   indentXml: boolean;
   preserveSpace: boolean;
   compressionLevel: number;
+  commandAliases: AliasList;
+  operatorAliases: AliasList;
 };
 
 export type SandBox = {
