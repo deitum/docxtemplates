@@ -30,12 +30,6 @@ export const processCmd: CommandProcessor = async (data, node, ctx) => {
   try {
     if (cmdName !== Command.CMD_NODE) logger.debug(`Processing cmd: ${cmd}`);
 
-    // While seeking the QUERY, no other command may run.
-    if (ctx.walk.seekingQuery) {
-      if (cmdName === Command.QUERY) ctx.walk.query = cmdRest;
-      return;
-    }
-
     const spec = cmdName != null ? specOf(cmdName) : undefined;
     if (spec == null || cmdName == null) throw new CommandSyntaxError(cmd);
     if (spec.skipWhileExploring && isLoopExploring(ctx)) return;

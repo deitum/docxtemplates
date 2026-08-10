@@ -36,12 +36,12 @@ function newWalkState(): WalkState {
     ) as WalkState['buffers'],
     isCollectingCommand: false,
     command: '',
-    seekingQuery: false,
     openIfCount: 0,
     closedIfCount: 0,
     // To verify we don't have a nested IF within the same `w:p` or `w:tr` tag
     ifByParagraph: new Map(),
     ifByTableRow: new Map(),
+    ifNames: new Map(),
   };
 }
 

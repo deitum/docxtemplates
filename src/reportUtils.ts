@@ -147,13 +147,8 @@ export const addChild = (parent: Node, child: Node): Node => {
 export const debugPrintNode = (node: Node) =>
   JSON.stringify(
     node._fTextNode
-      ? {
-          _ifName: node._ifName,
-          _fTextNode: node._fTextNode,
-          _text: node._text,
-        }
+      ? { _fTextNode: node._fTextNode, _text: node._text }
       : {
-          _ifName: node._ifName,
           _fTextNode: node._fTextNode,
           _tag: node._tag,
           _attrs: node._attrs,

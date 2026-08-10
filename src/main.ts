@@ -1,6 +1,4 @@
-import { type CommandProcessor } from './commands/execute';
 import { findHighestImgId } from './commands/media';
-import { getCommand, splitCommand } from './commands/parse';
 import { newContext } from './context';
 import { logger } from './debug';
 import {
@@ -24,7 +22,8 @@ import {
   type UserOptions,
   type ZipInput,
 } from './types';
-import { extractQuery, produceJsReport, walkTemplate } from './walk';
+import { compileTemplate, extractQuery, resolveSite } from './template/compile';
+import { produceJsReport } from './walk';
 import { buildXml } from './xml';
 import { zipSave, zipSetText } from './zip';
 
@@ -94,7 +93,7 @@ async function createReport(
   let queryResult: ReportData;
   if (typeof data === 'function') {
     logger.debug('Looking for the query in the template...');
-    const query = await extractQuery(mainPart.template, createOptions);
+    const query = extractQuery(mainPart.template, createOptions);
     logger.debug(`Query: ${query || 'no query found'}`);
     queryResult = await data(query, queryVars);
   } else {
@@ -205,23 +204,15 @@ export async function listCommands(
   ];
 
   const commands: CommandSummary[] = [];
-  const collectCommand: CommandProcessor = async (_data, _node, ctx) => {
-    const raw = getCommand(ctx.walk.command, ctx.scope.shorthands, ctx.options);
-    ctx.walk.command = ''; // flush the context
-    const { cmdName, cmdRest: code } = splitCommand(
-      raw,
-      ctx.options.operatorAliases
-    );
-    // `CMD_NODE` is scaffolding left behind by `preprocessTemplate`, not
-    // something the template author wrote.
-    if (cmdName != null && cmdName !== Command.CMD_NODE) {
-      commands.push({ raw, type: cmdName as BuiltInCommand, code });
-    }
-    return undefined;
-  };
-
   for (const part of parts) {
-    await walkTemplate(undefined, part, newContext(options), collectCommand);
+    for (const site of compileTemplate(part, options.cmdDelimiter).commands) {
+      const { raw, name, code } = resolveSite(site, options);
+      // `CMD_NODE` is scaffolding left behind by `preprocessTemplate`, not
+      // something the template author wrote.
+      if (name != null && name !== Command.CMD_NODE) {
+        commands.push({ raw, type: name as BuiltInCommand, code });
+      }
+    }
   }
   return commands;
 }

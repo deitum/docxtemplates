@@ -194,11 +194,13 @@ const processForIf = async ({
   let forMatch: RegExpExecArray | null = null;
   let varName: string;
   if (isIf) {
-    if (!node._ifName) {
-      node._ifName = `${IF_VAR_PREFIX}${ctx.walk.openIfCount}`;
+    let ifName = ctx.walk.ifNames.get(node);
+    if (ifName == null) {
+      ifName = `${IF_VAR_PREFIX}${ctx.walk.openIfCount}`;
+      ctx.walk.ifNames.set(node, ifName);
       ctx.walk.openIfCount += 1;
     }
-    varName = node._ifName;
+    varName = ifName;
   } else {
     forMatch = /^(\S+)\s+IN\s+(.+)/i.exec(rest);
     if (forMatch?.[1] == null || forMatch[2] == null)
@@ -377,8 +379,8 @@ const processEndForIf = ({ node, ctx, cmd, name, rest }: CommandArgs): void => {
 
   // First time we visit an END-IF node, we assign it the arbitrary name
   // generated when the IF was processed
-  if (isIf && !node._ifName) {
-    node._ifName = curLoop.varName;
+  if (isIf && !ctx.walk.ifNames.has(node)) {
+    ctx.walk.ifNames.set(node, curLoop.varName);
     ctx.walk.closedIfCount += 1;
   }
 
@@ -386,7 +388,7 @@ const processEndForIf = ({ node, ctx, cmd, name, rest }: CommandArgs): void => {
   // - If it names one of the enclosing loops, the template is malformed.
   // - Otherwise ignore it; an END-IF/END-FOR belonging to an earlier part of
   //   the current loop's paragraph shows up here legitimately.
-  const varName = isIf ? node._ifName : rest;
+  const varName = isIf ? ctx.walk.ifNames.get(node) : rest;
   if (curLoop.varName !== varName) {
     if (ctx.scope.loops.find(o => o.varName === varName) == null) {
       logger.debug(

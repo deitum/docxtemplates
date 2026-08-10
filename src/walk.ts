@@ -7,7 +7,6 @@
  * paragraph holding nothing but `+++END-FOR+++` vanishes from the report).
  */
 import { type CommandProcessor, processCmd } from './commands/execute';
-import { newContext } from './context';
 import {
   DROP_RULES,
   fillRequiredChildren,
@@ -28,12 +27,10 @@ import {
   getFirstChild,
   getNextSibling,
   isLoopExploring,
-  nextNodeInTree,
   tagOf,
 } from './reportUtils';
 import {
   type Context,
-  type CreateReportOptions,
   type Htmls,
   type Images,
   type Links,
@@ -71,27 +68,6 @@ export async function produceJsReport(
   ctx: Context
 ): Promise<ReportOutput> {
   return walkTemplate(data, template, ctx, processCmd);
-}
-
-/**
- * Goes through the document until the QUERY command is found (normally right at
- * the beginning), ignoring every other command on the way.
- */
-export async function extractQuery(
-  template: Node,
-  options: CreateReportOptions
-): Promise<string | undefined> {
-  const ctx: Context = newContext(options);
-  ctx.walk.seekingQuery = true;
-
-  let nodeIn: Node | null = template;
-  while ((nodeIn = nextNodeInTree(nodeIn)) != null) {
-    if (isTextNodeInsideWt(nodeIn)) {
-      await processText(null, nodeIn, ctx, processCmd);
-    }
-    if (ctx.walk.query != null) break;
-  }
-  return ctx.walk.query;
 }
 
 const isTextNodeInsideWt = (node: Node): node is TextNode =>
@@ -476,7 +452,6 @@ const appendTextToTagBuffers = (
   ctx: Context,
   options: { isCommand?: boolean; hasInsertedText?: boolean }
 ) => {
-  if (ctx.walk.seekingQuery) return;
   const { isCommand, hasInsertedText } = options;
   const type = isCommand ? 'cmds' : 'text';
   for (const key of BUFFER_TAGS) {

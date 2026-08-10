@@ -13,7 +13,6 @@ export type Node = TextNode | NonTextNode;
 type BaseNode = {
   _parent?: Node;
   _children: Array<Node>;
-  _ifName?: string;
 };
 
 export type TextNode = BaseNode & {
@@ -355,10 +354,6 @@ export type WalkState = {
   isCollectingCommand: boolean;
   /** The command collected so far. */
   command: string;
-  /** Whether this pass is only looking for the QUERY command. */
-  seekingQuery: boolean;
-  /** The QUERY command's payload, once found. */
-  query?: string;
 
   /** How many IF and END-IF commands have been seen, which must agree. */
   openIfCount: number;
@@ -366,6 +361,13 @@ export type WalkState = {
   /** The IF constructs open on each `w:p` / `w:tr`; two on one is an error. */
   ifByParagraph: Map<Node, string>;
   ifByTableRow: Map<Node, string>;
+  /**
+   * The internal name each IF / END-IF node has been given, assigned the first
+   * time the node is reached. Kept here rather than on the node itself: a
+   * parsed template is input, and writing render state into it is what stopped
+   * one from being rendered twice.
+   */
+  ifNames: Map<Node, string>;
 };
 
 /** What a command's JavaScript is evaluated against. */
