@@ -1,29 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { readFixture } from './helpers';
+import { makeDocx, readFixture, reportText } from './helpers';
 import { createReport, listCommands } from '../index';
-import { type Node } from '../types';
 import { setDebugLogSink } from '../debug';
 
 if (process.env.DEBUG) setDebugLogSink(console.log);
-
-// Concatenates the text of all the text nodes below the given node
-const nodeText = (node: Node): string =>
-  node._fTextNode ? node._text : node._children.map(nodeText).join('');
-
-// Returns the text of the report, one line per (non-empty) paragraph
-const reportText = (node: Node): string => {
-  const lines: string[] = [];
-  const walk = (n: Node) => {
-    if (!n._fTextNode && n._tag === 'w:p') {
-      const text = nodeText(n).trim();
-      if (text !== '') lines.push(text);
-      return;
-    }
-    n._children.forEach(walk);
-  };
-  walk(node);
-  return lines.join('\n');
-};
 
 const OPERATOR_ALIASES = {
   'больше или равно': '>=',
@@ -162,6 +142,28 @@ const COMMAND_ALIASES = {
             options
           )
         ).toEqual(['большое', 'товар: три'].join('\n'));
+      });
+
+      it('resolves a command alias stored in an ALIAS shorthand', async () => {
+        const template = await makeDocx({
+          body: [
+            '+++ALIAS условие ЕСЛИ значение больше 10+++',
+            '+++*условие+++',
+            'большое',
+            '+++КОНЕЦ ЕСЛИ+++',
+          ],
+        });
+        const report = await createReport(
+          { noSandbox, template, data, ...options },
+          'JS'
+        );
+        expect(reportText(report)).toEqual('большое');
+
+        const small = await createReport(
+          { noSandbox, template, data: { ...data, значение: 1 }, ...options },
+          'JS'
+        );
+        expect(reportText(small)).toEqual('');
       });
 
       it('rejects aliases that do not point to a built-in command', async () => {
