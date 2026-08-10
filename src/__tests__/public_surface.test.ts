@@ -26,6 +26,7 @@ describe('public surface', () => {
       InternalError: function
       InvalidAliasError: function
       InvalidCommandError: function
+      InvalidOptionError: function
       NullishCommandResultError: function
       ObjectCommandResultError: function
       TemplateError: function
@@ -49,6 +50,7 @@ describe('public surface', () => {
       InternalError: function
       InvalidAliasError: function
       InvalidCommandError: function
+      InvalidOptionError: function
       NullishCommandResultError: function
       ObjectCommandResultError: function
       TemplateError: function

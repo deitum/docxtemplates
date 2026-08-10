@@ -37,6 +37,7 @@ export const ErrorId = {
   templateParse: 'template_parse',
   incompleteConditional: 'incomplete_conditional',
   unterminatedForLoop: 'unterminated_for_loop',
+  invalidOption: 'invalid_option',
 } as const;
 
 export type ErrorId = (typeof ErrorId)[keyof typeof ErrorId];
@@ -255,5 +256,23 @@ export class UnterminatedForLoopError extends TemplateError {
       }
     );
     Object.setPrototypeOf(this, UnterminatedForLoopError.prototype);
+  }
+}
+
+/**
+ * Thrown when an option is of the wrong type. Unknown option names are only
+ * logged; see `optionsSchema.ts`.
+ */
+export class InvalidOptionError extends TemplateError {
+  option: string;
+  constructor(option: string, expected: string, received: string) {
+    super(`Option '${option}' must be ${expected}, but received ${received}`, {
+      id: ErrorId.invalidOption,
+      explanation:
+        'The option was passed with a value of the wrong type. It used to be ' +
+        'ignored, which meant the setting silently did nothing.',
+    });
+    Object.setPrototypeOf(this, InvalidOptionError.prototype);
+    this.option = option;
   }
 }

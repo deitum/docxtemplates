@@ -12,6 +12,7 @@ export {
   InternalError,
   InvalidAliasError,
   InvalidCommandError,
+  InvalidOptionError,
   isError,
   NullishCommandResultError,
   ObjectCommandResultError,

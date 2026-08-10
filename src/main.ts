@@ -11,6 +11,7 @@ import { writePartResources } from './docx/relationships';
 import { withPart } from './errors';
 import { PackagePath, partPathOf } from './ooxml';
 import { resolveOptions } from './options';
+import { validateTemplate } from './optionsSchema';
 import preprocessTemplate from './preprocessTemplate';
 import {
   type BuiltInCommand,
@@ -70,6 +71,7 @@ async function createReport(
 ): Promise<Node | string | Uint8Array> {
   logger.debug('Report options:', { attach: options });
   const { template, data, queryVars } = options;
+  validateTemplate(template);
   const createOptions = resolveOptions(options);
   const xmlOptions = {
     literalXmlDelimiter: createOptions.literalXmlDelimiter,
