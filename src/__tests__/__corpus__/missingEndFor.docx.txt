@@ -1,0 +1,2 @@
+# throws
+  Error: Unterminated FOR-loop ('FOR c'). Make sure each FOR loop has a corresponding END-FOR command.

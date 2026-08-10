@@ -1,0 +1,4 @@
+INS	"foo"	"INS foo"
+INS	"foo"	"INS foo"
+INS	"foo"	"INS foo"
+INS	"foo"	"INS foo"

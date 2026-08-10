@@ -1,0 +1,6 @@
+FOR	"company IN companies"	"FOR company IN companies"
+INS	"$company.name"	"INS $company.name"
+FOR	"person IN persons"	"FOR person IN persons"
+INS	"$person.name"	"INS $person.name"
+END-FOR	"company"	"END-FOR company"
+END-FOR	"company"	"END-FOR company"

@@ -1,0 +1,6 @@
+FOR	"name IN Object.keys(companies)"	"FOR name IN Object.keys(companies)"
+INS	"$name"	"INS $name"
+END-FOR	"name"	"END-FOR name"
+FOR	"name IN Object.values(companies)"	"FOR name IN Object.values(companies)"
+INS	"$name"	"INS $name"
+END-FOR	"name"	"END-FOR name"

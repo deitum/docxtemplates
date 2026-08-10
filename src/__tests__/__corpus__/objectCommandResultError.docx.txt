@@ -1,0 +1,2 @@
+# throws
+  Error: Result of command 'companies' is an object

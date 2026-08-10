@@ -72,6 +72,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "bench": "esbuild bench/bench.ts --bundle --platform=node --format=cjs --outfile=node_modules/.cache/bench/bench.cjs --log-level=error && node node_modules/.cache/bench/bench.cjs",
     "check:package": "publint --strict && npm run check:types:node && npm run check:types:browser",
     "check:types:node": "attw --pack . --entrypoints .",
     "check:types:browser": "attw --pack . --entrypoints ./browser --profile esm-only",

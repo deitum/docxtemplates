@@ -1,0 +1,2 @@
+INS	"companies.length + ': ' + companies.join(', ')"	"INS companies.length + ': ' + companies.join(', ')"
+INS	"`${companies.length}: ${companies.join(', ')}`"	"INS `${companies.length}: ${companies.join(', ')}`"

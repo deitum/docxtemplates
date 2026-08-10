@@ -1,0 +1,4 @@
+IF	"a"	"IF a"
+ELSE	""	"ELSE"
+INS	"missing.field"	"INS missing.field"
+END-IF	""	"END-IF"

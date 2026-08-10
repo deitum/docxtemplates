@@ -1,0 +1,609 @@
+# zip entries, in the order they are stored
+  [Content_Types].xml
+  _rels/.rels
+  word/_rels/document.xml.rels
+  word/document.xml
+  word/_rels/header1.xml.rels
+  word/endnotes.xml
+  word/footnotes.xml
+  word/_rels/footer1.xml.rels
+  word/footer1.xml
+  word/header1.xml
+  word/theme/theme1.xml
+  word/media/image1.png
+  word/settings.xml
+  word/styles.xml
+  customXml/itemProps1.xml
+  customXml/_rels/item1.xml.rels
+  word/fontTable.xml
+  docProps/app.xml
+  docProps/core.xml
+  customXml/item1.xml
+  word/webSettings.xml
+  word/numbering.xml
+  word/
+  word/_rels/
+
+# path -> sha256
+  [Content_Types].xml  bb20ca5f86b2a6eda78fcafa41c2c782212a2f5bafc1dc326ad056224f188afe  (2147 bytes)
+  _rels/.rels  e19238d7a71fa7a2490776252686f70e2de6238c87cd509b5e3a3cc07c2ea4df  (590 bytes)
+  customXml/_rels/item1.xml.rels  80482f86e196171d66001e0e74d1900408a3aaf2463e54005d251b5f2db9a0b0  (296 bytes)
+  customXml/item1.xml  7cb0976471ac2f2fcfa20a71c8525916247bbf25f0a4570e6020c92fdefe4737  (252 bytes)
+  customXml/itemProps1.xml  a5bd53d21a8baf7b125a98a2fdb3992f4cd0ef52952caf5a0221f71a120565f2  (341 bytes)
+  docProps/app.xml  238984be66383620e98733491f1806f8a58573c0fa65b690bd140a17b93797cb  (987 bytes)
+  docProps/core.xml  2ea5cfeefcddb30df0033e02005e8ed8c8e089f27afdd4f1433cf3567498c9ea  (751 bytes)
+  word/_rels/document.xml.rels  623b4956199220712b3ad2480a4505866d14ddd76634d50a00f3f62d4d59b33c  (2664 bytes)
+  word/_rels/footer1.xml.rels  00c9d7daa8c72cea8a836dc8ef85e3a3afb8bc47a6f2e62c99b0b6f3a6537903  (496 bytes)
+  word/_rels/header1.xml.rels  94bca6aec3177c3b64686e1248ecfb39e9750dc067c2274af33e6b442d1f6617  (289 bytes)
+  word/document.xml  80dbdab4fe5b56bf0cd7e0e87c3c81bb30f4b3dbb0a6bcab564993d10a11b0ca  (5589 bytes)
+  word/endnotes.xml  153827c6abe5e9f9070a7fdec37c79e23bc3a16e8cb3e67792a7291fafb12de5  (2654 bytes)
+  word/fontTable.xml  9f9ec1070ab7e2e17c009db31ab7d428aae6dae9f4049f006b0d17040ab9e176  (3676 bytes)
+  word/footer1.xml  14d331296324d59f870c17d908d98debbf5d7b16388f04db184d7cfc8c8f5336  (14167 bytes)
+  word/footnotes.xml  13fdf788a522cb20063e777020f92b59c4c66bbfd5eab0d6f83a7299c70c6121  (2660 bytes)
+  word/header1.xml  06ee481182853e90a3149683729ce81eeebaa8d3bbd24d268d290d5c5dcac037  (5072 bytes)
+  word/media/image1.png  8ce42d0a9c768093c7f795ade0016bdaae6e09d37bde0a64a99c5badecaa83a1  (24414 bytes)
+  word/numbering.xml  e8072a14f731e4c7454887f51de052fa9592ba1b6259c16540f06982fc5a80f0  (9477 bytes)
+  word/settings.xml  ca8a93e8b20bc84608623561928d116aa120277688a5cb5b6e7453f1609df57e  (10286 bytes)
+  word/styles.xml  f26287712488188dea90a4c52c45272ad312416c09aea8aac4f2108595bb0988  (41480 bytes)
+  word/theme/theme1.xml  dedd92194ab206dcd5e6221d85a108ef19a71597ca1673973b5a7fba9ca7fa8a  (7023 bytes)
+  word/webSettings.xml  e78b301d2c02a43a67e65201adbbf6fafd50d764bd10214132dab138ce39541d  (8631 bytes)
+
+# [Content_Types].xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="png" ContentType="image/png"/><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/customXml/itemProps1.xml" ContentType="application/vnd.openxmlformats-officedocument.customXmlProperties+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/><Override PartName="/word/footnotes.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml"/><Override PartName="/word/endnotes.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>
+
+# word/_rels/document.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId8" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/>
+  <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+  <Relationship Id="rId7" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/endnotes" Target="endnotes.xml"/>
+  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/>
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXml" Target="../customXml/item1.xml"/>
+  <Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes" Target="footnotes.xml"/>
+  <Relationship Id="rId11" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>
+  <Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/>
+  <Relationship Id="rId10" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/>
+  <Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>
+  <Relationship Id="rId9" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>
+  <Relationship Id="link1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="https://www.google.com/" TargetMode="External"/>
+  <Relationship Id="link2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="https://www.youtube.com/" TargetMode="External"/>
+  <Relationship Id="link3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="https://www.google.com/" TargetMode="External"/>
+  <Relationship Id="link4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="https://www.youtube.com/" TargetMode="External"/>
+  <Relationship Id="link5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="https://www.google.com/" TargetMode="External"/>
+  <Relationship Id="link6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="https://www.youtube.com/" TargetMode="External"/>
+</Relationships>
+
+# word/_rels/footer1.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="https://www.b4presearch.com/" TargetMode="External"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="mailto:info@b4presearch.com" TargetMode="External"/></Relationships>
+
+# word/_rels/header1.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/image1.png"/></Relationships>
+
+# word/document.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid wp14">
+  <w:body>
+    <w:p w14:paraId="69BB4420" w14:textId="77777777" w:rsidR="0026244B" w:rsidRDefault="0026244B" w:rsidP="0026244B">
+      <w:hyperlink r:id="link1" w:history="1">
+        <w:r>
+          <w:rPr>
+            <w:u w:val="single"/>
+          </w:rPr>
+          <w:t>Google</w:t>
+        </w:r>
+      </w:hyperlink>
+    </w:p>
+    <w:p w14:paraId="69BB4420" w14:textId="77777777" w:rsidR="0026244B" w:rsidRDefault="0026244B" w:rsidP="0026244B">
+      <w:hyperlink r:id="link2" w:history="1">
+        <w:r>
+          <w:rPr>
+            <w:u w:val="single"/>
+          </w:rPr>
+          <w:t>Youtube</w:t>
+        </w:r>
+      </w:hyperlink>
+    </w:p>
+    <w:p w14:paraId="11E888E5" w14:textId="77777777" w:rsidR="0026244B" w:rsidRDefault="0026244B" w:rsidP="0026244B"/>
+    <w:p w14:paraId="2AF000BC" w14:textId="77777777" w:rsidR="0026244B" w:rsidRPr="00EF06C4" w:rsidRDefault="0026244B" w:rsidP="0026244B">
+      <w:pPr>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+      </w:pPr>
+      <w:hyperlink r:id="link3" w:history="1">
+        <w:r>
+          <w:rPr>
+            <w:b/>
+          </w:rPr>
+          <w:t>Google</w:t>
+        </w:r>
+      </w:hyperlink>
+    </w:p>
+    <w:p w14:paraId="2AF000BC" w14:textId="77777777" w:rsidR="0026244B" w:rsidRPr="00EF06C4" w:rsidRDefault="0026244B" w:rsidP="0026244B">
+      <w:pPr>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+      </w:pPr>
+      <w:hyperlink r:id="link4" w:history="1">
+        <w:r>
+          <w:rPr>
+            <w:b/>
+          </w:rPr>
+          <w:t>Youtube</w:t>
+        </w:r>
+      </w:hyperlink>
+    </w:p>
+    <w:p w14:paraId="22AAED23" w14:textId="35363B20" w:rsidR="00085599" w:rsidRDefault="00085599" w:rsidP="0026244B"/>
+    <w:bookmarkEnd w:id="0"/>
+    <w:p w14:paraId="29265C55" w14:textId="77777777" w:rsidR="00BE4F42" w:rsidRPr="00BE4F42" w:rsidRDefault="00BE4F42" w:rsidP="00BE4F42">
+      <w:pPr>
+        <w:rPr>
+          <w:u w:val="single"/>
+        </w:rPr>
+      </w:pPr>
+      <w:bookmarkStart w:id="0" w:name="_GoBack"/>
+      <w:hyperlink r:id="link5" w:history="1">
+        <w:r>
+          <w:rPr>
+            <w:u w:val="single"/>
+          </w:rPr>
+          <w:t>Google</w:t>
+        </w:r>
+      </w:hyperlink>
+    </w:p>
+    <w:bookmarkEnd w:id="0"/>
+    <w:p w14:paraId="29265C55" w14:textId="77777777" w:rsidR="00BE4F42" w:rsidRPr="00BE4F42" w:rsidRDefault="00BE4F42" w:rsidP="00BE4F42">
+      <w:pPr>
+        <w:rPr>
+          <w:u w:val="single"/>
+        </w:rPr>
+      </w:pPr>
+      <w:bookmarkStart w:id="0" w:name="_GoBack"/>
+      <w:hyperlink r:id="link6" w:history="1">
+        <w:r>
+          <w:rPr>
+            <w:u w:val="single"/>
+          </w:rPr>
+          <w:t>Youtube</w:t>
+        </w:r>
+      </w:hyperlink>
+    </w:p>
+    <w:bookmarkEnd w:id="0"/>
+    <w:p w14:paraId="7C8708D9" w14:textId="77777777" w:rsidR="00BE4F42" w:rsidRPr="0026244B" w:rsidRDefault="00BE4F42" w:rsidP="0026244B"/>
+    <w:sectPr w:rsidR="00BE4F42" w:rsidRPr="0026244B" w:rsidSect="00374722">
+      <w:headerReference w:type="default" r:id="rId8"/>
+      <w:footerReference w:type="default" r:id="rId9"/>
+      <w:pgSz w:w="11906" w:h="16838"/>
+      <w:pgMar w:top="720" w:right="720" w:bottom="720" w:left="720" w:header="708" w:footer="708" w:gutter="0"/>
+      <w:cols w:space="708"/>
+      <w:titlePg/>
+      <w:bidi/>
+      <w:rtlGutter/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>
+
+# word/footer1.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:ftr xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid wp14">
+  <w:p w14:paraId="4609D757" w14:textId="7077FB3C" w:rsidR="001A7837" w:rsidRDefault="001A7837" w:rsidP="001A7837">
+    <w:pPr>
+      <w:spacing w:before="40" w:line="292" w:lineRule="auto"/>
+      <w:ind w:left="34" w:right="33" w:hanging="15"/>
+      <w:jc w:val="center"/>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans" w:hAnsi="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+    </w:pPr>
+    <w:r>
+      <w:rPr>
+        <w:noProof/>
+        <w:lang w:bidi="he-IL"/>
+      </w:rPr>
+      <mc:AlternateContent>
+        <mc:Choice Requires="wps">
+          <w:drawing>
+            <wp:anchor distT="0" distB="0" distL="0" distR="0" simplePos="0" relativeHeight="251660288" behindDoc="1" locked="0" layoutInCell="1" allowOverlap="1" wp14:anchorId="45EE0ECE" wp14:editId="61636C2D">
+              <wp:simplePos x="0" y="0"/>
+              <wp:positionH relativeFrom="page">
+                <wp:align>left</wp:align>
+              </wp:positionH>
+              <wp:positionV relativeFrom="page">
+                <wp:posOffset>9421662</wp:posOffset>
+              </wp:positionV>
+              <wp:extent cx="9032323" cy="45719"/>
+              <wp:effectExtent l="0" t="0" r="0" b="0"/>
+              <wp:wrapNone/>
+              <wp:docPr id="1073742624" name="officeArt object"/>
+              <wp:cNvGraphicFramePr/>
+              <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+                <a:graphicData uri="http://schemas.microsoft.com/office/word/2010/wordprocessingShape">
+                  <wps:wsp>
+                    <wps:cNvSpPr/>
+                    <wps:spPr>
+                      <a:xfrm>
+                        <a:off x="0" y="0"/>
+                        <a:ext cx="9032323" cy="45719"/>
+                      </a:xfrm>
+                      <a:prstGeom prst="rect">
+                        <a:avLst/>
+                      </a:prstGeom>
+                      <a:solidFill>
+                        <a:srgbClr val="0092D0"/>
+                      </a:solidFill>
+                      <a:ln w="12700" cap="flat">
+                        <a:noFill/>
+                        <a:miter lim="400000"/>
+                      </a:ln>
+                      <a:effectLst/>
+                    </wps:spPr>
+                    <wps:bodyPr/>
+                  </wps:wsp>
+                </a:graphicData>
+              </a:graphic>
+              <wp14:sizeRelH relativeFrom="margin">
+                <wp14:pctWidth>0</wp14:pctWidth>
+              </wp14:sizeRelH>
+              <wp14:sizeRelV relativeFrom="margin">
+                <wp14:pctHeight>0</wp14:pctHeight>
+              </wp14:sizeRelV>
+            </wp:anchor>
+          </w:drawing>
+        </mc:Choice>
+        <mc:Fallback xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml">
+          <w:pict>
+            <v:rect w14:anchorId="281EBDC9" id="officeArt object" o:spid="_x0000_s1026" style="position:absolute;left:0;text-align:left;margin-left:0;margin-top:741.85pt;width:711.2pt;height:3.6pt;z-index:-251656192;visibility:visible;mso-wrap-style:square;mso-width-percent:0;mso-height-percent:0;mso-wrap-distance-left:0;mso-wrap-distance-top:0;mso-wrap-distance-right:0;mso-wrap-distance-bottom:0;mso-position-horizontal:left;mso-position-horizontal-relative:page;mso-position-vertical:absolute;mso-position-vertical-relative:page;mso-width-percent:0;mso-height-percent:0;mso-width-relative:margin;mso-height-relative:margin;v-text-anchor:top" o:gfxdata="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
+bWxQSwUGAAAAAAQABADzAAAAEgUAAAAA
+" fillcolor="#0092d0" stroked="f" strokeweight="1pt">
+              <v:stroke miterlimit="4"/>
+              <w10:wrap anchorx="page" anchory="page"/>
+            </v:rect>
+          </w:pict>
+        </mc:Fallback>
+      </mc:AlternateContent>
+    </w:r>
+  </w:p>
+  <w:p w14:paraId="43AC55FF" w14:textId="17A5931F" w:rsidR="001A7837" w:rsidRDefault="001A7837" w:rsidP="001A7837">
+    <w:pPr>
+      <w:spacing w:before="40" w:line="292" w:lineRule="auto"/>
+      <w:ind w:left="34" w:right="33" w:hanging="15"/>
+      <w:jc w:val="center"/>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans" w:hAnsi="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+    </w:pPr>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans" w:hAnsi="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">B4P Research -  Hameyasdim 65, Zichron Yaakov 30900</w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans" w:hAnsi="Lucida Sans"/>
+        <w:b/>
+        <w:spacing w:val="-10"/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve"> </w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans" w:hAnsi="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">Israel</w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans" w:hAnsi="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:softHyphen/>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans" w:hAnsi="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:softHyphen/>
+    </w:r>
+  </w:p>
+  <w:p w14:paraId="456BFD77" w14:textId="452DCFCA" w:rsidR="001A7837" w:rsidRDefault="001A7837" w:rsidP="001A7837">
+    <w:pPr>
+      <w:spacing w:before="40"/>
+      <w:ind w:left="20"/>
+      <w:jc w:val="center"/>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:spacing w:val="-8"/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+    </w:pPr>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">+</w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:spacing w:val="-17"/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve"> </w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">972</w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:spacing w:val="-16"/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">  (0) </w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">4</w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:spacing w:val="-17"/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve"> </w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">8262619 | +</w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:spacing w:val="-17"/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve"> </w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">972</w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:spacing w:val="-16"/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve"> </w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">(0)</w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:spacing w:val="-16"/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve"> </w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">4</w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:spacing w:val="-17"/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve"> </w:t>
+    </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+      <w:t xml:space="preserve">8262617 | </w:t>
+    </w:r>
+    <w:hyperlink r:id="rId1" w:history="1">
+      <w:r w:rsidRPr="00AB3F90">
+        <w:rPr>
+          <w:rStyle w:val="Hyperlink"/>
+          <w:rFonts w:ascii="Lucida Sans"/>
+          <w:b/>
+          <w:sz w:val="17"/>
+        </w:rPr>
+        <w:t xml:space="preserve">info@b4presearch.com</w:t>
+      </w:r>
+    </w:hyperlink>
+  </w:p>
+  <w:p w14:paraId="5AE7924C" w14:textId="77777777" w:rsidR="001A7837" w:rsidRDefault="001A7837" w:rsidP="001A7837">
+    <w:pPr>
+      <w:spacing w:before="40"/>
+      <w:ind w:left="20"/>
+      <w:jc w:val="center"/>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+    </w:pPr>
+  </w:p>
+  <w:p w14:paraId="1D814331" w14:textId="2DE7A3FB" w:rsidR="001A7837" w:rsidRPr="001A7837" w:rsidRDefault="002F1DCA" w:rsidP="001A7837">
+    <w:pPr>
+      <w:spacing w:before="40"/>
+      <w:ind w:left="20"/>
+      <w:jc w:val="center"/>
+      <w:rPr>
+        <w:rFonts w:ascii="Lucida Sans"/>
+        <w:b/>
+        <w:sz w:val="17"/>
+      </w:rPr>
+    </w:pPr>
+    <w:hyperlink r:id="rId2" w:history="1">
+      <w:r w:rsidR="00AB3F90">
+        <w:rPr>
+          <w:rFonts w:ascii="Lucida Sans"/>
+          <w:b/>
+          <w:sz w:val="17"/>
+        </w:rPr>
+        <w:t xml:space="preserve">www.B4PRESEARCH.com</w:t>
+      </w:r>
+    </w:hyperlink>
+  </w:p>
+</w:ftr>
+
+# word/header1.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:hdr xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid wp14">
+  <w:p w14:paraId="44DC2428" w14:textId="3027ED6B" w:rsidR="001A7837" w:rsidRDefault="00AD62CB">
+    <w:pPr>
+      <w:pStyle w:val="Header"/>
+    </w:pPr>
+    <w:r>
+      <w:rPr>
+        <w:noProof/>
+        <w:lang w:bidi="he-IL"/>
+      </w:rPr>
+      <w:drawing>
+        <wp:anchor distT="0" distB="0" distL="114300" distR="114300" simplePos="0" relativeHeight="251658240" behindDoc="1" locked="0" layoutInCell="1" allowOverlap="1" wp14:anchorId="2EE9AA46" wp14:editId="547F0B53">
+          <wp:simplePos x="0" y="0"/>
+          <wp:positionH relativeFrom="margin">
+            <wp:align>center</wp:align>
+          </wp:positionH>
+          <wp:positionV relativeFrom="topMargin">
+            <wp:posOffset>243150</wp:posOffset>
+          </wp:positionV>
+          <wp:extent cx="1811020" cy="723265"/>
+          <wp:effectExtent l="0" t="0" r="0" b="0"/>
+          <wp:wrapTopAndBottom/>
+          <wp:docPr id="1073742625" name="Picture 1073742623" descr="../../../../../Documents/waka/B4PR/b4pr/logo-900X360.png"/>
+          <wp:cNvGraphicFramePr>
+            <a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/>
+          </wp:cNvGraphicFramePr>
+          <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+            <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+              <pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                <pic:nvPicPr>
+                  <pic:cNvPr id="0" name="Picture 1" descr="../../../../../Documents/waka/B4PR/b4pr/logo-900X360.png"/>
+                  <pic:cNvPicPr>
+                    <a:picLocks noChangeAspect="1" noChangeArrowheads="1"/>
+                  </pic:cNvPicPr>
+                </pic:nvPicPr>
+                <pic:blipFill>
+                  <a:blip r:embed="rId1">
+                    <a:extLst>
+                      <a:ext uri="{28A0092B-C50C-407E-A947-70E740481C1C}">
+                        <a14:useLocalDpi xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" val="0"/>
+                      </a:ext>
+                    </a:extLst>
+                  </a:blip>
+                  <a:srcRect/>
+                  <a:stretch>
+                    <a:fillRect/>
+                  </a:stretch>
+                </pic:blipFill>
+                <pic:spPr bwMode="auto">
+                  <a:xfrm>
+                    <a:off x="0" y="0"/>
+                    <a:ext cx="1811020" cy="723265"/>
+                  </a:xfrm>
+                  <a:prstGeom prst="rect">
+                    <a:avLst/>
+                  </a:prstGeom>
+                  <a:noFill/>
+                  <a:ln>
+                    <a:noFill/>
+                  </a:ln>
+                </pic:spPr>
+              </pic:pic>
+            </a:graphicData>
+          </a:graphic>
+        </wp:anchor>
+      </w:drawing>
+    </w:r>
+  </w:p>
+</w:hdr>

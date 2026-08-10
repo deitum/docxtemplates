@@ -1,0 +1,2 @@
+# throws
+  Error: Invalid IF command nested into another IF command on the same table row: IF b

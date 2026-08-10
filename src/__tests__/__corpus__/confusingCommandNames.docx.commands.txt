@@ -1,0 +1,7 @@
+INS	"something"	"INS something"
+INS	"INSertable"	"INS INSertable"
+INS	"formatNumber(123)"	"INS formatNumber(123)"
+FOR	"company in companies"	"FOR company in companies"
+INS	"$company.name"	"INS $company.name"
+INS	"formatNumber(123)"	"INS formatNumber(123)"
+END-FOR	"company"	"END-FOR company"

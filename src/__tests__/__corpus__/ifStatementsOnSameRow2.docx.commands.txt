@@ -1,0 +1,4 @@
+IF	"a"	"IF a"
+IF	"b"	"IF b"
+END-IF	""	"END-IF"
+END-IF	""	"END-IF"

@@ -1,0 +1,4 @@
+FOR	"a in [1,2,3]"	"FOR a in [1,2,3]"
+INS	"$a"	"INS $a"
+END-FOR	"a"	"END-FOR a"
+END-FOR	""	"END-FOR"

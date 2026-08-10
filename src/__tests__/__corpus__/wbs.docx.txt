@@ -1,0 +1,424 @@
+# zip entries, in the order they are stored
+  [Content_Types].xml
+  _rels/.rels
+  word/_rels/document.xml.rels
+  word/document.xml
+  word/media/image1.jpeg
+  word/theme/_rels/theme1.xml.rels
+  word/theme/theme1.xml
+  word/settings.xml
+  word/styles.xml
+  word/webSettings.xml
+  docProps/core.xml
+  word/numbering.xml
+  word/fontTable.xml
+  docProps/app.xml
+  word/
+
+# path -> sha256
+  [Content_Types].xml  9f42eb887b931fc45624fc8db1e0cdc70710859d1c33267c74bc2eecd808506e  (1497 bytes)
+  _rels/.rels  3f618fc2265b18fcbb747d120da306b261d3f8cc01675755b0b41d35b429e9d2  (590 bytes)
+  docProps/app.xml  e11eb2ea135932def1de9be1da6cc4f853943a6871d4fd6af4da16816ff7846d  (719 bytes)
+  docProps/core.xml  5c678387242c17cd44dc729723cd6064273e68584e7a59adc895a049c615aeb6  (759 bytes)
+  word/_rels/document.xml.rels  21b26a0a93f677c51d2b2bc6391c38da73d61f935512d24947f4c5a2525e002d  (950 bytes)
+  word/document.xml  c732aa6f68c2c414d05c409063a0eb4c00ca5592c17da0501ec12286da5a3b16  (19477 bytes)
+  word/fontTable.xml  d0ae8196161498c6de28e71b224485977c0b03fc538fcff5fe8521a5dba2005d  (2498 bytes)
+  word/media/image1.jpeg  0ed47c6580c7ac6d506026c728a40985bd06acfe2dfd0947c0590dfff98b15ac  (49384 bytes)
+  word/numbering.xml  ad6431857bb7d03e5dda6c81cd385e985faea9b81a6c31f80a99eb1e7f654f39  (4942 bytes)
+  word/settings.xml  5cb39bafab1eaa56ad3671d3c8abf3a5d5a39203beb59b82533ad298bd79b047  (3610 bytes)
+  word/styles.xml  f093ef39db82aa0e7875f15a8d50ce146d59358f7a8d0323ab0436505c9293b6  (60456 bytes)
+  word/theme/_rels/theme1.xml.rels  551874bae68eb9dcecb1875260e298e5644e8cfa6a4729e3ed687d419fdf5557  (293 bytes)
+  word/theme/theme1.xml  01857cd04d871d1c3523b9bec175acef398859e913b247122597dc37546d1cb4  (5233 bytes)
+  word/webSettings.xml  6d78818d99c2e7173ca0ab20877459940389c16e5b1a574e4d614bfef55a05b7  (506 bytes)
+
+# [Content_Types].xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="xml" ContentType="application/xml"/><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="jpeg" ContentType="image/jpeg"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>
+
+# word/_rels/document.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/><Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>
+
+# word/document.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mo="http://schemas.microsoft.com/office/mac/office/2008/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mv="urn:schemas-microsoft-com:mac:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
+  <w:body>
+    <w:p w14:paraId="408C39CD" w14:textId="546DA8E4" w:rsidR="00213DB3" w:rsidRPr="00450A20" w:rsidRDefault="00213DB3" w:rsidP="00213DB3">
+      <w:pPr>
+        <w:pStyle w:val="Title"/>
+      </w:pPr>
+      <w:r w:rsidRPr="00450A20">
+        <w:t xml:space="preserve">@deitum/docxtemplates</w:t>
+      </w:r>
+      <w:r w:rsidR="00C233E0" w:rsidRPr="00450A20">
+        <w:t xml:space="preserve"> </w:t>
+      </w:r>
+      <w:r w:rsidR="00143BCE" w:rsidRPr="00450A20">
+        <w:t xml:space="preserve">WBS</w:t>
+      </w:r>
+    </w:p>
+    <w:tbl>
+      <w:tblPr>
+        <w:tblStyle w:val="LightShading-Accent3"/>
+        <w:tblW w:w="5000" w:type="pct"/>
+        <w:tblLayout w:type="fixed"/>
+        <w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/>
+      </w:tblPr>
+      <w:tblGrid>
+        <w:gridCol w:w="1242"/>
+        <w:gridCol w:w="2268"/>
+        <w:gridCol w:w="1134"/>
+        <w:gridCol w:w="1843"/>
+        <w:gridCol w:w="2029"/>
+      </w:tblGrid>
+      <w:tr w:rsidR="00DD4490" w:rsidRPr="00E43E2E" w14:paraId="28941364" w14:textId="77777777" w:rsidTr="005A12CC">
+        <w:trPr>
+          <w:cnfStyle w:val="100000000000" w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+          <w:cantSplit/>
+          <w:tblHeader/>
+        </w:trPr>
+        <w:tc>
+          <w:tcPr>
+            <w:cnfStyle w:val="001000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            <w:tcW w:w="1242" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="50180FBF" w14:textId="1ABC0F69" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00143BCE" w:rsidP="00C233E0">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve">WP</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2268" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="4620F91D" w14:textId="172E1754" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00143BCE" w:rsidP="00C233E0">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="100000000000" w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve">Title</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="1134" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="7A01A87F" w14:textId="328B40FD" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00143BCE" w:rsidP="00C233E0">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="100000000000" w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve">Leader</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="1843" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="2CA9FD9C" w14:textId="3EFA1E46" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00143BCE" w:rsidP="00C233E0">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="100000000000" w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve">Starts</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2029" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="10730BB0" w14:textId="647C6353" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00143BCE" w:rsidP="00C233E0">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="100000000000" w:firstRow="1" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve">Ends</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+      <w:tr w:rsidR="00D8592F" w:rsidRPr="00E43E2E" w14:paraId="3B5FF6EB" w14:textId="77777777" w:rsidTr="005A12CC">
+        <w:trPr>
+          <w:cantSplit/>
+        </w:trPr>
+        <w:tc>
+          <w:tcPr>
+            <w:cnfStyle w:val="001000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            <w:tcW w:w="1242" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="41EE1143" w14:textId="7C59A011" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="004124FA" w:rsidP="00632851">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+            </w:pPr>
+            <w:r>
+              <w:t xml:space="preserve">WP1</w:t>
+            </w:r>
+            <w:r w:rsidR="00632851" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00C233E0" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2268" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="65190111" w14:textId="52CDBF06" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="004124FA" w:rsidP="00632851">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="000000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r>
+              <w:t xml:space="preserve">Work Package 1</w:t>
+            </w:r>
+            <w:r w:rsidR="00632851" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00C233E0" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="1134" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="0B4ADF31" w14:textId="0E384168" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00C233E0" w:rsidP="004124FA">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="000000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve">me</w:t>
+            </w:r>
+            <w:r w:rsidR="004124FA">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00632851" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="1843" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="5261117F" w14:textId="52F81B4E" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00C233E0" w:rsidP="004124FA">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="000000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+              <w:t xml:space="preserve">M1</w:t>
+            </w:r>
+            <w:r w:rsidR="004124FA">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00632851" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="004124FA">
+              <w:t xml:space="preserve"> (T0 + </w:t>
+              <w:t xml:space="preserve">0 m</w:t>
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00C94DDF" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve">)</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2029" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="70E925E7" w14:textId="3B574437" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00C233E0" w:rsidP="004124FA">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="000000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+              <w:t xml:space="preserve">M2</w:t>
+            </w:r>
+            <w:r w:rsidR="004124FA">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00632851" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="004124FA">
+              <w:t xml:space="preserve"> (T0 + </w:t>
+              <w:t xml:space="preserve">2 m</w:t>
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00C94DDF" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve">)</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+      <w:tr w:rsidR="00D8592F" w:rsidRPr="00E43E2E" w14:paraId="3B5FF6EB" w14:textId="77777777" w:rsidTr="005A12CC">
+        <w:trPr>
+          <w:cantSplit/>
+        </w:trPr>
+        <w:tc>
+          <w:tcPr>
+            <w:cnfStyle w:val="001000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            <w:tcW w:w="1242" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="41EE1143" w14:textId="7C59A011" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="004124FA" w:rsidP="00632851">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+            </w:pPr>
+            <w:r>
+              <w:t xml:space="preserve">WP2</w:t>
+            </w:r>
+            <w:r w:rsidR="00632851" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00C233E0" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2268" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="65190111" w14:textId="52CDBF06" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="004124FA" w:rsidP="00632851">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="000000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r>
+              <w:t xml:space="preserve">Work Package 2</w:t>
+            </w:r>
+            <w:r w:rsidR="00632851" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00C233E0" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="1134" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="0B4ADF31" w14:textId="0E384168" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00C233E0" w:rsidP="004124FA">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="000000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="004124FA">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00632851" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="1843" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="5261117F" w14:textId="52F81B4E" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00C233E0" w:rsidP="004124FA">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="000000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+              <w:t xml:space="preserve">M2</w:t>
+            </w:r>
+            <w:r w:rsidR="004124FA">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00632851" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="004124FA">
+              <w:t xml:space="preserve"> (T0 + </w:t>
+              <w:t xml:space="preserve">2 m</w:t>
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00C94DDF" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve">)</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2029" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w14:paraId="70E925E7" w14:textId="3B574437" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00C233E0" w:rsidP="004124FA">
+            <w:pPr>
+              <w:spacing w:before="40" w:after="40"/>
+              <w:cnfStyle w:val="000000000000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0" w:oddVBand="0" w:evenVBand="0" w:oddHBand="0" w:evenHBand="0" w:firstRowFirstColumn="0" w:firstRowLastColumn="0" w:lastRowFirstColumn="0" w:lastRowLastColumn="0"/>
+            </w:pPr>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+              <w:t xml:space="preserve">M3</w:t>
+            </w:r>
+            <w:r w:rsidR="004124FA">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00632851" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="004124FA">
+              <w:t xml:space="preserve"> (T0 + </w:t>
+              <w:t xml:space="preserve">4 m</w:t>
+              <w:t xml:space="preserve"></w:t>
+            </w:r>
+            <w:r w:rsidR="00C94DDF" w:rsidRPr="00E43E2E">
+              <w:t xml:space="preserve">)</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+    </w:tbl>
+    <w:p w14:paraId="03AE6C06" w14:textId="77777777" w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidRDefault="00C233E0" w:rsidP="000E451C"/>
+    <w:sectPr w:rsidR="00C233E0" w:rsidRPr="00E43E2E" w:rsidSect="00143BCE">
+      <w:pgSz w:w="11900" w:h="16840"/>
+      <w:pgMar w:top="1440" w:right="1800" w:bottom="1440" w:left="1800" w:header="708" w:footer="708" w:gutter="0"/>
+      <w:cols w:space="708"/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

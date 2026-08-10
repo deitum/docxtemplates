@@ -1,0 +1,2 @@
+LINK	"({ url: 'http://www.apple.com', label: 'Apple' })"	"LINK ({ url: 'http://www.apple.com', label: 'Apple' })"
+LINK	"({ url: 'http://www.apple.com' })"	"LINK ({ url: 'http://www.apple.com' })"

@@ -1,0 +1,164 @@
+# zip entries, in the order they are stored
+  [Content_Types].xml
+  _rels/.rels
+  word/_rels/document.xml.rels
+  word/document.xml
+  word/theme/theme1.xml
+  word/settings.xml
+  word/webSettings.xml
+  word/styles.xml
+  docProps/core.xml
+  word/numbering.xml
+  word/fontTable.xml
+  docProps/app.xml
+  word/
+
+# path -> sha256
+  [Content_Types].xml  72e1a7e789e238175e21a964870a263fd2426d6877bd868693e211a4eb23e587  (1445 bytes)
+  _rels/.rels  e19238d7a71fa7a2490776252686f70e2de6238c87cd509b5e3a3cc07c2ea4df  (590 bytes)
+  docProps/app.xml  4274a9bc610c5b36bebcb4f3bb133ca66c88ab2292c46ec2bccc5d6ef0ce27c5  (720 bytes)
+  docProps/core.xml  4a05eef9bc43cae5418953845c5d9746291e8240a62771a2df8f15bc44548684  (769 bytes)
+  word/_rels/document.xml.rels  88f80560ab13c082cc73a423a90131d6040dbb0ef7e655d797a214a2f481cf8f  (950 bytes)
+  word/document.xml  cae485ce3a118c83769930e65d1fbf2f46c32037958fb3f553d71e3af08bde44  (4818 bytes)
+  word/fontTable.xml  64115b312dc9bec70c958a865de73286c46c55ab4e87b2121c603a6897ebc184  (2247 bytes)
+  word/numbering.xml  13132e2a74a52301e458eca226bbd1a6d5af6a99e18072a7b65b655c885d7ab3  (4829 bytes)
+  word/settings.xml  69db8dd2e473fbd9bb1bf40ebbfb1acef4257265243f541baf8977d500a86e40  (2903 bytes)
+  word/styles.xml  9cd87cbf9335d5f9499a41919fd7c8956205d0351a9308a62882af362eabfc84  (31294 bytes)
+  word/theme/theme1.xml  040607f8a3991530db11345e5f959e63c1447b25369b46ce8645b0ace2d6980f  (6797 bytes)
+  word/webSettings.xml  5116fc31765d3a4dfdde7d2254dee814c5139b8bf5624cf6d813f799f8a37a60  (1021 bytes)
+
+# [Content_Types].xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>
+
+# word/_rels/document.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/><Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/></Relationships>
+
+# word/document.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
+  <w:body>
+    <w:p w:rsidR="00BE3B8D" w:rsidRDefault="00BE3B8D" w:rsidP="00BE3B8D">
+      <w:pPr>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+      </w:pPr>
+      <w:r w:rsidRPr="0023653F">
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t xml:space="preserve">FIRST</w:t>
+      </w:r>
+      <w:r w:rsidR="00160A38" w:rsidRPr="0023653F">
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r w:rsidRPr="0023653F">
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w:rsidR="0023653F" w:rsidRDefault="0023653F" w:rsidP="0023653F">
+      <w:r w:rsidRPr="0023653F">
+        <w:t xml:space="preserve">* </w:t>
+        <w:t xml:space="preserve">Pep</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r w:rsidRPr="0023653F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r w:rsidRPr="0023653F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w:rsidR="003F7FB2" w:rsidRDefault="003F7FB2" w:rsidP="003F7FB2">
+      <w:r>
+        <w:t xml:space="preserve">    - </w:t>
+        <w:t xml:space="preserve">Project 1</w:t>
+      </w:r>
+      <w:bookmarkStart w:id="0" w:name="_GoBack"/>
+      <w:bookmarkEnd w:id="0"/>
+    </w:p>
+    <w:p w:rsidR="0023653F" w:rsidRDefault="0023653F" w:rsidP="0023653F">
+      <w:r w:rsidRPr="0023653F">
+        <w:t xml:space="preserve">* </w:t>
+        <w:t xml:space="preserve">Fina</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r w:rsidRPr="0023653F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r w:rsidRPr="0023653F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w:rsidR="0035234F" w:rsidRPr="0023653F" w:rsidRDefault="0035234F" w:rsidP="00BE3B8D"/>
+    <w:p w:rsidR="00BE3B8D" w:rsidRDefault="00BE3B8D" w:rsidP="00BE3B8D">
+      <w:pPr>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+      </w:pPr>
+      <w:r w:rsidRPr="0023653F">
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t xml:space="preserve">SECOND</w:t>
+      </w:r>
+      <w:r w:rsidR="00160A38" w:rsidRPr="0023653F">
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r w:rsidRPr="0023653F">
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w:rsidR="0023653F" w:rsidRDefault="0023653F" w:rsidP="0023653F">
+      <w:r w:rsidRPr="0023653F">
+        <w:t xml:space="preserve">* </w:t>
+        <w:t xml:space="preserve">Manel</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r w:rsidRPr="0023653F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:r w:rsidRPr="0023653F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w:rsidR="0035234F" w:rsidRPr="0023653F" w:rsidRDefault="0035234F" w:rsidP="00BE3B8D"/>
+    <w:p w:rsidR="00426180" w:rsidRDefault="00426180"/>
+    <w:sectPr w:rsidR="00426180">
+      <w:pgSz w:w="12240" w:h="15840"/>
+      <w:pgMar w:top="1417" w:right="1701" w:bottom="1417" w:left="1701" w:header="708" w:footer="708" w:gutter="0"/>
+      <w:cols w:space="708"/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

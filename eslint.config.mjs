@@ -87,6 +87,13 @@ export default tseslint.config(
     ...vitest.configs.recommended,
   },
 
+  {
+    // The golden corpus generates one test per case, so its titles are
+    // necessarily computed rather than literal.
+    files: ['src/__tests__/golden_corpus.test.ts'],
+    rules: { 'vitest/valid-title': 'off' },
+  },
+
   // Must stay last: turns off every rule that would fight Prettier.
   prettier
 );

@@ -1,0 +1,2 @@
+# throws
+  Error: Unexpected END-IF outside of IF statement context: END-IF

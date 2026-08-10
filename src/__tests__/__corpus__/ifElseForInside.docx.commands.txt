@@ -1,0 +1,6 @@
+IF	"a"	"IF a"
+ELSE	""	"ELSE"
+FOR	"i IN list"	"FOR i IN list"
+INS	"$i"	"INS $i"
+END-FOR	"i"	"END-FOR i"
+END-IF	""	"END-IF"

@@ -1,0 +1,3 @@
+FOR	"company IN companies"	"FOR company IN companies"
+INS	"toLowerCase($company.name)"	"INS toLowerCase($company.name)"
+END-FOR	"company"	"END-FOR company"
