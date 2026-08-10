@@ -1,4 +1,7 @@
-html, body, table, tr {
+html,
+body,
+table,
+tr {
   width: 100%;
   margin: 0;
   padding: 0;
@@ -10,8 +13,6 @@ td {
   vertical-align: top;
 }
 
-
 .col1 {
-    border-right: 1px black solid;
-
+  border-right: 1px black solid;
 }

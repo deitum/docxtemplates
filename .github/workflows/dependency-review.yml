@@ -10,9 +10,17 @@ on: [pull_request]
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   dependency-review:
     runs-on: ubuntu-latest
+    # The dependency graph this action reads is only available on public
+    # repositories unless GitHub Advanced Security is enabled, so on a private
+    # repository the job can only fail. Skip it rather than block the PR.
+    if: ${{ !github.event.repository.private }}
     steps:
       - name: 'Checkout Repository'
         uses: actions/checkout@v4

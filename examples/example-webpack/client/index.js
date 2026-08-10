@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import createReport from 'docx-templates';
+import createReport from '@deitum/docxtemplates/browser';
 import qrcode from 'yaqrcode';
 
 console.log('Starting demo…');

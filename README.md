@@ -1,23 +1,24 @@
-# Docx-templates [![Coverage Status](https://coveralls.io/repos/github/guigrpa/docx-templates/badge.svg?branch=master)](https://coveralls.io/github/guigrpa/docx-templates?branch=master) [![npm version](https://img.shields.io/npm/v/docx-templates.svg)](https://www.npmjs.com/package/docx-templates)
+# @deitum/docxtemplates
 
-Template-based docx report creation for both Node and the browser. ([See the blog post](http://guigrpa.github.io/2017/01/01/word-docs-the-relay-way/)).
-
+[![npm version](https://img.shields.io/npm/v/@deitum/docxtemplates.svg)](https://www.npmjs.com/package/@deitum/docxtemplates)
+[![CI](https://github.com/deitum/docxtemplates/actions/workflows/ci.yml/badge.svg)](https://github.com/deitum/docxtemplates/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/@deitum/docxtemplates.svg)](./LICENSE)
 
 ## Why?
 
-* **Write documents naturally using Word**, just adding some commands where needed for dynamic contents
-* **Express your data needs (queries) in the template itself** (`QUERY` command), in whatever query language you want (e.g. in GraphQL). This is similar to _the Relay way™_: in [Relay](https://facebook.github.io/relay/), data requirements are declared alongside the React components that need the data
-* **Execute JavaScript snippets** (`EXEC` command, or `!` for short)
-* **Insert the result of JavaScript snippets** in your document (`INS`, `=` or just *nothing*)
-* **Embed images, hyperlinks and even HTML dynamically** (`IMAGE`, `LINK`, `HTML`). Dynamic images can be great for on-the-fly QR codes, downloading photos straight to your reports, charts… even maps!
-* Add **loops** with `FOR`/`END-FOR` commands, with support for table rows, nested loops, and JavaScript processing of elements (filter, sort, etc)
-* Include contents **conditionally**, `IF` a certain JavaScript expression is truthy, with support for alternative branches (`ELSE-IF`, `ELSE`)
-* Define custom **aliases** for some commands (`ALIAS`) — useful for writing table templates!
-* Run all JavaScript in a **separate Node VM** or a user-provided sandbox.
-* Include **literal XML**
-* Written in TypeScript, so ships with type definitions.
-* Plenty of **examples** in this repo (with Node, Webpack and Browserify)
-* Supports `.docm` templates in addition to regular `.docx` files.
+- **Write documents naturally using Word**, just adding some commands where needed for dynamic contents
+- **Express your data needs (queries) in the template itself** (`QUERY` command), in whatever query language you want (e.g. in GraphQL). This is similar to _the Relay way™_: in [Relay](https://facebook.github.io/relay/), data requirements are declared alongside the React components that need the data
+- **Execute JavaScript snippets** (`EXEC` command, or `!` for short)
+- **Insert the result of JavaScript snippets** in your document (`INS`, `=` or just _nothing_)
+- **Embed images, hyperlinks and even HTML dynamically** (`IMAGE`, `LINK`, `HTML`). Dynamic images can be great for on-the-fly QR codes, downloading photos straight to your reports, charts… even maps!
+- Add **loops** with `FOR`/`END-FOR` commands, with support for table rows, nested loops, and JavaScript processing of elements (filter, sort, etc)
+- Include contents **conditionally**, `IF` a certain JavaScript expression is truthy, with support for alternative branches (`ELSE-IF`, `ELSE`)
+- Define custom **aliases** for some commands (`ALIAS`) — useful for writing table templates!
+- Run all JavaScript in a **separate Node VM** or a user-provided sandbox.
+- Include **literal XML**
+- Written in TypeScript, so ships with type definitions.
+- Plenty of **examples** in this repo (with Node, Webpack and plain browser scripts)
+- Supports `.docm` templates in addition to regular `.docx` files.
 
 Contributions are welcome!
 
@@ -55,22 +56,32 @@ Contributions are welcome!
 # Installation
 
 ```
-$ npm install docx-templates
+$ npm install @deitum/docxtemplates
 ```
 
-...or using yarn:
+...or using yarn or pnpm:
 
 ```
-$ yarn add docx-templates
+$ yarn add @deitum/docxtemplates
+$ pnpm add @deitum/docxtemplates
 ```
 
+Requires Node.js 20 or later. The package ships both ESM and CommonJS builds along with TypeScript declarations, so all of these work:
+
+```js
+import createReport from '@deitum/docxtemplates'; // ESM, default export
+import { createReport } from '@deitum/docxtemplates'; // ESM, named export
+const { createReport } = require('@deitum/docxtemplates'); // CommonJS
+```
+
+There is also a pre-polyfilled, browser-ready build under the `@deitum/docxtemplates/browser` subpath — see [Browser usage](#browser-usage).
 
 # Node usage
 
 Here is a simple example, with report data injected directly as an object:
 
 ```js
-import createReport from 'docx-templates';
+import createReport from '@deitum/docxtemplates';
 import fs from 'fs';
 
 const template = fs.readFileSync('myTemplate.docx');
@@ -83,7 +94,7 @@ const buffer = await createReport({
   },
 });
 
-fs.writeFileSync('report.docx', buffer)
+fs.writeFileSync('report.docx', buffer);
 ```
 
 You can also **provide a sync or Promise-returning callback function (query resolver)** instead of a `data` object:
@@ -177,38 +188,39 @@ const report = await createReport({
 });
 ```
 
-Check out the [Node examples folder](https://github.com/guigrpa/docx-templates/tree/master/examples/example-node).
+Check out the [Node examples folder](https://github.com/deitum/docxtemplates/tree/master/examples/example-node).
 
 # Deno usage
-You can use docx-templates in Deno! Just follow the Browser guide and import the polyfilled docx-templates bundle, for example from unpkg:
+
+You can use @deitum/docxtemplates in Deno! Just follow the Browser guide and import the polyfilled bundle, for example from unpkg:
 
 ```ts
-// @deno-types="https://unpkg.com/docx-templates/lib/bundled.d.ts"
-import { createReport } from 'https://unpkg.com/docx-templates/lib/browser.js';
+// @deno-types="https://unpkg.com/@deitum/docxtemplates/dist/browser.d.mts"
+import { createReport } from 'https://unpkg.com/@deitum/docxtemplates/dist/browser.mjs';
 ```
 
 > Note that you have to set `noSandbox: true` or bring your own sandbox with the `runJs` option.
 
 # Browser usage
 
-You can use docx-templates in the browser (yay!). Just as when using docx-templates in Node, you need to provide the template contents as a `Buffer`-like object. 
+You can use @deitum/docxtemplates in the browser (yay!). Just as when using it in Node, you need to provide the template contents as a `Buffer`-like object.
 
 For example when the template is on your server you can get it with something like:
 
 ```js
-const template = await fetch('./template.docx').then(res => res.arrayBuffer())
+const template = await fetch('./template.docx').then(res => res.arrayBuffer());
 ```
 
 Or if the user provides the template you can get a `File` object with:
 
 ```html
-<input type="file">
+<input type="file" />
 ```
 
-Then read this file in an ArrayBuffer, feed it to docx-templates, and download the result:
+Then read this file in an ArrayBuffer, feed it to @deitum/docxtemplates, and download the result:
 
 ```js
-import createReport from 'docx-templates';
+import createReport from '@deitum/docxtemplates';
 
 const onTemplateChosen = async () => {
   const template = await readFileIntoArrayBuffer(myFile);
@@ -235,53 +247,61 @@ const readFileIntoArrayBuffer = fd =>
   });
 ```
 
-You can find an example implementation of `saveDataToFile()` [in the Webpack example](https://github.com/guigrpa/docx-templates/blob/79119723ff1c009b5bbdd28016558da9b405742f/examples/example-webpack/client/index.js#L82).
+You can find an example implementation of `saveDataToFile()` [in the Webpack example](https://github.com/deitum/docxtemplates/blob/master/examples/example-webpack/client/index.js).
 
-Check out the examples [using Webpack](https://github.com/guigrpa/docx-templates/tree/master/examples/example-webpack) and [using Browserify](https://github.com/guigrpa/docx-templates/tree/master/examples/example-browserify) or you can use the browserified bundle directly as discussed below.
+Check out the examples [using Webpack](https://github.com/deitum/docxtemplates/tree/master/examples/example-webpack) and [plain browser scripts](https://github.com/deitum/docxtemplates/tree/master/examples/example-browser), or use the pre-polyfilled bundle directly as discussed below.
 
 ## Polyfilled browser-ready bundle
-As this library depends on the internal NodeJS modules `vm`, `stream`, `util`, `events` and the `Buffer` global, your build tools have to polyfill these modules when using the library in the browser. We provide a browser build which includes the required polyfills. Its file size is about 300K uncompressed or 85K / 70K with gzip / brotli compression).
 
-You can import the library directly **as a module** using e.g. the unpkg.com CDN, like below, or you can host the `/lib/browser.js` bundle yourself.
+As this library depends on the internal NodeJS module `vm` and the `Buffer` global, your build tools have to polyfill these when using the library in the browser. We provide a browser build which includes the required polyfills, exposed as the `browser` subpath:
 
-```ts
-import { createReport } from 'https://unpkg.com/docx-templates/lib/browser.js';
+```js
+import { createReport } from '@deitum/docxtemplates/browser';
 ```
 
-this is good for testing or prototyping but you should keep in mind that the `browser.js` is `es2017` code which is supported by only 95% of users. If you have to support IE or old browser versions, you are better off compiling it to your target. Also see the support table for `es2017` [here](https://caniuse.com/sr_es8).
+Its file size is about 200K uncompressed, or roughly 60K / 50K with gzip / brotli compression. It is an ES module; bundle it with your app, host `dist/browser.mjs` yourself, or import it straight from a CDN:
+
+```ts
+import { createReport } from 'https://unpkg.com/@deitum/docxtemplates/dist/browser.mjs';
+```
+
+this is good for testing or prototyping but you should keep in mind that `browser.mjs` is `es2017` code which is supported by only 95% of users. If you have to support IE or old browser versions, you are better off compiling it to your target. Also see the support table for `es2017` [here](https://caniuse.com/sr_es8).
 
 ## Browser template compatibility caveat
+
 Note that the JavaScript code in your .docx template will be run as-is by the browser. Transpilers like Babel can't see this code, and won't be able to polyfill it. This means that the JS code in your template needs to be compatible with the browsers you are targeting. In other words: don't use fancy modern syntax and functions in your template if you want older browsers, like IE11, to be able to render it.
 
 ## Running within a Web Worker
+
 Note that you need to disable the sandbox mode using the `noSandbox: true` option to be able to run `createReport` from within a web worker. This is because the default sandbox mode browser polyfills require access to the `iframe` API, which is not available from a web worker context. Make sure you are aware of the security implications of disabling the sandbox.
 
 # Writing templates
 
 You can find several template examples in this repo:
 
-* [SWAPI](https://github.com/guigrpa/docx-templates/tree/master/examples/example-node), a good example of what you can achieve embedding a template (GraphQL in this case) in your report, including a simple script for report generation. Uses the freak-ish online [Star Wars GraphQL API](https://github.com/graphql/swapi-graphql).
-* [Dynamic images](https://github.com/guigrpa/docx-templates/tree/master/examples/example-node): with examples of images that are dynamically downloaded or created. Check out the _images-many-tiles_ example for a taste of this powerful feature.
-* Browser-based examples [using Webpack](https://github.com/guigrpa/docx-templates/tree/master/examples/example-webpack) and [using Browserify](https://github.com/guigrpa/docx-templates/tree/master/examples/example-browserify).
+- [SWAPI](https://github.com/deitum/docxtemplates/tree/master/examples/example-node), a good example of what you can achieve embedding a template (GraphQL in this case) in your report, including a simple script for report generation. Uses the freak-ish online [Star Wars GraphQL API](https://github.com/graphql/swapi-graphql).
+- [Dynamic images](https://github.com/deitum/docxtemplates/tree/master/examples/example-node): with examples of images that are dynamically downloaded or created. Check out the _images-many-tiles_ example for a taste of this powerful feature.
+- Browser-based examples [using Webpack](https://github.com/deitum/docxtemplates/tree/master/examples/example-webpack) and [plain browser scripts](https://github.com/deitum/docxtemplates/tree/master/examples/example-browser).
 
 ## Custom command delimiters
+
 You can use different **left/right command delimiters** by passing an array to `cmdDelimiter`:
 
 ```js
 const report = await createReport({
   // ...
   cmdDelimiter: ['{', '}'],
-})
+});
 ```
 
 This allows much cleaner-looking templates!
 
 Then you can add commands and JS snippets in your template like this: `{foo}`, `{project.name}` `{QUERY ...}`, `{FOR ...}`.
 
-When choosing a delimiter, take care not to introduce conflicts with JS syntax, especially if you are planning to use larger JS code snippets in your templates. For example, with `['{', '}']` you may run into conflicts as the brackets in your JS code may be mistaken for command delimiters. As an alternative, consider using multi-character delimiters, like `{#` and `#}` (see issue [#102](https://github.com/guigrpa/docx-templates/issues/102)).
-
+When choosing a delimiter, take care not to introduce conflicts with JS syntax, especially if you are planning to use larger JS code snippets in your templates. For example, with `['{', '}']` you may run into conflicts as the brackets in your JS code may be mistaken for command delimiters. As an alternative, consider using multi-character delimiters, like `{#` and `#}` (see upstream issue [#102](https://github.com/guigrpa/docx-templates/issues/102)).
 
 ## Supported commands
+
 Currently supported commands are defined below.
 
 ### Insert data with the `INS` command ( or using `=`, or nothing at all)
@@ -289,13 +309,15 @@ Currently supported commands are defined below.
 Inserts the result of a given JavaScript snippet as follows.
 
 Using code like this:
+
 ```js
- const report = await createReport({
-    template,
-    data: { name: 'John', surname: 'Appleseed' },
-    cmdDelimiter: ['+++', '+++'],
-  });
+const report = await createReport({
+  template,
+  data: { name: 'John', surname: 'Appleseed' },
+  cmdDelimiter: ['+++', '+++'],
+});
 ```
+
 And a template like this:
 
 ```
@@ -309,6 +331,7 @@ John Appleseed
 ```
 
 Alternatively, you can use the more explicit `INS` (insert) command syntax.
+
 ```
 +++INS name+++ +++INS surname+++
 ```
@@ -364,9 +387,12 @@ For the following sections (except where noted), we assume the following dataset
 ```js
 const data = {
   project: {
-    name: 'docx-templates',
+    name: '@deitum/docxtemplates',
     details: { year: '2016' },
-    people: [{ name: 'John', since: 2015 }, { name: 'Robert', since: 2010 }],
+    people: [
+      { name: 'John', since: 2015 },
+      { name: 'Robert', since: 2010 },
+    ],
   },
 };
 ```
@@ -397,13 +423,15 @@ Usage elsewhere will then look like
 When disabling sandbox mode (noSandbox: true), the scoping behaviour is slightly different. Disabling the sandbox will execute each EXEC snippet's code in a `with(this){...}` context, where this is the 'context' object. This 'context' object is re-used between the code snippets of your template. The critical difference outside of sandbox mode is that you are not declaring functions and variables in the global scope by default. The only way to assign to the global scope is to assign declarations as properties of the context object. This is simplified by the `with(context){}` wrapper: all global declarations are actually added as properties to this context object. Locally scoped declarations are not. _The above examples should work in both `noSandbox: true` and `noSandbox: false`.
 
 This example declares the test function in the context object, making it callable from another snippet.
+
 ```js
 test = () => {};
 ```
 
 While the below example only declares test in the local scope of the snippet, meaning it gets garbage collected after the snippet has executed.
+
 ```js
-function test() {};
+function test() {}
 ```
 
 ### `IMAGE`
@@ -428,16 +456,17 @@ In this case, we use a function from `additionalJsContext` object passed to `cre
 
 The JS snippet must return an _image object_ or a Promise of an _image object_, containing:
 
-* `width`: desired width of the image on the page _in cm_. Note that the aspect ratio should match that of the input image to avoid stretching.
-* `height` desired height of the image on the page _in cm_.
-* `data`: either an ArrayBuffer or a base64 string with the image data
-* `extension`: one of `'.png'`, `'.gif'`, `'.jpg'`, `'.jpeg'`, `'.svg'`.
-* `thumbnail` _[optional]_: when injecting an SVG image, a fallback non-SVG (png/jpg/gif, etc.) image can be provided. This thumbnail is used when SVG images are not supported (e.g. older versions of Word) or when the document is previewed by e.g. Windows Explorer. See usage example below.
-* `alt` _[optional]_: optional alt text.
-* `rotation` _[optional]_: optional rotation in degrees, with positive angles moving clockwise.
-* `caption` _[optional]_: optional caption displayed below the image
+- `width`: desired width of the image on the page _in cm_. Note that the aspect ratio should match that of the input image to avoid stretching.
+- `height` desired height of the image on the page _in cm_.
+- `data`: either an ArrayBuffer or a base64 string with the image data
+- `extension`: one of `'.png'`, `'.gif'`, `'.jpg'`, `'.jpeg'`, `'.svg'`.
+- `thumbnail` _[optional]_: when injecting an SVG image, a fallback non-SVG (png/jpg/gif, etc.) image can be provided. This thumbnail is used when SVG images are not supported (e.g. older versions of Word) or when the document is previewed by e.g. Windows Explorer. See usage example below.
+- `alt` _[optional]_: optional alt text.
+- `rotation` _[optional]_: optional rotation in degrees, with positive angles moving clockwise.
+- `caption` _[optional]_: optional caption displayed below the image
 
 In the .docx template:
+
 ```
 +++IMAGE injectSvg()+++
 ```
@@ -445,21 +474,31 @@ In the .docx template:
 Note that you can center the image by centering the IMAGE command in the template.
 
 In the `createReport` call:
+
 ```js
 additionalJsContext: {
   injectSvg: () => {
-      const svg_data = Buffer.from(`<svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    const svg_data = Buffer.from(
+      `<svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                   <rect x="10" y="10" height="100" width="100" style="stroke:#ff0000; fill: #0000ff"/>
-                                </svg>`, 'utf-8');
+                                </svg>`,
+      'utf-8'
+    );
 
-      // Providing a thumbnail is technically optional, as newer versions of Word will just ignore it.
-      const thumbnail = {
-        data: fs.readFileSync('sample.png'),
-        extension: '.png',
-      };
-      return { width: 6, height: 6, data: svg_data, extension: '.svg', thumbnail };                    
-    }
-  }
+    // Providing a thumbnail is technically optional, as newer versions of Word will just ignore it.
+    const thumbnail = {
+      data: fs.readFileSync('sample.png'),
+      extension: '.png',
+    };
+    return {
+      width: 6,
+      height: 6,
+      data: svg_data,
+      extension: '.svg',
+      thumbnail,
+    };
+  };
+}
 ```
 
 ### `LINK`
@@ -504,6 +543,7 @@ Loop over a group of elements (resulting from the evaluation of a JavaScript exp
 Note that inside the loop, the variable relative to the current element being processed must be prefixed with `$`.
 
 It is possible to get the current element index of the inner-most loop with the variable `$idx`, starting from `0`. For example:
+
 ```
 +++FOR company IN companies+++
 Company (+++$idx+++): +++INS $company.name+++
@@ -596,9 +636,9 @@ Toddler
 
 A few notes on `ELSE-IF`/`ELSE`:
 
-* You can add as many `ELSE-IF` branches as you want, but at most one `ELSE`, and it must be the last branch.
-* The expressions of the branches following the selected one are not evaluated at all, and neither are the commands they contain.
-* An `ELSE-IF`/`ELSE` command outside of an `IF`…`END-IF` block raises an `InvalidCommandError`.
+- You can add as many `ELSE-IF` branches as you want, but at most one `ELSE`, and it must be the last branch.
+- The expressions of the branches following the selected one are not evaluated at all, and neither are the commands they contain.
+- An `ELSE-IF`/`ELSE` command outside of an `IF`…`END-IF` block raises an `InvalidCommandError`.
 
 Similarly to the `FOR` command, it also works over table rows. You can also nest `IF` commands
 and mix & match `IF` and `FOR` commands. In fact, for the technically inclined: the `IF` command
@@ -715,6 +755,7 @@ const commands = await listCommands(template, undefined, {
 ```
 
 ## Inserting literal XML
+
 You can also directly insert Office Open XML markup into the document using the `literalXmlDelimiter`, which is by default set to `||`.
 
 E.g. if you have a template like this:
@@ -756,7 +797,9 @@ try {
   }
 }
 ```
+
 ## Error types
+
 The library exposes the following error types. See the `errors.ts` module for details.
 
 ```
@@ -774,28 +817,30 @@ UnterminatedForLoopError // thrown when a `FOR` loop is not properly terminated 
 ```
 
 ## Custom error handler
+
 A custom error handler callback can be provided to handle any errors that may occur when executing commands from a template. The value returned by this callback will be inserted into the rendered document instead. The callback is provided with two arguments: the error that was caught and the raw code of the command.
 
 ```typescript
-  const report = await createReport({
-    template,
-    data: {
-      name: 'John',
-      surname: 'Appleseed',
-    },
-    errorHandler: (err, command_code) => {
-      return 'command failed!';
-    },
-  });
+const report = await createReport({
+  template,
+  data: {
+    name: 'John',
+    surname: 'Appleseed',
+  },
+  errorHandler: (err, command_code) => {
+    return 'command failed!';
+  },
+});
 ```
 
 Using a custom `errorHandler` in combination with `rejectNullish = true` allows users to intelligently replace the result of commands that returned `null` or `undefined` (make sure to check for `NullishCommandResultError`).
 
 # Inspecting templates
+
 The `listCommands` function lets you list all the commands in a docx template using the same parser as `createReport`.
 
 ```typescript
-import { listCommands } from 'docx-templates';
+import { listCommands } from '@deitum/docxtemplates';
 const template_buffer = fs.readFileSync('template.docx');
 const commands = await listCommands(template_buffer, ['{', '}']);
 
@@ -803,15 +848,16 @@ const commands = await listCommands(template_buffer, ['{', '}']);
 [
   { raw: 'INS some_variable', code: 'some_variable', type: 'INS' },
   { raw: 'IMAGE svgImgFile()', code: 'svgImgFile()', type: 'IMAGE' },
-]
+];
 ```
 
 The `getMetadata` function lets you extract the metadata fields from a document, such as the number of pages or words. Note that this feature has a few limitations:
-- Not all fields may be available, depending on the document. 
-- These metadata fields, including the number of pages, are only updated by MS Word (or LibreOffice) when saving the document. Docx-templates does not alter these metadata fields, so the number of pages may not reflect the actual size of your rendered document (see issue [#240](https://github.com/guigrpa/docx-templates/issues/240)). Docx-templates can not reliably determine the number of pages in a document, as this requires a full-fledged docx renderer (e.g. MS Word).
+
+- Not all fields may be available, depending on the document.
+- These metadata fields, including the number of pages, are only updated by MS Word (or LibreOffice) when saving the document. @deitum/docxtemplates does not alter these metadata fields, so the number of pages may not reflect the actual size of your rendered document (see upstream issue [#240](https://github.com/guigrpa/docx-templates/issues/240)). @deitum/docxtemplates can not reliably determine the number of pages in a document, as this requires a full-fledged docx renderer (e.g. MS Word).
 
 ```typescript
-    import { getMetadata } from 'docx-templates';
+    import { getMetadata } from '@deitum/docxtemplates';
     const template = fs.readFileSync('template.docx');
     await getMetadata(template)
     // result:
@@ -840,20 +886,19 @@ The `getMetadata` function lets you extract the metadata fields from a document,
 
 **Templates can contain arbitrary javascript code. Beware of code injection risks!**
 
-Obviously, this is less of an issue when running docx-templates in a browser environment.
+Obviously, this is less of an issue when running @deitum/docxtemplates in a browser environment.
 
 Regardless of whether you are using sandboxing or not (`noSandbox: true`), be aware that allowing users to upload arbitrary templates to be executed on your server poses a significant security threat. Use at your own risk.
 
-The library uses `require('vm')` as its default sandboxing environment. Note that this sandbox is explicitly [_not_ meant to be used as a security mechanism](https://nodejs.org/api/vm.html#vm_vm_executing_javascript). You can provide your own sandboxing environment if you want, as shown in [this example project](https://github.com/guigrpa/docx-templates/tree/master/examples/example-vm2).
+The library uses `require('vm')` as its default sandboxing environment. Note that this sandbox is explicitly [_not_ meant to be used as a security mechanism](https://nodejs.org/api/vm.html#vm_vm_executing_javascript). You can provide your own sandboxing environment if you want, as shown in [this example project](https://github.com/deitum/docxtemplates/tree/master/examples/example-vm2).
 
 Note that turning off the sandbox (`noSandbox: true`) is known to give significant performance improvements when working with large templates or datasets. However, before you do this, make sure you are aware of the security implications.
 
 # Similar projects
 
-* [docxtemplater](https://github.com/open-xml-templating/docxtemplater) (believe it or not, I just discovered this very similarly-named project after brushing up my old CS code for `docx-templates` and publishing it for the first time!). It provides lots of goodies, but doesn't allow (AFAIK) embedding queries or JS snippets.
+- [docxtemplater](https://github.com/open-xml-templating/docxtemplater), a very similarly-named project. It provides lots of goodies, but doesn't allow (AFAIK) embedding queries or JS snippets.
 
-* [docx](https://github.com/dolanmiu/docx) and similar ones - generate docx files from scratch, programmatically. Drawbacks of this approach: they typically do not support all Word features, and producing a complex document can be challenging.
-
+- [docx](https://github.com/dolanmiu/docx) and similar ones - generate docx files from scratch, programmatically. Drawbacks of this approach: they typically do not support all Word features, and producing a complex document can be challenging.
 
 # License (MIT)
 

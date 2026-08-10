@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 
-console.log('Starting swapi demo');
+import { createReport } from './docxtemplates.mjs';
 
-const { createReport } = docxTemplates;
+console.log('Starting swapi demo');
 
 // callback when a template has been selected
 async function onTemplateChosen(event) {
@@ -14,11 +14,13 @@ async function onTemplateChosen(event) {
   if (event.target.id === 'inputSwapi') {
     data = query => postQuery('/swapi', query); // query to swapi webservice
   } else if (event.target.id === 'inputQuill') {
-    data = { html: `
+    data = {
+      html: `
     <meta charset="UTF-8">
     <body>
     ${window.quill.root.innerHTML}
-    </body>` };
+    </body>`,
+    };
   }
   // fill the template
   console.log('Creating report (can take some time) ...');

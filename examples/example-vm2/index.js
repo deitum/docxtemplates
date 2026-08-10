@@ -1,12 +1,12 @@
 require('isomorphic-fetch');
 const qrcode = require('yaqrcode');
-const createReport = require('docx-templates').default;
+const createReport = require('@deitum/docxtemplates').default;
 const { VM, VMScript } = require('vm2');
-const fs = require('fs')
+const fs = require('fs');
 
-const template_path = process.argv[2]
-console.log('Reading template path from ' + template_path)
-const template = fs.readFileSync(template_path)
+const template_path = process.argv[2];
+console.log('Reading template path from ' + template_path);
+const template = fs.readFileSync(template_path);
 
 createReport({
   template,
@@ -49,14 +49,12 @@ createReport({
     const result = modifiedSandbox.__result__;
     return { modifiedSandbox, result };
   },
-}).then(
-  rendered => {
-    fs.writeFileSync(
-    'report.docx',
-    rendered
-  )
-  console.log('Wrote result to ./report.docx')
-}).catch(console.log);
+})
+  .then(rendered => {
+    fs.writeFileSync('report.docx', rendered);
+    console.log('Wrote result to ./report.docx');
+  })
+  .catch(console.log);
 
 /*
 {

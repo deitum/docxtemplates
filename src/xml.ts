@@ -1,5 +1,5 @@
-import sax, { QualifiedAttribute } from 'sax';
-import { Node } from './types';
+import sax, { type QualifiedAttribute } from 'sax';
+import { type Node } from './types';
 import { logger } from './debug';
 
 const parseXml = (templateXml: string): Promise<Node> => {
@@ -14,12 +14,12 @@ const parseXml = (templateXml: string): Promise<Node> => {
   return new Promise((resolve, reject) => {
     parser.onopentag = node => {
       const newNode: Node = {
-        _parent: curNode || undefined,
         _children: [],
         _fTextNode: false,
         _tag: node.name,
         _attrs: node.attributes,
       };
+      if (curNode) newNode._parent = curNode;
       if (curNode != null) curNode._children.push(newNode);
       else template = newNode;
       curNode = newNode;
@@ -65,14 +65,15 @@ function buildXml(
       ? ''
       : '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 
-  const xmlBuffers = [Buffer.from(xml, 'utf-8')];
+  const xmlBuffers: Buffer[] = [Buffer.from(xml, 'utf-8')];
   if (node._fTextNode)
     xmlBuffers.push(Buffer.from(sanitizeText(node._text, options)));
   else {
     let attrs = '';
     const nodeAttrs = node._attrs;
-    Object.keys(nodeAttrs).forEach(key => {
-      attrs += ` ${key}="${sanitizeAttr(nodeAttrs[key])}"`;
+    Object.entries(nodeAttrs).forEach(([key, value]) => {
+      if (value == null) return;
+      attrs += ` ${key}="${sanitizeAttr(value)}"`;
     });
     const fHasChildren = node._children.length > 0;
     const suffix = fHasChildren ? '' : '/';
@@ -103,7 +104,7 @@ const sanitizeText = (str: string, options: XmlOptions) => {
   const segments = str.split(options.literalXmlDelimiter);
   let fLiteral = false;
   for (let i = 0; i < segments.length; i++) {
-    let processedSegment = segments[i];
+    let processedSegment = segments[i] ?? '';
     if (!fLiteral) {
       processedSegment = processedSegment.replace(/&/g, '&amp;'); // must be the first one
       processedSegment = processedSegment.replace(/</g, '&lt;');

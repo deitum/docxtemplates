@@ -1,20 +1,29 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "noEmit": false,
-        "outDir": "./lib/",
-        "declaration": true
-    },
-    "include": [
-        "src"
-    ],
-    "exclude": [
-        "src/browser-polyfill.ts",
-        "src/browser.ts",
-    ]
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"],
+
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "verbatimModuleSyntax": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+
+    // Rollup owns emit (see rollup.config.mjs); tsc only type-checks.
+    "noEmit": true
+  },
+  "include": ["src", "*.config.mjs", "*.config.mts"]
 }

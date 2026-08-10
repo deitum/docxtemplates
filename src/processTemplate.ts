@@ -1,5 +1,6 @@
 import {
   cloneNodeWithoutChildren,
+  getFirstChild,
   getNextSibling,
   newNonTextNode,
   newTextNode,
@@ -11,22 +12,22 @@ import {
 import { runUserJsAndGetRaw } from './jsSandbox';
 import { resolveCommandAlias, substituteAliases } from './aliases';
 import {
-  AliasList,
-  Node,
-  TextNode,
-  ReportData,
-  Context,
-  CreateReportOptions,
-  ImagePars,
-  Images,
-  LinkPars,
-  Links,
-  Htmls,
-  Image,
+  type AliasList,
+  type Node,
+  type TextNode,
+  type ReportData,
+  type Context,
+  type CreateReportOptions,
+  type ImagePars,
+  type Images,
+  type LinkPars,
+  type Links,
+  type Htmls,
+  type Image,
   BUILT_IN_COMMANDS,
   ImageExtensions,
-  NonTextNode,
-  LoopStatus,
+  type NonTextNode,
+  type LoopStatus,
 } from './types';
 import {
   isError,
@@ -86,7 +87,8 @@ export async function extractQuery(
   let nodeIn = template;
   while (true) {
     // Move down
-    if (nodeIn._children.length) nodeIn = nodeIn._children[0];
+    const firstChild = getFirstChild(nodeIn);
+    if (firstChild) nodeIn = firstChild;
     else {
       // Move sideways or up
       let fFound = false;
@@ -217,7 +219,8 @@ export async function walkTemplate(
   const maximumWalkingDepth = ctx.options?.maximumWalkingDepth || 1_000_000;
   while (true) {
     const curLoop = getCurLoop(ctx);
-    let nextSibling: Node | null = null;
+    let firstChild: Node | null;
+    let nextSibling: Node | null;
 
     // =============================================
     // Move input node pointer
@@ -236,8 +239,8 @@ export async function walkTemplate(
       move = 'JUMP';
 
       // Down (only if he haven't just moved up)
-    } else if (nodeIn._children.length && move !== 'UP') {
-      nodeIn = nodeIn._children[0];
+    } else if (move !== 'UP' && (firstChild = getFirstChild(nodeIn))) {
+      nodeIn = firstChild;
       ctx.level += 1;
       move = 'DOWN';
 
@@ -544,8 +547,8 @@ export async function walkTemplate(
     }
   }
 
-  if (ctx.loops.filter(l => !l.isIf).length > 0) {
-    const innermost_loop = ctx.loops[ctx.loops.length - 1];
+  const innermost_loop = ctx.loops[ctx.loops.length - 1];
+  if (innermost_loop != null && ctx.loops.some(l => !l.isIf)) {
     const err = new UnterminatedForLoopError(innermost_loop);
     if (ctx.options.failFast) {
       throw err;
@@ -596,7 +599,7 @@ const processText = async (
 
     // Append segment either to the `ctx.cmd` buffer (to be executed), if we are in "command mode",
     // or to the output text
-    const segment = segments[idx];
+    const segment = segments[idx] ?? '';
     // logger.debug(`Token: '${segment}' (${ctx.fCmd})`);
     if (ctx.fCmd) ctx.cmd += segment;
     else if (!isLoopExploring(ctx)) outText += segment;
@@ -653,10 +656,9 @@ const processCmd: CommandProcessor = async (
       // ALIAS name ANYTHING ELSE THAT MIGHT BE PART OF THE COMMAND...
     } else if (cmdName === 'ALIAS') {
       const aliasMatch = /^(\S+)\s+(.+)/.exec(cmdRest);
-      if (!aliasMatch)
+      const [, aliasName, fullCmd] = aliasMatch ?? [];
+      if (aliasName == null || fullCmd == null)
         throw new InvalidCommandError('Invalid ALIAS command', cmd);
-      const aliasName = aliasMatch[1];
-      const fullCmd = aliasMatch[2];
       ctx.shorthands[aliasName] = fullCmd;
       logger.debug(`Defined alias '${aliasName}' for: ${fullCmd}`);
 
@@ -830,7 +832,7 @@ export function splitCommand(cmd: string, operatorAliases?: AliasList) {
   const cmdNameMatch = /^(\S+)\s*/.exec(cmd);
   let cmdName;
   let cmdRest = '';
-  if (cmdNameMatch != null) {
+  if (cmdNameMatch?.[1] != null) {
     cmdName = cmdNameMatch[1].toUpperCase();
     cmdRest = cmd.slice(cmdName.length).trim();
     if (operatorAliases?.length && EXPRESSION_COMMANDS.includes(cmdName)) {
@@ -856,7 +858,7 @@ const processForIf = async (
 
   // Identify FOR/IF loop
   let forMatch: RegExpExecArray | null = null;
-  let varName: string | undefined = undefined;
+  let varName: string | undefined;
   if (isIf) {
     if (!node._ifName) {
       node._ifName = `__if_${ctx.gCntIf}`;
@@ -865,7 +867,8 @@ const processForIf = async (
     varName = node._ifName;
   } else {
     forMatch = /^(\S+)\s+IN\s+(.+)/i.exec(cmdRest);
-    if (!forMatch) throw new InvalidCommandError('Invalid FOR command', cmd);
+    if (forMatch?.[1] == null || forMatch[2] == null)
+      throw new InvalidCommandError('Invalid FOR command', cmd);
     varName = forMatch[1];
   }
 
@@ -910,9 +913,9 @@ const processForIf = async (
       }
     }
 
-    const parentLoopLevel = ctx.loops.length - 1;
+    const parentLoop = getCurLoop(ctx);
     const fParentIsExploring =
-      parentLoopLevel >= 0 && isLoopSkippingOutput(ctx.loops[parentLoopLevel]);
+      parentLoop != null && isLoopSkippingOutput(parentLoop);
     let loopOver: unknown[];
     // For IF loops, the branch that gets rendered (if any) is only known once
     // all ELSE-IF/ELSE branches have been explored, i.e. when the END-IF command
@@ -929,8 +932,10 @@ const processForIf = async (
       ifBranchTaken = !!(await runUserJsAndGetRaw(data, cmdRest, ctx));
       if (ifBranchTaken) ifActiveBranch = 0;
     } else {
-      if (!forMatch) throw new InvalidCommandError('Invalid FOR command', cmd);
-      loopOver = await runUserJsAndGetRaw(data, forMatch[2], ctx);
+      const loopExpression = forMatch?.[2];
+      if (loopExpression == null)
+        throw new InvalidCommandError('Invalid FOR command', cmd);
+      loopOver = await runUserJsAndGetRaw(data, loopExpression, ctx);
       if (!Array.isArray(loopOver))
         throw new InvalidCommandError(
           'Invalid FOR command (can only iterate over Array)',
@@ -1106,13 +1111,11 @@ const imageToContext = (ctx: Context, img: Image) => {
 };
 
 function validateImage(img: Image) {
-  if (
-    !(
-      img.data instanceof Uint8Array ||
-      img.data instanceof ArrayBuffer ||
-      typeof img.data === 'string'
-    )
-  ) {
+  if (!(
+    img.data instanceof Uint8Array ||
+    img.data instanceof ArrayBuffer ||
+    typeof img.data === 'string'
+  )) {
     throw new Error(
       'image .data property needs to be provided as Uint8Array (e.g. Buffer), ArrayBuffer, or as a base64-encoded string'
     );
@@ -1159,7 +1162,7 @@ const processImage = (ctx: Context, imagePars: ImagePars) => {
     ? (imagePars.rotation * 60e3).toString()
     : undefined;
 
-  if (ctx.images[imgRelId].extension === '.svg') {
+  if (ctx.images[imgRelId]?.extension === '.svg') {
     // Default to an empty thumbnail, as it is not critical and just part of the docx standard's scaffolding.
     // Without a thumbnail, the svg won't render (even in newer versions of Word that don't need the thumbnail).
     const thumbnail: Image = imagePars.thumbnail ?? {

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`noSandbox Template processing 03 Uses the resolver's response to produce the report 1`] = `
+exports[`noSandbox > Template processing > 03 Uses the resolver's response to produce the report 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -200,7 +200,7 @@ exports[`noSandbox Template processing 03 Uses the resolver's response to produc
 }
 `;
 
-exports[`noSandbox Template processing 04 Allows replacing the resolver by a data object 1`] = `
+exports[`noSandbox > Template processing > 04 Allows replacing the resolver by a data object 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -594,7 +594,7 @@ exports[`noSandbox Template processing 04 Allows replacing the resolver by a dat
 }
 `;
 
-exports[`noSandbox Template processing 04b Allows custom left-right delimiters 1`] = `
+exports[`noSandbox > Template processing > 04b Allows custom left-right delimiters 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -1085,7 +1085,7 @@ exports[`noSandbox Template processing 04b Allows custom left-right delimiters 1
 }
 `;
 
-exports[`noSandbox Template processing 05 Processes 1-level FOR loops 1`] = `
+exports[`noSandbox > Template processing > 05 Processes 1-level FOR loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -1499,7 +1499,7 @@ exports[`noSandbox Template processing 05 Processes 1-level FOR loops 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 06 Processes 2-level FOR loops 1`] = `
+exports[`noSandbox > Template processing > 06 Processes 2-level FOR loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -2640,7 +2640,7 @@ exports[`noSandbox Template processing 06 Processes 2-level FOR loops 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 07 Processes 3-level FOR loops 1`] = `
+exports[`noSandbox > Template processing > 07 Processes 3-level FOR loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -4081,7 +4081,7 @@ exports[`noSandbox Template processing 07 Processes 3-level FOR loops 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 08 Processes 1-level FOR-ROW loops 1`] = `
+exports[`noSandbox > Template processing > 08 Processes 1-level FOR-ROW loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -4777,7 +4777,7 @@ exports[`noSandbox Template processing 08 Processes 1-level FOR-ROW loops 1`] = 
 }
 `;
 
-exports[`noSandbox Template processing 08b Processes 1-level IF-ROW loops 1`] = `
+exports[`noSandbox > Template processing > 08b Processes 1-level IF-ROW loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -5346,7 +5346,7 @@ exports[`noSandbox Template processing 08b Processes 1-level IF-ROW loops 1`] = 
 }
 `;
 
-exports[`noSandbox Template processing 09 Allows scalar arrays in FOR loops 1`] = `
+exports[`noSandbox > Template processing > 09 Allows scalar arrays in FOR loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -5760,7 +5760,7 @@ exports[`noSandbox Template processing 09 Allows scalar arrays in FOR loops 1`] 
 }
 `;
 
-exports[`noSandbox Template processing 3A Processes HTML commands 1`] = `
+exports[`noSandbox > Template processing > 3A Processes HTML commands 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -6240,7 +6240,7 @@ exports[`noSandbox Template processing 3A Processes HTML commands 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 10 Processes JS snippets to get the array elements 1`] = `
+exports[`noSandbox > Template processing > 10 Processes JS snippets to get the array elements 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -6720,7 +6720,7 @@ exports[`noSandbox Template processing 10 Processes JS snippets to get the array
 }
 `;
 
-exports[`noSandbox Template processing 11 Processes inline FOR loops 1`] = `
+exports[`noSandbox > Template processing > 11 Processes inline FOR loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -7154,7 +7154,7 @@ exports[`noSandbox Template processing 11 Processes inline FOR loops 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 12 Processes a more complex inline FOR loop with spaces 1`] = `
+exports[`noSandbox > Template processing > 12 Processes a more complex inline FOR loop with spaces 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -7620,7 +7620,7 @@ exports[`noSandbox Template processing 12 Processes a more complex inline FOR lo
 }
 `;
 
-exports[`noSandbox Template processing 13a Processes 1-level IF 1`] = `
+exports[`noSandbox > Template processing > 13a Processes 1-level IF 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -7846,7 +7846,7 @@ exports[`noSandbox Template processing 13a Processes 1-level IF 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 13b Processes 2-level IF 1`] = `
+exports[`noSandbox > Template processing > 13b Processes 2-level IF 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -8660,7 +8660,7 @@ exports[`noSandbox Template processing 13b Processes 2-level IF 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 13j Processes inline IF 1`] = `
+exports[`noSandbox > Template processing > 13j Processes inline IF 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -9049,7 +9049,7 @@ exports[`noSandbox Template processing 13j Processes inline IF 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 20 Processes ALIAS commands 1`] = `
+exports[`noSandbox > Template processing > 20 Processes ALIAS commands 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -9557,7 +9557,7 @@ exports[`noSandbox Template processing 20 Processes ALIAS commands 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 22 Allows accented characters and such 1`] = `
+exports[`noSandbox > Template processing > 22 Allows accented characters and such 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -9866,7 +9866,7 @@ exports[`noSandbox Template processing 22 Allows accented characters and such 1`
 }
 `;
 
-exports[`noSandbox Template processing 23 Allows characters that conflict with XML 1`] = `
+exports[`noSandbox > Template processing > 23 Allows characters that conflict with XML 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
   <w:body>
@@ -9920,7 +9920,7 @@ exports[`noSandbox Template processing 23 Allows characters that conflict with X
 </w:document>"
 `;
 
-exports[`noSandbox Template processing 23b Allows insertion of literal XML 1`] = `
+exports[`noSandbox > Template processing > 23b Allows insertion of literal XML 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
   <w:body>
@@ -9956,7 +9956,7 @@ exports[`noSandbox Template processing 23b Allows insertion of literal XML 1`] =
 </w:document>"
 `;
 
-exports[`noSandbox Template processing 23c Allows insertion of literal XML with custom delimiter 1`] = `
+exports[`noSandbox > Template processing > 23c Allows insertion of literal XML with custom delimiter 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
   <w:body>
@@ -9992,7 +9992,7 @@ exports[`noSandbox Template processing 23c Allows insertion of literal XML with 
 </w:document>"
 `;
 
-exports[`noSandbox Template processing 24 Allows Word to split commands arbitrarily, incl. delimiters 1`] = `
+exports[`noSandbox > Template processing > 24 Allows Word to split commands arbitrarily, incl. delimiters 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -10466,7 +10466,7 @@ exports[`noSandbox Template processing 24 Allows Word to split commands arbitrar
 }
 `;
 
-exports[`noSandbox Template processing 25 Adds line breaks by default 1`] = `
+exports[`noSandbox > Template processing > 25 Adds line breaks by default 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
   <w:body>
@@ -10521,7 +10521,7 @@ exports[`noSandbox Template processing 25 Adds line breaks by default 1`] = `
 </w:document>"
 `;
 
-exports[`noSandbox Template processing 25b Allows disabling line break processing 1`] = `
+exports[`noSandbox > Template processing > 25b Allows disabling line break processing 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
   <w:body>
@@ -10579,7 +10579,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 </w:document>"
 `;
 
-exports[`noSandbox Template processing 30 Processes simple JS snippets in an INS 1`] = `
+exports[`noSandbox > Template processing > 30 Processes simple JS snippets in an INS 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -10892,7 +10892,7 @@ exports[`noSandbox Template processing 30 Processes simple JS snippets in an INS
 }
 `;
 
-exports[`noSandbox Template processing 31 Processes more complex JS snippets in an INS 1`] = `
+exports[`noSandbox > Template processing > 31 Processes more complex JS snippets in an INS 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -11488,7 +11488,7 @@ exports[`noSandbox Template processing 31 Processes more complex JS snippets in 
 }
 `;
 
-exports[`noSandbox Template processing 32 Provides access to loop indices (JS) 1`] = `
+exports[`noSandbox > Template processing > 32 Provides access to loop indices (JS) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -13795,7 +13795,7 @@ exports[`noSandbox Template processing 32 Provides access to loop indices (JS) 1
 }
 `;
 
-exports[`noSandbox Template processing 33 Processes EXEC commands (JS) 1`] = `
+exports[`noSandbox > Template processing > 33 Processes EXEC commands (JS) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -14128,7 +14128,7 @@ exports[`noSandbox Template processing 33 Processes EXEC commands (JS) 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 33b Processes EXEC with shorthand (!) 1`] = `
+exports[`noSandbox > Template processing > 33b Processes EXEC with shorthand (!) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -14607,7 +14607,7 @@ exports[`noSandbox Template processing 33b Processes EXEC with shorthand (!) 1`]
 }
 `;
 
-exports[`noSandbox Template processing 33c Processes EXEC when a promise is returned 1`] = `
+exports[`noSandbox > Template processing > 33c Processes EXEC when a promise is returned 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -14961,7 +14961,7 @@ exports[`noSandbox Template processing 33c Processes EXEC when a promise is retu
 }
 `;
 
-exports[`noSandbox Template processing 34 Processes INS with shorthand (=) 1`] = `
+exports[`noSandbox > Template processing > 34 Processes INS with shorthand (=) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -15453,7 +15453,7 @@ exports[`noSandbox Template processing 34 Processes INS with shorthand (=) 1`] =
 }
 `;
 
-exports[`noSandbox Template processing 34b Processes INS omitting the command name 1`] = `
+exports[`noSandbox > Template processing > 34b Processes INS omitting the command name 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -16442,7 +16442,7 @@ exports[`noSandbox Template processing 34b Processes INS omitting the command na
 }
 `;
 
-exports[`noSandbox Template processing 35 Processes all snippets in the same sandbox 1`] = `
+exports[`noSandbox > Template processing > 35 Processes all snippets in the same sandbox 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -16926,7 +16926,7 @@ exports[`noSandbox Template processing 35 Processes all snippets in the same san
 }
 `;
 
-exports[`noSandbox Template processing 36 Processes all snippets without sandbox 1`] = `
+exports[`noSandbox > Template processing > 36 Processes all snippets without sandbox 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -17410,7 +17410,7 @@ exports[`noSandbox Template processing 36 Processes all snippets without sandbox
 }
 `;
 
-exports[`noSandbox Template processing 36b Processes a snippet with additional context 1`] = `
+exports[`noSandbox > Template processing > 36b Processes a snippet with additional context 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -18290,7 +18290,7 @@ exports[`noSandbox Template processing 36b Processes a snippet with additional c
 }
 `;
 
-exports[`noSandbox Template processing 38b Processes IMAGE commands with base64 data 1`] = `
+exports[`noSandbox > Template processing > 38b Processes IMAGE commands with base64 data 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -18754,7 +18754,7 @@ exports[`noSandbox Template processing 38b Processes IMAGE commands with base64 
 }
 `;
 
-exports[`noSandbox Template processing 38c Processes IMAGE commands with alt text 1`] = `
+exports[`noSandbox > Template processing > 38c Processes IMAGE commands with alt text 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -19218,7 +19218,7 @@ exports[`noSandbox Template processing 38c Processes IMAGE commands with alt tex
 }
 `;
 
-exports[`noSandbox Template processing 39 Processes LINK commands 1`] = `
+exports[`noSandbox > Template processing > 39 Processes LINK commands 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -19868,13 +19868,13 @@ exports[`noSandbox Template processing 39 Processes LINK commands 1`] = `
 }
 `;
 
-exports[`noSandbox Template processing 40 Throws on invalid command 1`] = `[Error: Error executing command 'TTT foo': SyntaxError: Unexpected identifier 'foo']`;
+exports[`noSandbox > Template processing > 40 Throws on invalid command 1`] = `[Error: Error executing command 'TTT foo': SyntaxError: Unexpected identifier 'foo']`;
 
-exports[`noSandbox Template processing 41 Throws on invalid for logic 1`] = `[Error: Invalid command: END-FOR company]`;
+exports[`noSandbox > Template processing > 41 Throws on invalid for logic 1`] = `[Error: Invalid command: END-FOR company]`;
 
-exports[`noSandbox Template processing 41b Throws on invalid if logic (bad nesting) 1`] = `[Error: Invalid command: END-FOR company]`;
+exports[`noSandbox > Template processing > 41b Throws on invalid if logic (bad nesting) 1`] = `[Error: Invalid command: END-FOR company]`;
 
-exports[`noSandbox Template processing 70 Allows customisation of cmd delimiter 1`] = `
+exports[`noSandbox > Template processing > 70 Allows customisation of cmd delimiter 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -20309,7 +20309,7 @@ exports[`noSandbox Template processing 70 Allows customisation of cmd delimiter 
 }
 `;
 
-exports[`noSandbox Template processing 80 Copes with a more complex example: WBS 1`] = `
+exports[`noSandbox > Template processing > 80 Copes with a more complex example: WBS 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -20377,7 +20377,7 @@ exports[`noSandbox Template processing 80 Copes with a more complex example: WBS
                       "_children": [],
                       "_fTextNode": true,
                       "_parent": [Circular],
-                      "_text": "docx-templates",
+                      "_text": "@deitum/docxtemplates",
                     },
                   ],
                   "_fTextNode": false,
@@ -23431,7 +23431,7 @@ exports[`noSandbox Template processing 80 Copes with a more complex example: WBS
 }
 `;
 
-exports[`noSandbox Template processing 83 LINK inside FOR loop: regression test for issue #83 1`] = `
+exports[`noSandbox > Template processing > 83 LINK inside FOR loop: regression test for issue #83 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -23939,7 +23939,7 @@ exports[`noSandbox Template processing 83 LINK inside FOR loop: regression test 
 }
 `;
 
-exports[`noSandbox Template processing 107a non-alphanumeric INS commands (e.g. Chinese) 1`] = `
+exports[`noSandbox > Template processing > 107a non-alphanumeric INS commands (e.g. Chinese) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -25077,7 +25077,7 @@ exports[`noSandbox Template processing 107a non-alphanumeric INS commands (e.g. 
 }
 `;
 
-exports[`noSandbox Template processing 107b non-alphanumeric INS commands (e.g. Chinese) with custom delimiter 1`] = `
+exports[`noSandbox > Template processing > 107b non-alphanumeric INS commands (e.g. Chinese) with custom delimiter 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -26170,7 +26170,7 @@ exports[`noSandbox Template processing 107b non-alphanumeric INS commands (e.g. 
 }
 `;
 
-exports[`noSandbox Template processing 112a failFast: false lists all errors in the document before failing. 1`] = `
+exports[`noSandbox > Template processing > 112a failFast: false lists all errors in the document before failing. 1`] = `
 [
   [Error: Error executing command 'notavailable': ReferenceError: notavailable is not defined],
   [Error: Error executing command 'something': ReferenceError: something is not defined],
@@ -26179,9 +26179,9 @@ exports[`noSandbox Template processing 112a failFast: false lists all errors in 
 ]
 `;
 
-exports[`noSandbox Template processing 112b failFast: true has the same behaviour as when failFast is undefined 1`] = `[Error: Error executing command 'notavailable': ReferenceError: notavailable is not defined]`;
+exports[`noSandbox > Template processing > 112b failFast: true has the same behaviour as when failFast is undefined 1`] = `[Error: Error executing command 'notavailable': ReferenceError: notavailable is not defined]`;
 
-exports[`noSandbox Template processing 131 correctly handles Office 365 .docx files 1`] = `
+exports[`noSandbox > Template processing > 131 correctly handles Office 365 .docx files 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -26645,7 +26645,7 @@ exports[`noSandbox Template processing 131 correctly handles Office 365 .docx fi
 }
 `;
 
-exports[`noSandbox Template processing Access current element index from FOR loop 1`] = `
+exports[`noSandbox > Template processing > Access current element index from FOR loop 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -26978,7 +26978,7 @@ exports[`noSandbox Template processing Access current element index from FOR loo
 </w:document>"
 `;
 
-exports[`noSandbox Template processing Dynamic table columns 1`] = `
+exports[`noSandbox > Template processing > Dynamic table columns 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -27081,7 +27081,7 @@ exports[`noSandbox Template processing Dynamic table columns 1`] = `
 </w:document>"
 `;
 
-exports[`noSandbox Template processing Dynamic table columns with dynamic rows 1`] = `
+exports[`noSandbox > Template processing > Dynamic table columns with dynamic rows 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -27542,7 +27542,7 @@ exports[`noSandbox Template processing Dynamic table columns with dynamic rows 1
 </w:document>"
 `;
 
-exports[`noSandbox Template processing HTML in table (see PR #233) 1`] = `
+exports[`noSandbox > Template processing > HTML in table (see PR #233) 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -27632,7 +27632,7 @@ exports[`noSandbox Template processing HTML in table (see PR #233) 1`] = `
 </w:document>"
 `;
 
-exports[`noSandbox Template processing INS command is an array (see issue #214) 1`] = `
+exports[`noSandbox > Template processing > INS command is an array (see issue #214) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid w16 w16cex wp14",
@@ -27856,7 +27856,7 @@ exports[`noSandbox Template processing INS command is an array (see issue #214) 
 }
 `;
 
-exports[`noSandbox Template processing INS in header and footer 1`] = `
+exports[`noSandbox > Template processing > INS in header and footer 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -27892,13 +27892,13 @@ exports[`noSandbox Template processing INS in header and footer 1`] = `
 </w:document>"
 `;
 
-exports[`noSandbox Template processing Nested IF statements on same line 1`] = `[Error: Invalid IF command nested into another IF command on the same line: IF b]`;
+exports[`noSandbox > Template processing > Nested IF statements on same line 1`] = `[Error: Invalid IF command nested into another IF command on the same line: IF b]`;
 
-exports[`noSandbox Template processing Nested IF statements on same row1 1`] = `[Error: Invalid IF command nested into another IF command on the same table row: IF b]`;
+exports[`noSandbox > Template processing > Nested IF statements on same row1 1`] = `[Error: Invalid IF command nested into another IF command on the same table row: IF b]`;
 
-exports[`noSandbox Template processing Nested IF statements on same row2 1`] = `[Error: Invalid IF command nested into another IF command on the same table row: IF b]`;
+exports[`noSandbox > Template processing > Nested IF statements on same row2 1`] = `[Error: Invalid IF command nested into another IF command on the same table row: IF b]`;
 
-exports[`noSandbox Template processing Preserves anchored elements on empty paragraph 1`] = `
+exports[`noSandbox > Template processing > Preserves anchored elements on empty paragraph 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16du="http://schemas.microsoft.com/office/word/2023/wordml/word16du" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du wp14">
   <w:body>
@@ -28216,7 +28216,7 @@ AAAAAAAAAAAAAAAAAJQEAABkcnMvZG93bnJldi54bWxQSwUGAAAAAAQABADzAAAAogUAAAAA
 </w:document>"
 `;
 
-exports[`noSandbox Template processing Processes FOR loops with Text Box 1`] = `
+exports[`noSandbox > Template processing > Processes FOR loops with Text Box 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14",
@@ -30308,7 +30308,7 @@ AAAAAAAAAAAAkQQAAGRycy9kb3ducmV2LnhtbFBLBQYAAAAABAAEAPMAAACeBQAAAAA=
 }
 `;
 
-exports[`noSandbox Template processing Removes everything within a block that evaluates to false 1`] = `
+exports[`noSandbox > Template processing > Removes everything within a block that evaluates to false 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16du="http://schemas.microsoft.com/office/word/2023/wordml/word16du" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du wp14">
   <w:body>
@@ -30501,7 +30501,7 @@ exports[`noSandbox Template processing Removes everything within a block that ev
 </w:document>"
 `;
 
-exports[`noSandbox Template processing avoids confusion between variable name and built-in command 1`] = `
+exports[`noSandbox > Template processing > avoids confusion between variable name and built-in command 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -31371,9 +31371,9 @@ exports[`noSandbox Template processing avoids confusion between variable name an
 }
 `;
 
-exports[`noSandbox Template processing fixSmartQuotes flag (see PR #152) 1`] = `"Error executing command 'reverse(‘aubergine’)': SyntaxError: Invalid or unexpected token"`;
+exports[`noSandbox > Template processing > fixSmartQuotes flag (see PR #152) 1`] = `[Error: Error executing command 'reverse(‘aubergine’)': SyntaxError: Invalid or unexpected token]`;
 
-exports[`noSandbox Template processing iterate over object properties and keys in FOR loop 1`] = `
+exports[`noSandbox > Template processing > iterate over object properties and keys in FOR loop 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -31877,7 +31877,7 @@ exports[`noSandbox Template processing iterate over object properties and keys i
 }
 `;
 
-exports[`noSandbox Template processing newline character inside variable issue #143 not rendered properly in LibreOffice/GDrive 1`] = `
+exports[`noSandbox > Template processing > newline character inside variable issue #143 not rendered properly in LibreOffice/GDrive 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex wp14">
   <w:body>
@@ -31896,7 +31896,7 @@ exports[`noSandbox Template processing newline character inside variable issue #
 </w:document>"
 `;
 
-exports[`noSandbox Template processing regression test for issue #133 (and #83): LINK inside FOR loop 1`] = `
+exports[`noSandbox > Template processing > regression test for issue #133 (and #83): LINK inside FOR loop 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -32608,7 +32608,7 @@ exports[`noSandbox Template processing regression test for issue #133 (and #83):
 }
 `;
 
-exports[`noSandbox Template processing treats existing text near nested FOR loops correctly 1`] = `
+exports[`noSandbox > Template processing > treats existing text near nested FOR loops correctly 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -32987,7 +32987,7 @@ exports[`noSandbox Template processing treats existing text near nested FOR loop
 </w:document>"
 `;
 
-exports[`noSandbox Template processing works with macro-enabled (docm) templates 1`] = `
+exports[`noSandbox > Template processing > works with macro-enabled (docm) templates 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid w16 w16cex wp14",
@@ -33167,7 +33167,7 @@ exports[`noSandbox Template processing works with macro-enabled (docm) templates
 }
 `;
 
-exports[`sandbox Template processing 03 Uses the resolver's response to produce the report 1`] = `
+exports[`sandbox > Template processing > 03 Uses the resolver's response to produce the report 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -33367,7 +33367,7 @@ exports[`sandbox Template processing 03 Uses the resolver's response to produce 
 }
 `;
 
-exports[`sandbox Template processing 04 Allows replacing the resolver by a data object 1`] = `
+exports[`sandbox > Template processing > 04 Allows replacing the resolver by a data object 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -33761,7 +33761,7 @@ exports[`sandbox Template processing 04 Allows replacing the resolver by a data 
 }
 `;
 
-exports[`sandbox Template processing 04b Allows custom left-right delimiters 1`] = `
+exports[`sandbox > Template processing > 04b Allows custom left-right delimiters 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -34252,7 +34252,7 @@ exports[`sandbox Template processing 04b Allows custom left-right delimiters 1`]
 }
 `;
 
-exports[`sandbox Template processing 05 Processes 1-level FOR loops 1`] = `
+exports[`sandbox > Template processing > 05 Processes 1-level FOR loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -34666,7 +34666,7 @@ exports[`sandbox Template processing 05 Processes 1-level FOR loops 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 06 Processes 2-level FOR loops 1`] = `
+exports[`sandbox > Template processing > 06 Processes 2-level FOR loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -35807,7 +35807,7 @@ exports[`sandbox Template processing 06 Processes 2-level FOR loops 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 07 Processes 3-level FOR loops 1`] = `
+exports[`sandbox > Template processing > 07 Processes 3-level FOR loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -37248,7 +37248,7 @@ exports[`sandbox Template processing 07 Processes 3-level FOR loops 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 08 Processes 1-level FOR-ROW loops 1`] = `
+exports[`sandbox > Template processing > 08 Processes 1-level FOR-ROW loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -37944,7 +37944,7 @@ exports[`sandbox Template processing 08 Processes 1-level FOR-ROW loops 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 08b Processes 1-level IF-ROW loops 1`] = `
+exports[`sandbox > Template processing > 08b Processes 1-level IF-ROW loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -38513,7 +38513,7 @@ exports[`sandbox Template processing 08b Processes 1-level IF-ROW loops 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 09 Allows scalar arrays in FOR loops 1`] = `
+exports[`sandbox > Template processing > 09 Allows scalar arrays in FOR loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -38927,7 +38927,7 @@ exports[`sandbox Template processing 09 Allows scalar arrays in FOR loops 1`] = 
 }
 `;
 
-exports[`sandbox Template processing 3A Processes HTML commands 1`] = `
+exports[`sandbox > Template processing > 3A Processes HTML commands 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -39407,7 +39407,7 @@ exports[`sandbox Template processing 3A Processes HTML commands 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 10 Processes JS snippets to get the array elements 1`] = `
+exports[`sandbox > Template processing > 10 Processes JS snippets to get the array elements 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -39887,7 +39887,7 @@ exports[`sandbox Template processing 10 Processes JS snippets to get the array e
 }
 `;
 
-exports[`sandbox Template processing 11 Processes inline FOR loops 1`] = `
+exports[`sandbox > Template processing > 11 Processes inline FOR loops 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -40321,7 +40321,7 @@ exports[`sandbox Template processing 11 Processes inline FOR loops 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 12 Processes a more complex inline FOR loop with spaces 1`] = `
+exports[`sandbox > Template processing > 12 Processes a more complex inline FOR loop with spaces 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -40787,7 +40787,7 @@ exports[`sandbox Template processing 12 Processes a more complex inline FOR loop
 }
 `;
 
-exports[`sandbox Template processing 13a Processes 1-level IF 1`] = `
+exports[`sandbox > Template processing > 13a Processes 1-level IF 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -41013,7 +41013,7 @@ exports[`sandbox Template processing 13a Processes 1-level IF 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 13b Processes 2-level IF 1`] = `
+exports[`sandbox > Template processing > 13b Processes 2-level IF 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -41827,7 +41827,7 @@ exports[`sandbox Template processing 13b Processes 2-level IF 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 13j Processes inline IF 1`] = `
+exports[`sandbox > Template processing > 13j Processes inline IF 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -42216,7 +42216,7 @@ exports[`sandbox Template processing 13j Processes inline IF 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 20 Processes ALIAS commands 1`] = `
+exports[`sandbox > Template processing > 20 Processes ALIAS commands 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -42724,7 +42724,7 @@ exports[`sandbox Template processing 20 Processes ALIAS commands 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 22 Allows accented characters and such 1`] = `
+exports[`sandbox > Template processing > 22 Allows accented characters and such 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -43033,7 +43033,7 @@ exports[`sandbox Template processing 22 Allows accented characters and such 1`] 
 }
 `;
 
-exports[`sandbox Template processing 23 Allows characters that conflict with XML 1`] = `
+exports[`sandbox > Template processing > 23 Allows characters that conflict with XML 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
   <w:body>
@@ -43087,7 +43087,7 @@ exports[`sandbox Template processing 23 Allows characters that conflict with XML
 </w:document>"
 `;
 
-exports[`sandbox Template processing 23b Allows insertion of literal XML 1`] = `
+exports[`sandbox > Template processing > 23b Allows insertion of literal XML 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
   <w:body>
@@ -43123,7 +43123,7 @@ exports[`sandbox Template processing 23b Allows insertion of literal XML 1`] = `
 </w:document>"
 `;
 
-exports[`sandbox Template processing 23c Allows insertion of literal XML with custom delimiter 1`] = `
+exports[`sandbox > Template processing > 23c Allows insertion of literal XML with custom delimiter 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
   <w:body>
@@ -43159,7 +43159,7 @@ exports[`sandbox Template processing 23c Allows insertion of literal XML with cu
 </w:document>"
 `;
 
-exports[`sandbox Template processing 24 Allows Word to split commands arbitrarily, incl. delimiters 1`] = `
+exports[`sandbox > Template processing > 24 Allows Word to split commands arbitrarily, incl. delimiters 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -43633,7 +43633,7 @@ exports[`sandbox Template processing 24 Allows Word to split commands arbitraril
 }
 `;
 
-exports[`sandbox Template processing 25 Adds line breaks by default 1`] = `
+exports[`sandbox > Template processing > 25 Adds line breaks by default 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
   <w:body>
@@ -43688,7 +43688,7 @@ exports[`sandbox Template processing 25 Adds line breaks by default 1`] = `
 </w:document>"
 `;
 
-exports[`sandbox Template processing 25b Allows disabling line break processing 1`] = `
+exports[`sandbox > Template processing > 25b Allows disabling line break processing 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
   <w:body>
@@ -43746,7 +43746,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 </w:document>"
 `;
 
-exports[`sandbox Template processing 30 Processes simple JS snippets in an INS 1`] = `
+exports[`sandbox > Template processing > 30 Processes simple JS snippets in an INS 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -44059,7 +44059,7 @@ exports[`sandbox Template processing 30 Processes simple JS snippets in an INS 1
 }
 `;
 
-exports[`sandbox Template processing 31 Processes more complex JS snippets in an INS 1`] = `
+exports[`sandbox > Template processing > 31 Processes more complex JS snippets in an INS 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -44655,7 +44655,7 @@ exports[`sandbox Template processing 31 Processes more complex JS snippets in an
 }
 `;
 
-exports[`sandbox Template processing 32 Provides access to loop indices (JS) 1`] = `
+exports[`sandbox > Template processing > 32 Provides access to loop indices (JS) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -46962,7 +46962,7 @@ exports[`sandbox Template processing 32 Provides access to loop indices (JS) 1`]
 }
 `;
 
-exports[`sandbox Template processing 33 Processes EXEC commands (JS) 1`] = `
+exports[`sandbox > Template processing > 33 Processes EXEC commands (JS) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -47295,7 +47295,7 @@ exports[`sandbox Template processing 33 Processes EXEC commands (JS) 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 33b Processes EXEC with shorthand (!) 1`] = `
+exports[`sandbox > Template processing > 33b Processes EXEC with shorthand (!) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -47774,7 +47774,7 @@ exports[`sandbox Template processing 33b Processes EXEC with shorthand (!) 1`] =
 }
 `;
 
-exports[`sandbox Template processing 33c Processes EXEC when a promise is returned 1`] = `
+exports[`sandbox > Template processing > 33c Processes EXEC when a promise is returned 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -48128,7 +48128,7 @@ exports[`sandbox Template processing 33c Processes EXEC when a promise is return
 }
 `;
 
-exports[`sandbox Template processing 34 Processes INS with shorthand (=) 1`] = `
+exports[`sandbox > Template processing > 34 Processes INS with shorthand (=) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -48620,7 +48620,7 @@ exports[`sandbox Template processing 34 Processes INS with shorthand (=) 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 34b Processes INS omitting the command name 1`] = `
+exports[`sandbox > Template processing > 34b Processes INS omitting the command name 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -49609,7 +49609,7 @@ exports[`sandbox Template processing 34b Processes INS omitting the command name
 }
 `;
 
-exports[`sandbox Template processing 35 Processes all snippets in the same sandbox 1`] = `
+exports[`sandbox > Template processing > 35 Processes all snippets in the same sandbox 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -50093,7 +50093,7 @@ exports[`sandbox Template processing 35 Processes all snippets in the same sandb
 }
 `;
 
-exports[`sandbox Template processing 36 Processes all snippets without sandbox 1`] = `
+exports[`sandbox > Template processing > 36 Processes all snippets without sandbox 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -50577,7 +50577,7 @@ exports[`sandbox Template processing 36 Processes all snippets without sandbox 1
 }
 `;
 
-exports[`sandbox Template processing 36b Processes a snippet with additional context 1`] = `
+exports[`sandbox > Template processing > 36b Processes a snippet with additional context 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -51457,7 +51457,7 @@ exports[`sandbox Template processing 36b Processes a snippet with additional con
 }
 `;
 
-exports[`sandbox Template processing 38b Processes IMAGE commands with base64 data 1`] = `
+exports[`sandbox > Template processing > 38b Processes IMAGE commands with base64 data 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -51921,7 +51921,7 @@ exports[`sandbox Template processing 38b Processes IMAGE commands with base64 da
 }
 `;
 
-exports[`sandbox Template processing 38c Processes IMAGE commands with alt text 1`] = `
+exports[`sandbox > Template processing > 38c Processes IMAGE commands with alt text 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -52385,7 +52385,7 @@ exports[`sandbox Template processing 38c Processes IMAGE commands with alt text 
 }
 `;
 
-exports[`sandbox Template processing 39 Processes LINK commands 1`] = `
+exports[`sandbox > Template processing > 39 Processes LINK commands 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -53035,13 +53035,13 @@ exports[`sandbox Template processing 39 Processes LINK commands 1`] = `
 }
 `;
 
-exports[`sandbox Template processing 40 Throws on invalid command 1`] = `[Error: Error executing command 'TTT foo': SyntaxError: Unexpected identifier 'foo']`;
+exports[`sandbox > Template processing > 40 Throws on invalid command 1`] = `[Error: Error executing command 'TTT foo': SyntaxError: Unexpected identifier 'foo']`;
 
-exports[`sandbox Template processing 41 Throws on invalid for logic 1`] = `[Error: Invalid command: END-FOR company]`;
+exports[`sandbox > Template processing > 41 Throws on invalid for logic 1`] = `[Error: Invalid command: END-FOR company]`;
 
-exports[`sandbox Template processing 41b Throws on invalid if logic (bad nesting) 1`] = `[Error: Invalid command: END-FOR company]`;
+exports[`sandbox > Template processing > 41b Throws on invalid if logic (bad nesting) 1`] = `[Error: Invalid command: END-FOR company]`;
 
-exports[`sandbox Template processing 70 Allows customisation of cmd delimiter 1`] = `
+exports[`sandbox > Template processing > 70 Allows customisation of cmd delimiter 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -53476,7 +53476,7 @@ exports[`sandbox Template processing 70 Allows customisation of cmd delimiter 1`
 }
 `;
 
-exports[`sandbox Template processing 80 Copes with a more complex example: WBS 1`] = `
+exports[`sandbox > Template processing > 80 Copes with a more complex example: WBS 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -53544,7 +53544,7 @@ exports[`sandbox Template processing 80 Copes with a more complex example: WBS 1
                       "_children": [],
                       "_fTextNode": true,
                       "_parent": [Circular],
-                      "_text": "docx-templates",
+                      "_text": "@deitum/docxtemplates",
                     },
                   ],
                   "_fTextNode": false,
@@ -56598,7 +56598,7 @@ exports[`sandbox Template processing 80 Copes with a more complex example: WBS 1
 }
 `;
 
-exports[`sandbox Template processing 83 LINK inside FOR loop: regression test for issue #83 1`] = `
+exports[`sandbox > Template processing > 83 LINK inside FOR loop: regression test for issue #83 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -57106,7 +57106,7 @@ exports[`sandbox Template processing 83 LINK inside FOR loop: regression test fo
 }
 `;
 
-exports[`sandbox Template processing 107a non-alphanumeric INS commands (e.g. Chinese) 1`] = `
+exports[`sandbox > Template processing > 107a non-alphanumeric INS commands (e.g. Chinese) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -58244,7 +58244,7 @@ exports[`sandbox Template processing 107a non-alphanumeric INS commands (e.g. Ch
 }
 `;
 
-exports[`sandbox Template processing 107b non-alphanumeric INS commands (e.g. Chinese) with custom delimiter 1`] = `
+exports[`sandbox > Template processing > 107b non-alphanumeric INS commands (e.g. Chinese) with custom delimiter 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -59337,7 +59337,7 @@ exports[`sandbox Template processing 107b non-alphanumeric INS commands (e.g. Ch
 }
 `;
 
-exports[`sandbox Template processing 112a failFast: false lists all errors in the document before failing. 1`] = `
+exports[`sandbox > Template processing > 112a failFast: false lists all errors in the document before failing. 1`] = `
 [
   [Error: Error executing command 'notavailable': ReferenceError: notavailable is not defined],
   [Error: Error executing command 'something': ReferenceError: something is not defined],
@@ -59346,9 +59346,9 @@ exports[`sandbox Template processing 112a failFast: false lists all errors in th
 ]
 `;
 
-exports[`sandbox Template processing 112b failFast: true has the same behaviour as when failFast is undefined 1`] = `[Error: Error executing command 'notavailable': ReferenceError: notavailable is not defined]`;
+exports[`sandbox > Template processing > 112b failFast: true has the same behaviour as when failFast is undefined 1`] = `[Error: Error executing command 'notavailable': ReferenceError: notavailable is not defined]`;
 
-exports[`sandbox Template processing 131 correctly handles Office 365 .docx files 1`] = `
+exports[`sandbox > Template processing > 131 correctly handles Office 365 .docx files 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 wp14",
@@ -59812,7 +59812,7 @@ exports[`sandbox Template processing 131 correctly handles Office 365 .docx file
 }
 `;
 
-exports[`sandbox Template processing Access current element index from FOR loop 1`] = `
+exports[`sandbox > Template processing > Access current element index from FOR loop 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -60145,7 +60145,7 @@ exports[`sandbox Template processing Access current element index from FOR loop 
 </w:document>"
 `;
 
-exports[`sandbox Template processing Dynamic table columns 1`] = `
+exports[`sandbox > Template processing > Dynamic table columns 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -60248,7 +60248,7 @@ exports[`sandbox Template processing Dynamic table columns 1`] = `
 </w:document>"
 `;
 
-exports[`sandbox Template processing Dynamic table columns with dynamic rows 1`] = `
+exports[`sandbox > Template processing > Dynamic table columns with dynamic rows 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -60709,7 +60709,7 @@ exports[`sandbox Template processing Dynamic table columns with dynamic rows 1`]
 </w:document>"
 `;
 
-exports[`sandbox Template processing HTML in table (see PR #233) 1`] = `
+exports[`sandbox > Template processing > HTML in table (see PR #233) 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -60799,7 +60799,7 @@ exports[`sandbox Template processing HTML in table (see PR #233) 1`] = `
 </w:document>"
 `;
 
-exports[`sandbox Template processing INS command is an array (see issue #214) 1`] = `
+exports[`sandbox > Template processing > INS command is an array (see issue #214) 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid w16 w16cex wp14",
@@ -61023,7 +61023,7 @@ exports[`sandbox Template processing INS command is an array (see issue #214) 1`
 }
 `;
 
-exports[`sandbox Template processing INS in header and footer 1`] = `
+exports[`sandbox > Template processing > INS in header and footer 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -61059,13 +61059,13 @@ exports[`sandbox Template processing INS in header and footer 1`] = `
 </w:document>"
 `;
 
-exports[`sandbox Template processing Nested IF statements on same line 1`] = `[Error: Invalid IF command nested into another IF command on the same line: IF b]`;
+exports[`sandbox > Template processing > Nested IF statements on same line 1`] = `[Error: Invalid IF command nested into another IF command on the same line: IF b]`;
 
-exports[`sandbox Template processing Nested IF statements on same row1 1`] = `[Error: Invalid IF command nested into another IF command on the same table row: IF b]`;
+exports[`sandbox > Template processing > Nested IF statements on same row1 1`] = `[Error: Invalid IF command nested into another IF command on the same table row: IF b]`;
 
-exports[`sandbox Template processing Nested IF statements on same row2 1`] = `[Error: Invalid IF command nested into another IF command on the same table row: IF b]`;
+exports[`sandbox > Template processing > Nested IF statements on same row2 1`] = `[Error: Invalid IF command nested into another IF command on the same table row: IF b]`;
 
-exports[`sandbox Template processing Preserves anchored elements on empty paragraph 1`] = `
+exports[`sandbox > Template processing > Preserves anchored elements on empty paragraph 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16du="http://schemas.microsoft.com/office/word/2023/wordml/word16du" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du wp14">
   <w:body>
@@ -61383,7 +61383,7 @@ AAAAAAAAAAAAAAAAAJQEAABkcnMvZG93bnJldi54bWxQSwUGAAAAAAQABADzAAAAogUAAAAA
 </w:document>"
 `;
 
-exports[`sandbox Template processing Processes FOR loops with Text Box 1`] = `
+exports[`sandbox > Template processing > Processes FOR loops with Text Box 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14",
@@ -63475,7 +63475,7 @@ AAAAAAAAAAAAkQQAAGRycy9kb3ducmV2LnhtbFBLBQYAAAAABAAEAPMAAACeBQAAAAA=
 }
 `;
 
-exports[`sandbox Template processing Removes everything within a block that evaluates to false 1`] = `
+exports[`sandbox > Template processing > Removes everything within a block that evaluates to false 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16du="http://schemas.microsoft.com/office/word/2023/wordml/word16du" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du wp14">
   <w:body>
@@ -63668,7 +63668,7 @@ exports[`sandbox Template processing Removes everything within a block that eval
 </w:document>"
 `;
 
-exports[`sandbox Template processing avoids confusion between variable name and built-in command 1`] = `
+exports[`sandbox > Template processing > avoids confusion between variable name and built-in command 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -64538,9 +64538,9 @@ exports[`sandbox Template processing avoids confusion between variable name and 
 }
 `;
 
-exports[`sandbox Template processing fixSmartQuotes flag (see PR #152) 1`] = `"Error executing command 'reverse(‘aubergine’)': SyntaxError: Invalid or unexpected token"`;
+exports[`sandbox > Template processing > fixSmartQuotes flag (see PR #152) 1`] = `[Error: Error executing command 'reverse(‘aubergine’)': SyntaxError: Invalid or unexpected token]`;
 
-exports[`sandbox Template processing iterate over object properties and keys in FOR loop 1`] = `
+exports[`sandbox > Template processing > iterate over object properties and keys in FOR loop 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -65044,7 +65044,7 @@ exports[`sandbox Template processing iterate over object properties and keys in 
 }
 `;
 
-exports[`sandbox Template processing newline character inside variable issue #143 not rendered properly in LibreOffice/GDrive 1`] = `
+exports[`sandbox > Template processing > newline character inside variable issue #143 not rendered properly in LibreOffice/GDrive 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex wp14">
   <w:body>
@@ -65063,7 +65063,7 @@ exports[`sandbox Template processing newline character inside variable issue #14
 </w:document>"
 `;
 
-exports[`sandbox Template processing regression test for issue #133 (and #83): LINK inside FOR loop 1`] = `
+exports[`sandbox > Template processing > regression test for issue #133 (and #83): LINK inside FOR loop 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid wp14",
@@ -65775,7 +65775,7 @@ exports[`sandbox Template processing regression test for issue #133 (and #83): L
 }
 `;
 
-exports[`sandbox Template processing treats existing text near nested FOR loops correctly 1`] = `
+exports[`sandbox > Template processing > treats existing text near nested FOR loops correctly 1`] = `
 "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
   <w:body>
@@ -66154,7 +66154,7 @@ exports[`sandbox Template processing treats existing text near nested FOR loops 
 </w:document>"
 `;
 
-exports[`sandbox Template processing works with macro-enabled (docm) templates 1`] = `
+exports[`sandbox > Template processing > works with macro-enabled (docm) templates 1`] = `
 {
   "_attrs": {
     "mc:Ignorable": "w14 w15 w16se w16cid w16 w16cex wp14",
