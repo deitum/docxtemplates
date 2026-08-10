@@ -11,6 +11,8 @@ export default tseslint.config(
     ignores: [
       'dist',
       'coverage',
+      // Committed build output of the skill's agent tools.
+      'skills/*/agent/dist',
       // Legacy demo apps, pinned to ancient toolchains and not part of the build.
       'examples',
       'src/__tests__/__snapshots__',

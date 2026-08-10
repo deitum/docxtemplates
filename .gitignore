@@ -10,6 +10,9 @@ pids
 node_modules
 dist
 coverage
+# ...except the skill's agent bundles, which are committed so that the plugin
+# runs straight after installation (see CONTRIBUTING.md).
+!skills/*/agent/dist
 
 # Editors and OS
 .idea

@@ -62,7 +62,7 @@
   },
   "packageManager": "npm@10.9.8",
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rimraf dist skills/*/agent/dist",
     "build": "npm run clean && rollup -c",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

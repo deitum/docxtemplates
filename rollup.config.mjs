@@ -99,6 +99,32 @@ export default defineConfig([
     plugins: [dtsPlugin({ respectExternal: true }), selfContainedDts],
   },
 
+  // Agent tools for the `docx-template` skill. These are CLIs, not a package:
+  // they bundle `jszip`, `sax` and the library itself so that the skill runs
+  // straight after `/plugin install`, with nothing to install first. The output
+  // is committed to git, so it carries no sourcemaps and no hashed filenames —
+  // see CONTRIBUTING.md.
+  {
+    input: Object.fromEntries(
+      ['analyze', 'generate', 'refine', 'verify'].map(tool => [
+        tool,
+        `./skills/docx-template/agent/${tool}.ts`,
+      ])
+    ),
+    output: {
+      dir: './skills/docx-template/agent/dist',
+      format: 'es',
+      entryFileNames: '[name].mjs',
+      chunkFileNames: 'shared-[name].mjs',
+      sourcemap: false,
+    },
+    plugins: [
+      node({ preferBuiltins: true }),
+      commonjs(),
+      esbuild({ target: 'node20' }),
+    ],
+  },
+
   // Browser: self-contained, polyfilled bundle exposed as the `./browser`
   // subpath (and as the default entry point on unpkg/jsDelivr).
   {

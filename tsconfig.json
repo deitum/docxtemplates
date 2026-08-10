@@ -25,5 +25,5 @@
     // Rollup owns emit (see rollup.config.mjs); tsc only type-checks.
     "noEmit": true
   },
-  "include": ["src", "*.config.mjs", "*.config.mts"]
+  "include": ["src", "skills", "*.config.mjs", "*.config.mts"]
 }

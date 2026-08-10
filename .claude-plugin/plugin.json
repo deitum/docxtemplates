@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "docx-template",
+  "displayName": "DOCX Template",
+  "version": "1.0.0",
+  "description": "Turn filled-out .docx files into @deitum/docxtemplates templates, and render them with sample data to prove they work",
+  "author": {
+    "name": "Zvyagin Danila"
+  },
+  "homepage": "https://github.com/deitum/docxtemplates#readme",
+  "repository": "https://github.com/deitum/docxtemplates",
+  "license": "MIT",
+  "keywords": ["docx", "template", "word", "report", "document-generation"]
+}

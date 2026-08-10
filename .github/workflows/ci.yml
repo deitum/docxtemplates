@@ -62,3 +62,8 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run check:package
+      # The skill's agent tools ship as committed bundles so that the plugin
+      # needs no install step; this catches a source change that was pushed
+      # without rebuilding them.
+      - name: Check the committed skill bundles are up to date
+        run: git diff --exit-code -- skills
