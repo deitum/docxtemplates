@@ -225,3 +225,34 @@ describe('content types', () => {
     expect(await readReportFile(report, '[Content_Types].xml')).toEqual(before);
   });
 });
+
+describe('encoding', () => {
+  // `zipSetText` hands JSZip a `Buffer` that `buildXml` has already UTF-8
+  // encoded. Declaring it as text would have JSZip encode it a second time,
+  // which only shows up on characters outside ASCII.
+  it('writes non-ASCII content as UTF-8', async () => {
+    const template = await makeDocx({
+      body: ['+++greeting+++', '+++emoji+++'],
+      header: ['+++greeting+++'],
+    });
+    const report = await createReport({
+      template,
+      data: { greeting: 'Ёлка — «привет» 中文', emoji: '👋🏽' },
+    });
+
+    for (const part of ['word/document.xml', 'word/header1.xml']) {
+      const xml = await readReportFile(report, part);
+      expect(xml).toContain('Ёлка — «привет» 中文');
+    }
+    expect(await readReportFile(report, 'word/document.xml')).toContain('👋🏽');
+  });
+
+  it('writes non-ASCII hyperlink targets and image data intact', async () => {
+    const template = await makeDocx({
+      body: [`+++LINK ({ url: 'https://example.test/пример?q=中文' })+++`],
+    });
+    const report = await createReport({ template, data: {} });
+    const rels = await readReportFile(report, 'word/_rels/document.xml.rels');
+    expect(rels).toContain('Target="https://example.test/пример?q=中文"');
+  });
+});

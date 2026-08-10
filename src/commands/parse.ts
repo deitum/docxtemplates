@@ -10,10 +10,34 @@ import {
   type CreateReportOptions,
 } from '../types';
 
-const builtInRegexes = BUILT_IN_COMMANDS.map(word => new RegExp(`^${word}\\b`));
+const BUILT_IN_NAMES: ReadonlySet<string> = new Set(BUILT_IN_COMMANDS);
 
-const isBuiltIn = (cmd: string) =>
-  builtInRegexes.some(r => r.test(cmd.toUpperCase()));
+/** The characters a word boundary (`\b`) separates on. */
+const isWordChar = (char: string | undefined) =>
+  char != null && /[A-Za-z0-9_]/.test(char);
+
+/** How far the run of word characters starting at `from` reaches. */
+const endOfWord = (cmd: string, from: number): number => {
+  let idx = from;
+  while (idx < cmd.length && isWordChar(cmd[idx])) idx += 1;
+  return idx;
+};
+
+/**
+ * Whether the command starts with the name of a built-in.
+ *
+ * Equivalent to testing `^NAME\b` for every built-in, which is what this used to
+ * do — fourteen regular expressions against every command that has no prefix.
+ * A single word is enough to decide, except for the hyphenated names
+ * (`END-FOR`, `ELSE-IF`, `END-IF`), which need the word after the hyphen too.
+ */
+const isBuiltIn = (cmd: string): boolean => {
+  const firstEnd = endOfWord(cmd, 0);
+  if (BUILT_IN_NAMES.has(cmd.slice(0, firstEnd).toUpperCase())) return true;
+  if (cmd[firstEnd] !== '-') return false;
+  const secondEnd = endOfWord(cmd, firstEnd + 1);
+  return BUILT_IN_NAMES.has(cmd.slice(0, secondEnd).toUpperCase());
+};
 
 /**
  * The quotes MS Word autocorrects straight ones into. They are not valid

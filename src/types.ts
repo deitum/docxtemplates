@@ -1,4 +1,6 @@
 import { type QualifiedAttribute } from 'sax';
+// Type-only, so that nothing pulls `node:vm` into the browser bundle.
+import type { Script } from 'node:vm';
 import { type BufferTag } from './ooxml';
 
 // ==========================================
@@ -291,6 +293,15 @@ export type SandBox = {
   [k: string]: unknown;
 };
 
+/**
+ * The evaluation context and compiled-snippet cache of one document part; see
+ * `jsSandbox.ts`. Opaque to everything but the sandbox itself.
+ */
+export type SandboxRuntime = {
+  context: SandBox;
+  scripts: Map<string, Script>;
+};
+
 /** The mutable state of one pass over one XML part; see `context.ts`. */
 export type Context = {
   gCntIf: number;
@@ -317,6 +328,7 @@ export type Context = {
   shorthands: { [shorthand: string]: string };
   options: CreateReportOptions;
   jsSandbox?: SandBox;
+  jsRuntime?: SandboxRuntime;
   textRunPropsNode?: NonTextNode;
 
   // To verify we don't have a nested IF within the same `w:p` or `w:tr` tag

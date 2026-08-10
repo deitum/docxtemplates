@@ -60,51 +60,54 @@ const XML_DECLARATION =
 /** Two spaces per level, when `indentXml` is on. */
 const INDENT_STEP = '  ';
 
-function buildXml(
+/**
+ * Serialises a tree.
+ *
+ * The pieces are collected into one array of strings and encoded once at the
+ * end. Concatenating buffers per node instead — as this used to do — copies
+ * every byte once for each level of the tree it sits under, which on a real
+ * document means copying the whole output a dozen times over.
+ */
+function buildXml(node: Node, options: XmlOptions): Buffer {
+  const out: string[] = [XML_DECLARATION];
+  appendNode(node, options, '', out);
+  return Buffer.from(out.join(''), 'utf-8');
+}
+
+function appendNode(
   node: Node,
   options: XmlOptions,
-  indent: string = '',
-  firstRun: boolean = true
-): Buffer {
-  const xmlBuffers: Buffer[] = [
-    Buffer.from(firstRun ? XML_DECLARATION : '', 'utf-8'),
-  ];
-  if (node._fTextNode)
-    xmlBuffers.push(Buffer.from(sanitizeText(node._text, options)));
-  else {
-    let attrs = '';
-    const nodeAttrs = node._attrs;
-    Object.entries(nodeAttrs).forEach(([key, value]) => {
-      if (value == null) return;
-      attrs += ` ${key}="${sanitizeAttr(value)}"`;
-    });
-    const fHasChildren = node._children.length > 0;
-    const suffix = fHasChildren ? '' : '/';
-
-    // Conditionally add newlines and indentation based on indentXml option
-    const newline = options.indentXml ? `\n${indent}` : '';
-    xmlBuffers.push(Buffer.from(`${newline}<${node._tag}${attrs}${suffix}>`));
-
-    let fLastChildIsNode = false;
-    node._children.forEach(child => {
-      xmlBuffers.push(
-        buildXml(
-          child,
-          options,
-          options.indentXml ? `${indent}${INDENT_STEP}` : '',
-          false
-        )
-      );
-      fLastChildIsNode = !child._fTextNode;
-    });
-    if (fHasChildren) {
-      // Only add indentation if indentXml is true and last child is a node
-      const indent2 =
-        options.indentXml && fLastChildIsNode ? `\n${indent}` : '';
-      xmlBuffers.push(Buffer.from(`${indent2}</${node._tag}>`));
-    }
+  indent: string,
+  out: string[]
+): void {
+  if (node._fTextNode) {
+    out.push(sanitizeText(node._text, options));
+    return;
   }
-  return Buffer.concat(xmlBuffers);
+
+  let attrs = '';
+  for (const [key, value] of Object.entries(node._attrs)) {
+    if (value == null) continue;
+    attrs += ` ${key}="${sanitizeAttr(value)}"`;
+  }
+  const fHasChildren = node._children.length > 0;
+  const suffix = fHasChildren ? '' : '/';
+
+  // Conditionally add newlines and indentation based on indentXml option
+  const newline = options.indentXml ? `\n${indent}` : '';
+  out.push(`${newline}<${node._tag}${attrs}${suffix}>`);
+  if (!fHasChildren) return;
+
+  const childIndent = options.indentXml ? `${indent}${INDENT_STEP}` : '';
+  let fLastChildIsNode = false;
+  for (const child of node._children) {
+    appendNode(child, options, childIndent, out);
+    fLastChildIsNode = !child._fTextNode;
+  }
+  // Only add indentation if indentXml is true and last child is a node
+  const closingIndent =
+    options.indentXml && fLastChildIsNode ? `\n${indent}` : '';
+  out.push(`${closingIndent}</${node._tag}>`);
 }
 
 const XML_ENTITIES: { [char: string]: string } = {

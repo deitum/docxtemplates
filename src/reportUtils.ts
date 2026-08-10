@@ -37,11 +37,35 @@ export const cloneNodeWithoutChildren = (node: Node): Node => {
 export const getFirstChild = (node: Node): Node | null =>
   node._children[0] ?? null;
 
+/**
+ * Where the last `getNextSibling` call on a given parent left off.
+ *
+ * A node does not know its own index, so finding the next one means searching
+ * the parent's children — and visiting all of them in turn is quadratic in
+ * their number. `w:body` routinely has tens of thousands of children, which
+ * made that the most expensive thing about a long, otherwise trivial document.
+ *
+ * Children are visited in order, so the answer is nearly always the one right
+ * after the previous answer for the same parent. It is one entry per parent
+ * rather than one overall because the walk descends into each child before
+ * asking for the next one, so a single slot would be evicted every time.
+ *
+ * The guess is checked by identity before it is used. A miss — an interleaved
+ * report, or a tree spliced behind our back, which is exactly what
+ * `preprocessTemplate` does — costs a search and nothing else.
+ */
+const nextIdxByParent = new WeakMap<Node, number>();
+
 export const getNextSibling = (node: Node): Node | null => {
   const parent = node._parent;
   if (parent == null) return null;
   const siblings = parent._children;
-  const idx = siblings.indexOf(node);
+
+  const guess = nextIdxByParent.get(parent);
+  const idx =
+    guess != null && siblings[guess] === node ? guess : siblings.indexOf(node);
+  nextIdxByParent.set(parent, idx + 1);
+
   if (idx < 0 || idx >= siblings.length - 1) return null;
   return siblings[idx + 1] ?? null;
 };

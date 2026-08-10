@@ -88,9 +88,12 @@ export default tseslint.config(
   },
 
   {
-    // The golden corpus generates one test per case, so its titles are
-    // necessarily computed rather than literal.
-    files: ['src/__tests__/golden_corpus.test.ts'],
+    // These generate one case per fixture / per sandbox mode, so their titles
+    // are necessarily computed rather than literal.
+    files: [
+      'src/__tests__/golden_corpus.test.ts',
+      'src/__tests__/sandbox.test.ts',
+    ],
     rules: { 'vitest/valid-title': 'off' },
   },
 
