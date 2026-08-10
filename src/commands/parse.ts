@@ -9,6 +9,7 @@ import {
   type Context,
   type CreateReportOptions,
 } from '../types';
+import { EXPRESSION_COMMANDS } from './registry';
 
 const BUILT_IN_NAMES: ReadonlySet<string> = new Set(BUILT_IN_COMMANDS);
 
@@ -46,6 +47,27 @@ const isBuiltIn = (cmd: string): boolean => {
 const SMART_DOUBLE_QUOTES = /[“”„]/g; // “ ” „
 const SMART_SINGLE_QUOTES = /[‘’‚]/g; // ‘ ’ ‚
 
+/** What a single-character command prefix expands into. */
+type PrefixExpansion = (args: {
+  /** Whatever followed the prefix, trimmed. */
+  rest: string;
+  /** The whole command, prefix included, for error messages. */
+  cmd: string;
+  shorthands: Context['shorthands'];
+  options: Pick<CreateReportOptions, 'commandAliases'>;
+}) => string;
+
+const PREFIX_EXPANSIONS: { [prefix: string]: PrefixExpansion } = {
+  [CommandPrefix.shorthand]: ({ rest, cmd, shorthands, options }) => {
+    const shorthand = shorthands[rest];
+    if (!shorthand) throw new InvalidCommandError('Unknown alias', cmd);
+    logger.debug(`Alias for: ${shorthand}`);
+    return resolveCommandAlias(shorthand, options.commandAliases) ?? shorthand;
+  },
+  [CommandPrefix.ins]: ({ rest }) => `${Command.INS} ${rest}`,
+  [CommandPrefix.exec]: ({ rest }) => `${Command.EXEC} ${rest}`,
+};
+
 /**
  * Normalises the raw text found between the command delimiters into a full
  * command: expands `*shorthand` / `=` / `!` prefixes, resolves user-defined
@@ -58,16 +80,9 @@ export function getCommand(
   options: Pick<CreateReportOptions, 'fixSmartQuotes' | 'commandAliases'>
 ): string {
   let cmd = command.trim();
-  if (cmd[0] === CommandPrefix.shorthand) {
-    const aliasName = cmd.slice(1).trim();
-    const shorthand = shorthands[aliasName];
-    if (!shorthand) throw new InvalidCommandError('Unknown alias', cmd);
-    logger.debug(`Alias for: ${shorthand}`);
-    cmd = resolveCommandAlias(shorthand, options.commandAliases) ?? shorthand;
-  } else if (cmd[0] === CommandPrefix.ins) {
-    cmd = `${Command.INS} ${cmd.slice(1).trim()}`;
-  } else if (cmd[0] === CommandPrefix.exec) {
-    cmd = `${Command.EXEC} ${cmd.slice(1).trim()}`;
+  const expandPrefix = PREFIX_EXPANSIONS[cmd[0] ?? ''];
+  if (expandPrefix != null) {
+    cmd = expandPrefix({ rest: cmd.slice(1).trim(), cmd, shorthands, options });
   } else {
     // A user-defined name for a built-in command (e.g. `ЕСЛИ` for `IF`)?
     const aliased = resolveCommandAlias(cmd, options.commandAliases);
@@ -84,19 +99,6 @@ export function getCommand(
   return cmd.trim();
 }
 
-// Commands whose payload is a JS expression, and hence the only ones in which
-// operator aliases (e.g. `больше` for `>`) get substituted.
-const EXPRESSION_COMMANDS: string[] = [
-  Command.FOR,
-  Command.IF,
-  Command.ELSE_IF,
-  Command.INS,
-  Command.EXEC,
-  Command.IMAGE,
-  Command.LINK,
-  Command.HTML,
-];
-
 /** Splits a command into its (upper-cased) name and the rest. */
 export function splitCommand(cmd: string, operatorAliases?: AliasList) {
   const cmdNameMatch = /^(\S+)\s*/.exec(cmd);
@@ -105,7 +107,10 @@ export function splitCommand(cmd: string, operatorAliases?: AliasList) {
   if (cmdNameMatch?.[1] != null) {
     cmdName = cmdNameMatch[1].toUpperCase();
     cmdRest = cmd.slice(cmdName.length).trim();
-    if (operatorAliases?.length && EXPRESSION_COMMANDS.includes(cmdName)) {
+    // Operator aliases (`больше` for `>`, say) are only substituted where the
+    // payload is a JS expression; `EXPRESSION_COMMANDS` comes from the command
+    // registry, so it cannot fall out of step with it.
+    if (operatorAliases?.length && EXPRESSION_COMMANDS.has(cmdName)) {
       cmdRest = substituteAliases(cmdRest, operatorAliases);
     }
   }
