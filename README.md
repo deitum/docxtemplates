@@ -592,6 +592,12 @@ And let you dynamically generate columns:
 +-------------------------------+--------------------+------------------------+
 ```
 
+The cells holding the `FOR` and `END-FOR` commands above are deleted, which is what
+makes the generated columns line up. This only happens to cells whose loop (or `IF`
+construct) spans several cells: a cell containing a complete `FOR`…`END-FOR` (or
+`IF`…`END-IF`) is kept, even when it renders to nothing, so that the other cells of
+the row stay in their columns.
+
 Finally, you can nest loops (this example assumes a different data set):
 
 ```
