@@ -1,0 +1,2 @@
+IMAGE	"svgImgFile()"	"IMAGE svgImgFile()"
+IMAGE	"svgImgStr()"	"IMAGE svgImgStr()"

@@ -1,0 +1,6 @@
+FOR	"row IN rows"	"FOR row IN rows"
+FOR	"column IN columns"	"FOR column IN columns"
+INS	"$row"	"INS $row"
+INS	"$column"	"INS $column"
+END-FOR	"column"	"END-FOR column"
+END-FOR	"row"	"END-FOR row"

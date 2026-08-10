@@ -1,0 +1,8 @@
+FOR	"company IN companies"	"FOR company IN companies"
+INS	"$idx"	"INS $idx"
+INS	"$company.name"	"INS $company.name"
+FOR	"executive IN $company.executives"	"FOR executive IN $company.executives"
+INS	"$idx"	"INS $idx"
+INS	"$executive"	"INS $executive"
+END-FOR	"executive"	"END-FOR executive"
+END-FOR	"company"	"END-FOR company"

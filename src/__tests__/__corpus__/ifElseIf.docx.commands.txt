@@ -1,0 +1,5 @@
+IF	"value > 10"	"IF value > 10"
+ELSE-IF	"value > 5"	"ELSE-IF value > 5"
+ELSE-IF	"value > 0"	"ELSE-IF value > 0"
+ELSE	""	"ELSE"
+END-IF	""	"END-IF"

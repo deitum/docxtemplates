@@ -1,0 +1,2 @@
+IMAGE	"image()"	"IMAGE image()"
+IMAGE	"image()"	"IMAGE image()"

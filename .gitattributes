@@ -1,0 +1,4 @@
+# The golden corpus records the exact text of the XML parts a report is made
+# of, and Word writes those with CRLF. Git's end-of-line normalisation would
+# rewrite them on checkout, so every corpus case would fail on a fresh clone.
+src/__tests__/__corpus__/** -text

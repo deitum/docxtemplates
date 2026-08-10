@@ -1,0 +1,2 @@
+# throws
+  Error: Error executing command 'nonExistentFunction(`abc`)': ReferenceError: nonExistentFunction is not defined

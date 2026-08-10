@@ -1,0 +1,2 @@
+# throws
+  Error: Error executing command 'nonExistentVariable': ReferenceError: nonExistentVariable is not defined

@@ -1,0 +1,3 @@
+FOR	"company IN companies.filter(o => o.name[0].toUpperCase() === 'A')"	"FOR company IN companies.filter(o => o.name[0].toUpperCase() === 'A')"
+INS	"$company.name.toUpperCase()"	"INS $company.name.toUpperCase()"
+END-FOR	"company"	"END-FOR company"

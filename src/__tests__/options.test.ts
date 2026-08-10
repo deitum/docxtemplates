@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import JSZip from 'jszip';
-import { makeDocx, reportText } from './helpers';
+import { getError, makeDocx, reportText } from './helpers';
 import { createReport } from '../index';
-import { InternalError } from '../errors';
-import { type Context, type SandBox } from '../types';
+import { ErrorId, InternalError, InvalidOptionError } from '../errors';
+import { type RunJsContext, type SandBox } from '../types';
 import { setDebugLogSink } from '../debug';
 
 if (process.env.DEBUG) setDebugLogSink(console.log);
@@ -11,7 +11,13 @@ if (process.env.DEBUG) setDebugLogSink(console.log);
 describe('runJs (custom sandbox)', () => {
   it('runs every snippet through the user-provided sandbox', async () => {
     const seen: { code: string | undefined; hasCtx: boolean }[] = [];
-    const runJs = ({ sandbox, ctx }: { sandbox: SandBox; ctx: Context }) => {
+    const runJs = ({
+      sandbox,
+      ctx,
+    }: {
+      sandbox: SandBox;
+      ctx: RunJsContext;
+    }) => {
       seen.push({ code: sandbox.__code__, hasCtx: ctx.options != null });
       return { modifiedSandbox: sandbox, result: `<${sandbox.__code__}>` };
     };
@@ -176,5 +182,163 @@ describe('data as a resolver function', () => {
     expect(resolver).toHaveBeenCalledTimes(1);
     expect(resolver.mock.calls[0]).toEqual([undefined, undefined]);
     expect(reportText(report)).toEqual('some text\nJohn\nmore text');
+  });
+});
+
+describe('runJs receives a narrowed context', () => {
+  it('exposes the options, the loop variables and the carried sandbox', async () => {
+    // `ctx` holds live references to the engine's state, exactly as it did when
+    // the whole context was handed over, so anything read out of it has to be
+    // read while the call is happening.
+    const seen: { keys: string[]; loopVar?: string; delimiter: string }[] = [];
+    const runJs = ({
+      sandbox,
+      ctx,
+    }: {
+      sandbox: SandBox;
+      ctx: RunJsContext;
+    }) => {
+      seen.push({
+        keys: Object.keys(ctx).sort(),
+        ...(ctx.loops[0] ? { loopVar: ctx.loops[0].varName } : {}),
+        delimiter: ctx.options.cmdDelimiter[0],
+      });
+      // A real sandbox has to evaluate: `FOR` needs an actual array back.
+      const result = new Function(
+        's',
+        `with (s) { return (${String(sandbox.__code__)}); }`
+      )(sandbox);
+      return { modifiedSandbox: sandbox, result };
+    };
+
+    const template = await makeDocx({
+      body: ['+++FOR item IN items+++', '+++$item+++', '+++END-FOR item+++'],
+    });
+    const report = await createReport(
+      { template, data: { items: ['a', 'b'] }, runJs },
+      'JS'
+    );
+
+    expect(reportText(report)).toEqual('a\nb');
+    // The keys are the ones `runJs` was given back when it received the whole
+    // context, so code reading them did not have to change.
+    expect(seen[0]?.keys).toEqual(['jsSandbox', 'loops', 'options', 'vars']);
+    expect(seen[0]?.delimiter).toEqual('+++');
+    expect(seen.map(s => s.loopVar)).toContain('item');
+  });
+});
+
+describe('option validation', () => {
+  const template = () => makeDocx({ body: ['text'] });
+
+  it('rejects an option of the wrong type instead of ignoring it', async () => {
+    // The motivating case: a non-function `errorHandler` used to be replaced
+    // with `null`, so the handler silently never ran.
+    const docx = await template();
+    const err = await getError<InvalidOptionError>(() =>
+      createReport({ template: docx, errorHandler: 'nope' } as never)
+    );
+    expect(err).toBeInstanceOf(InvalidOptionError);
+    expect(err.option).toEqual('errorHandler');
+    expect(err.message).toEqual(
+      "Option 'errorHandler' must be a function, but received a string"
+    );
+    expect(err.properties.id).toEqual(ErrorId.invalidOption);
+  });
+
+  it.each([
+    ['cmdDelimiter', 42],
+    ['cmdDelimiter', ['only-one']],
+    ['literalXmlDelimiter', 7],
+    ['processLineBreaks', 'yes'],
+    ['noSandbox', 1],
+    ['runJs', {}],
+    ['additionalJsContext', 'nope'],
+    ['failFast', 'true'],
+    ['rejectNullish', null],
+    ['fixSmartQuotes', 'x'],
+    ['maximumWalkingDepth', '100'],
+    ['indentXml', 0],
+    ['preserveSpace', 'yes'],
+    ['compressionLevel', '9'],
+    ['commandAliases', { ЕСЛИ: 5 }],
+    ['operatorAliases', []],
+  ])('rejects %s of the wrong type', async (option, value) => {
+    await expect(
+      createReport({ template: await template(), [option]: value } as never)
+    ).rejects.toBeInstanceOf(InvalidOptionError);
+  });
+
+  it('accepts an option explicitly set to undefined', async () => {
+    // Absent and `undefined` mean the same thing, and callers spread objects.
+    await expect(
+      createReport({
+        template: await template(),
+        errorHandler: undefined,
+        failFast: undefined,
+      } as never)
+    ).resolves.toBeInstanceOf(Uint8Array);
+  });
+
+  it('reports a template of the wrong type instead of failing inside JSZip', async () => {
+    const err = await getError<InvalidOptionError>(() =>
+      createReport({ template: { not: 'a docx' } } as never)
+    );
+    expect(err).toBeInstanceOf(InvalidOptionError);
+    expect(err.message).toEqual(
+      "Option 'template' must be a Uint8Array (e.g. a Buffer), an ArrayBuffer " +
+        'or a string, but received an object'
+    );
+  });
+
+  it('reports a missing template', async () => {
+    const err = await getError<InvalidOptionError>(() =>
+      createReport({ data: {} } as never)
+    );
+    expect(err).toBeInstanceOf(InvalidOptionError);
+    expect(err.message).toContain('but received nothing');
+  });
+
+  it('ignores an unknown option, but says so in the debug log', async () => {
+    const lines: string[] = [];
+    setDebugLogSink(msg => lines.push(String(msg)));
+    try {
+      await createReport({
+        template: await template(),
+        procesLineBreaks: true, // typo
+        data: {},
+      } as never);
+    } finally {
+      setDebugLogSink(process.env.DEBUG ? console.log : null);
+    }
+    expect(
+      lines.some(l => l.includes('Ignoring unknown option: procesLineBreaks'))
+    ).toBe(true);
+  });
+
+  it('still accepts every documented option', async () => {
+    await expect(
+      createReport({
+        template: await template(),
+        data: {},
+        queryVars: { a: 1 },
+        cmdDelimiter: ['{', '}'],
+        literalXmlDelimiter: '||',
+        processLineBreaks: true,
+        noSandbox: false,
+        additionalJsContext: {},
+        failFast: true,
+        rejectNullish: false,
+        errorHandler: () => '',
+        fixSmartQuotes: false,
+        processLineBreaksAsNewText: false,
+        maximumWalkingDepth: 1000,
+        indentXml: true,
+        preserveSpace: true,
+        compressionLevel: 1,
+        commandAliases: { ЕСЛИ: 'IF' },
+        operatorAliases: { больше: '>' },
+      })
+    ).resolves.toBeInstanceOf(Uint8Array);
   });
 });

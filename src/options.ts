@@ -5,6 +5,7 @@
  * so the two cannot drift apart.
  */
 import { compileAliases, compileCommandAliases } from './aliases';
+import { validateOptions } from './optionsSchema';
 import { type CreateReportOptions, type UserOptions } from './types';
 
 export const DEFAULT_CMD_DELIMITER = '+++' as const;
@@ -55,6 +56,7 @@ type ResolvableOptions = {
 export function resolveOptions(
   options: ResolvableOptions
 ): CreateReportOptions {
+  validateOptions(options);
   return {
     cmdDelimiter: getCmdDelimiter(options.cmdDelimiter),
     literalXmlDelimiter:
@@ -69,10 +71,7 @@ export function resolveOptions(
     additionalJsContext: options.additionalJsContext ?? {},
     failFast: options.failFast ?? OPTION_DEFAULTS.failFast,
     rejectNullish: options.rejectNullish ?? OPTION_DEFAULTS.rejectNullish,
-    // Anything that isn't callable is treated as "no handler", rather than
-    // failing later at the point of call.
-    errorHandler:
-      typeof options.errorHandler === 'function' ? options.errorHandler : null,
+    errorHandler: options.errorHandler ?? null,
     fixSmartQuotes: options.fixSmartQuotes ?? OPTION_DEFAULTS.fixSmartQuotes,
     maximumWalkingDepth: options.maximumWalkingDepth,
     indentXml: options.indentXml ?? OPTION_DEFAULTS.indentXml,

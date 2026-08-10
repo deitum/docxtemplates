@@ -1,0 +1,3 @@
+QUERY	"exampleQuery"	"QUERY  exampleQuery"
+INS	"a"	"INS a"
+INS	"b"	"INS b"

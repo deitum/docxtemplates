@@ -1,0 +1,6 @@
+FOR	"company IN companies"	"FOR company IN companies"
+INS	"$company.name"	"INS $company.name"
+FOR	"product IN products"	"FOR product IN products"
+INS	"$product.name"	"INS $product.name"
+END-FOR	"product"	"END-FOR product"
+END-FOR	"company"	"END-FOR company"

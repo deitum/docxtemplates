@@ -1,0 +1,57 @@
+# zip entries, in the order they are stored
+  [Content_Types].xml
+  _rels/.rels
+  word/_rels/document.xml.rels
+  word/document.xml
+  word/theme/theme1.xml
+  word/settings.xml
+  docProps/core.xml
+  word/fontTable.xml
+  word/webSettings.xml
+  word/styles.xml
+  docProps/app.xml
+  word/
+
+# path -> sha256
+  [Content_Types].xml  8572d4113715b15382c32291473d196df2f65c0440810bc5fc0215eae65f150d  (1286 bytes)
+  _rels/.rels  e19238d7a71fa7a2490776252686f70e2de6238c87cd509b5e3a3cc07c2ea4df  (590 bytes)
+  docProps/app.xml  a930b1bd05633c51c7e917c237ea79b8d9e88645c6a5a208c15d6dee4d87f1ca  (714 bytes)
+  docProps/core.xml  9bcdf53ad36b4ea1b8b285ddb8aaf98d0ad88c25e213be192dc8cb18841ed30a  (767 bytes)
+  word/_rels/document.xml.rels  b725d5476e76f555fc24ecb908474fd29b671687336e5e1177a5c4c35cb5939f  (817 bytes)
+  word/document.xml  ad7ea6e3012493ce05ef785456ad1bddcc9f5f82c557d1c32774978769cd68e4  (3007 bytes)
+  word/fontTable.xml  2caa9512c82d166b7ed5e65e47d03f702533b5aa51ee2d40dde928c0efab806c  (1660 bytes)
+  word/settings.xml  ea49369d6db80dcc356f55f880b18a566e103741531d0568a2d0bc631e20da34  (2897 bytes)
+  word/styles.xml  38e33a6e7c38c53e187885b18ead42e5ec0a8aad968b0328ef1da176e93d43b5  (31396 bytes)
+  word/theme/theme1.xml  70a70d84494772c1855ec6c2f9a16e0fc6cc41bdb0ce3743563ed943b63e07b8  (8393 bytes)
+  word/webSettings.xml  cdd78f3a0a2e0c3230651a90f72450805ea4432a84fc78528b0045121ca3f512  (809 bytes)
+
+# [Content_Types].xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.ms-word.document.macroEnabled.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>
+
+# word/_rels/document.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/></Relationships>
+
+# word/document.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex wp14">
+  <w:body>
+    <w:p w14:paraId="2E1EE055" w14:textId="77777777" w:rsidR="0094382F" w:rsidRDefault="0094382F" w:rsidP="0094382F">
+      <w:r>
+        <w:t xml:space="preserve">4</w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="3DCF0DFB" w14:textId="7190F7FD" w:rsidR="0094382F" w:rsidRDefault="0094382F" w:rsidP="0094382F">
+      <w:r>
+        <w:t xml:space="preserve">enigrebua</w:t>
+      </w:r>
+    </w:p>
+    <w:sectPr w:rsidR="0094382F">
+      <w:pgSz w:w="11906" w:h="16838"/>
+      <w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="708" w:footer="708" w:gutter="0"/>
+      <w:cols w:space="708"/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

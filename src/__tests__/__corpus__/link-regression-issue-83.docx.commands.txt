@@ -1,0 +1,4 @@
+FOR	"company IN companies"	"FOR company IN companies"
+INS	"$company.name"	"INS $company.name"
+LINK	"({ url: 'http://www.test.com', label: 'Link' })"	"LINK ({ url: 'http://www.test.com', label: 'Link' })"
+END-FOR	"company"	"END-FOR company"

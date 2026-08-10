@@ -87,6 +87,16 @@ export default tseslint.config(
     ...vitest.configs.recommended,
   },
 
+  {
+    // These generate one case per fixture / per sandbox mode, so their titles
+    // are necessarily computed rather than literal.
+    files: [
+      'src/__tests__/golden_corpus.test.ts',
+      'src/__tests__/sandbox.test.ts',
+    ],
+    rules: { 'vitest/valid-title': 'off' },
+  },
+
   // Must stay last: turns off every rule that would fight Prettier.
   prettier
 );

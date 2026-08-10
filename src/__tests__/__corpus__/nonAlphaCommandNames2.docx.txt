@@ -1,0 +1,163 @@
+# zip entries, in the order they are stored
+  [Content_Types].xml
+  _rels/.rels
+  word/_rels/document.xml.rels
+  word/document.xml
+  word/theme/theme1.xml
+  word/settings.xml
+  word/fontTable.xml
+  word/webSettings.xml
+  docProps/app.xml
+  docProps/core.xml
+  word/styles.xml
+  word/
+
+# path -> sha256
+  [Content_Types].xml  dfa90f373b8fd8147ee3e4bfe1ee059e536cc1b068f7ec140c3fc0e6554f331a  (1312 bytes)
+  _rels/.rels  e19238d7a71fa7a2490776252686f70e2de6238c87cd509b5e3a3cc07c2ea4df  (590 bytes)
+  docProps/app.xml  1278c33a43280ca62558180f06bc2c5d5619b4180b6383ccae08b13b9642a8aa  (711 bytes)
+  docProps/core.xml  40cce4ef7d014e90cd3fecc063fe0b8e44c86ed84a6df18c234be2f3f647e7ab  (767 bytes)
+  word/_rels/document.xml.rels  b725d5476e76f555fc24ecb908474fd29b671687336e5e1177a5c4c35cb5939f  (817 bytes)
+  word/document.xml  8e4191072ddfee8b7b08c51bfd7181d940d885c56d0f167607e97a100ac19e7e  (7637 bytes)
+  word/fontTable.xml  73fbc478d0394a571a4dd7d497c1959446430869359b702aefd0756ab5404705  (2461 bytes)
+  word/settings.xml  b8fbdd574c5f62f70e81587e26eeff29161e6581193f06178f829838c18d7400  (3090 bytes)
+  word/styles.xml  a19273756fa0e3019121f0878c1edb01d22a7603ccb63598f74123e47169607d  (33328 bytes)
+  word/theme/theme1.xml  70a70d84494772c1855ec6c2f9a16e0fc6cc41bdb0ce3743563ed943b63e07b8  (8393 bytes)
+  word/webSettings.xml  7c6e25fe1e3b8f98f971bff6c6240ce1dd66d6c53de379abb02889a36ce406fe  (2167 bytes)
+
+# [Content_Types].xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>
+
+# word/_rels/document.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/></Relationships>
+
+# word/document.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid wp14">
+  <w:body>
+    <w:p w14:paraId="6BF6C63C" w14:textId="03D60101" w:rsidR="00F35C33" w:rsidRPr="00F95E1F" w:rsidRDefault="00D85011" w:rsidP="00F95E1F">
+      <w:bookmarkStart w:id="0" w:name="_GoBack"/>
+      <w:bookmarkEnd w:id="0"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve">hong</w:t>
+      </w:r>
+      <w:proofErr w:type="spellStart"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:rPr>
+          <w:rFonts w:ascii="MS Gothic" w:eastAsia="MS Gothic" w:hAnsi="MS Gothic" w:cs="MS Gothic" w:hint="eastAsia"/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellEnd"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="60A37F38" w14:textId="4190B879" w:rsidR="00D85011" w:rsidRPr="00F95E1F" w:rsidRDefault="00D85011" w:rsidP="00F95E1F"/>
+    <w:p w14:paraId="297A6708" w14:textId="0C0851F2" w:rsidR="00D85011" w:rsidRPr="00F95E1F" w:rsidRDefault="00D85011" w:rsidP="00F95E1F">
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve">junyao</w:t>
+      </w:r>
+      <w:proofErr w:type="spellStart"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:rPr>
+          <w:rFonts w:ascii="Microsoft JhengHei" w:eastAsia="Microsoft JhengHei" w:hAnsi="Microsoft JhengHei" w:cs="Microsoft JhengHei" w:hint="eastAsia"/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellEnd"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="6FE1B114" w14:textId="315C8C84" w:rsidR="00D85011" w:rsidRPr="00F95E1F" w:rsidRDefault="00D85011" w:rsidP="00F95E1F"/>
+    <w:p w14:paraId="6742E140" w14:textId="43F12D8C" w:rsidR="00F95E1F" w:rsidRPr="00F95E1F" w:rsidRDefault="00F95E1F" w:rsidP="00F95E1F">
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve">hong</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellStart"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:rPr>
+          <w:rFonts w:ascii="MS Gothic" w:eastAsia="MS Gothic" w:hAnsi="MS Gothic" w:cs="MS Gothic" w:hint="eastAsia"/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellEnd"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="0BC84266" w14:textId="77777777" w:rsidR="00F95E1F" w:rsidRPr="00F95E1F" w:rsidRDefault="00F95E1F" w:rsidP="00F95E1F"/>
+    <w:p w14:paraId="46877074" w14:textId="338B35A6" w:rsidR="00F95E1F" w:rsidRDefault="00F95E1F" w:rsidP="00F95E1F">
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve">junyao</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellStart"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:rPr>
+          <w:rFonts w:ascii="Microsoft JhengHei" w:eastAsia="Microsoft JhengHei" w:hAnsi="Microsoft JhengHei" w:cs="Microsoft JhengHei" w:hint="eastAsia"/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellEnd"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="7E960016" w14:textId="5B8E4394" w:rsidR="00F95E1F" w:rsidRDefault="00F95E1F" w:rsidP="00F95E1F"/>
+    <w:p w14:paraId="107BB8B5" w14:textId="46BE478F" w:rsidR="00F95E1F" w:rsidRPr="00F95E1F" w:rsidRDefault="00F95E1F" w:rsidP="00F95E1F">
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve">hong</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellStart"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:rPr>
+          <w:rFonts w:ascii="MS Gothic" w:eastAsia="MS Gothic" w:hAnsi="MS Gothic" w:cs="MS Gothic" w:hint="eastAsia"/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellEnd"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="7569C168" w14:textId="77777777" w:rsidR="00F95E1F" w:rsidRPr="00F95E1F" w:rsidRDefault="00F95E1F" w:rsidP="00F95E1F"/>
+    <w:p w14:paraId="752DA1D2" w14:textId="511C7589" w:rsidR="00F95E1F" w:rsidRPr="00F95E1F" w:rsidRDefault="00F95E1F" w:rsidP="00F95E1F">
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve">junyao</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellStart"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:rPr>
+          <w:rFonts w:ascii="Microsoft JhengHei" w:eastAsia="Microsoft JhengHei" w:hAnsi="Microsoft JhengHei" w:cs="Microsoft JhengHei" w:hint="eastAsia"/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellEnd"/>
+      <w:r w:rsidRPr="00F95E1F">
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="7BC35AB4" w14:textId="77777777" w:rsidR="00F95E1F" w:rsidRPr="00F95E1F" w:rsidRDefault="00F95E1F" w:rsidP="00F95E1F"/>
+    <w:sectPr w:rsidR="00F95E1F" w:rsidRPr="00F95E1F" w:rsidSect="0019199C">
+      <w:pgSz w:w="11900" w:h="16840"/>
+      <w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="708" w:footer="708" w:gutter="0"/>
+      <w:cols w:space="708"/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

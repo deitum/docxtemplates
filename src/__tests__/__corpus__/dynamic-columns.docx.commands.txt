@@ -1,0 +1,3 @@
+FOR	"column IN columns"	"FOR column IN columns"
+INS	"$column"	"INS $column"
+END-FOR	"column"	"END-FOR column"

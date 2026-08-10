@@ -1,0 +1,2 @@
+EXEC	"foo = (str) => str + ' there!';"	"EXEC foo = (str) => str + ' there!';"
+INS	"foo('Hello');"	"INS foo('Hello');"

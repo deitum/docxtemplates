@@ -1,0 +1,354 @@
+# zip entries, in the order they are stored
+  [Content_Types].xml
+  _rels/.rels
+  word/_rels/document.xml.rels
+  word/document.xml
+  word/theme/theme1.xml
+  word/settings.xml
+  docProps/core.xml
+  word/fontTable.xml
+  word/webSettings.xml
+  word/styles.xml
+  docProps/app.xml
+  word/
+
+# path -> sha256
+  [Content_Types].xml  dfa90f373b8fd8147ee3e4bfe1ee059e536cc1b068f7ec140c3fc0e6554f331a  (1312 bytes)
+  _rels/.rels  e19238d7a71fa7a2490776252686f70e2de6238c87cd509b5e3a3cc07c2ea4df  (590 bytes)
+  docProps/app.xml  42c925a37245be79fac624227fd7d3e055fb54f9d14ca84a313e71d369babfcb  (714 bytes)
+  docProps/core.xml  ec9962e20c3f9c0d7ffbde82dc98a56911f49f67ee62fa8ff1617fee6a559229  (767 bytes)
+  word/_rels/document.xml.rels  b725d5476e76f555fc24ecb908474fd29b671687336e5e1177a5c4c35cb5939f  (817 bytes)
+  word/document.xml  e20fa086dc3d4db4d0d99c8ff21b4cdf936ba968de65c39e03ae9b627ae36979  (13153 bytes)
+  word/fontTable.xml  c46f9f24b9f3e4b20226faeea26ce0f0b52d86b995e005f0c5b669f3663ef81b  (1751 bytes)
+  word/settings.xml  e3d7ebd5478a4cf10b1b2aa5d042f76574da4639ab631d930afaa983a6c18a09  (2997 bytes)
+  word/styles.xml  5fa71d430d4a13dbe64ecaa5f91396e85a7d0bd69d40d906a1e8bf1ef0699992  (32857 bytes)
+  word/theme/theme1.xml  70a70d84494772c1855ec6c2f9a16e0fc6cc41bdb0ce3743563ed943b63e07b8  (8393 bytes)
+  word/webSettings.xml  152c574a89b4b80a15d960dae28810e2d1f264557f8c5087c931acf645cda82f  (900 bytes)
+
+# [Content_Types].xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>
+
+# word/_rels/document.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/></Relationships>
+
+# word/document.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh wp14">
+  <w:body>
+    <w:tbl>
+      <w:tblPr>
+        <w:tblStyle w:val="TableGrid"/>
+        <w:tblW w:w="0" w:type="auto"/>
+        <w:tblLayout w:type="fixed"/>
+        <w:tblLook w:val="06A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="1" w:noVBand="1"/>
+      </w:tblPr>
+      <w:tblGrid>
+        <w:gridCol w:w="3255"/>
+        <w:gridCol w:w="2025"/>
+        <w:gridCol w:w="4080"/>
+      </w:tblGrid>
+      <w:tr w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidTr="00AD5F16">
+        <w:trPr>
+          <w:trHeight w:val="300"/>
+        </w:trPr>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2025" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">r1</w:t>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">-</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">c1</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2025" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">r1</w:t>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">-</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">c2</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2025" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">r1</w:t>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">-</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">c3</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+      <w:tr w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidTr="00AD5F16">
+        <w:trPr>
+          <w:trHeight w:val="300"/>
+        </w:trPr>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2025" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">r2</w:t>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">-</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">c1</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2025" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">r2</w:t>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">-</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">c2</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="2025" w:type="dxa"/>
+          </w:tcPr>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">r2</w:t>
+              <w:t xml:space="preserve"> </w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">-</w:t>
+            </w:r>
+          </w:p>
+          <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00AD5F16">
+            <w:pPr>
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00A70780">
+              <w:rPr>
+                <w:rFonts w:cstheme="minorHAnsi"/>
+              </w:rPr>
+              <w:t xml:space="preserve">c3</w:t>
+            </w:r>
+          </w:p>
+        </w:tc>
+      </w:tr>
+    </w:tbl>
+    <w:p w:rsidR="00904538" w:rsidRPr="00A70780" w:rsidRDefault="00904538" w:rsidP="00904538">
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:cstheme="minorHAnsi"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p w:rsidR="00486C39" w:rsidRPr="00A70780" w:rsidRDefault="00486C39">
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:cstheme="minorHAnsi"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:sectPr w:rsidR="00486C39" w:rsidRPr="00A70780">
+      <w:pgSz w:w="12240" w:h="15840"/>
+      <w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/>
+      <w:cols w:space="720"/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

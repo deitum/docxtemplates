@@ -1,0 +1,5 @@
+FOR	"company IN companies"	"FOR company IN companies"
+INS	"$company.name"	"INS $company.name"
+IF	"true"	"IF true"
+END-FOR	"company"	"END-FOR company"
+END-IF	""	"END-IF"

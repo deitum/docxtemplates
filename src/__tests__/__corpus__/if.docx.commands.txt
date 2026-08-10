@@ -1,0 +1,4 @@
+IF	"4 > 3"	"IF 4 > 3"
+END-IF	""	"END-IF"
+IF	"4 < 3"	"IF 4 < 3"
+END-IF	""	"END-IF"

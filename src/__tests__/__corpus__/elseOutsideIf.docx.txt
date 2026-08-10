@@ -1,0 +1,2 @@
+# throws
+  Error: Unexpected ELSE outside of IF statement context: ELSE

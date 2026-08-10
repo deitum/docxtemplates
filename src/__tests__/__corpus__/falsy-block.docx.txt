@@ -1,0 +1,230 @@
+# zip entries, in the order they are stored
+  [Content_Types].xml
+  _rels/.rels
+  word/document.xml
+  word/_rels/document.xml.rels
+  word/media/image1.jpeg
+  word/media/image2.jpeg
+  word/theme/theme1.xml
+  word/settings.xml
+  word/styles.xml
+  word/webSettings.xml
+  word/fontTable.xml
+  docProps/core.xml
+  docProps/app.xml
+  word/
+
+# path -> sha256
+  [Content_Types].xml  0f8f2545bad82a1f8f7041d6f898d289c22a19e9aeb3d05aa2b7944d225c4a19  (1364 bytes)
+  _rels/.rels  e19238d7a71fa7a2490776252686f70e2de6238c87cd509b5e3a3cc07c2ea4df  (590 bytes)
+  docProps/app.xml  0b16a152dfd7f38664166bae969744332038d08871fa710e3076792caf1628b9  (987 bytes)
+  docProps/core.xml  0ffb9ff8bc3388f5adf9e3ab47b91b5ecf95d4d27ebddb553fcd8d1bfb40b907  (747 bytes)
+  word/_rels/document.xml.rels  d0eca0dd0d533f40af1b688820cba576ff201a0b2b1e14ff28cd4e34f3c8f629  (1083 bytes)
+  word/document.xml  1badcbd449aef91a82e20a62df57507bfd28da2ee73bd37154625292897c7081  (9887 bytes)
+  word/fontTable.xml  dc0197d41fcf41f13af1e6f3d5ade40f18402529c77244cee8b13afb250cd6ee  (1926 bytes)
+  word/media/image1.jpeg  c0c6a0d4fe11a68418f87e80e32882a3455bfcd8fa388d9ae65fb84a19736551  (33055 bytes)
+  word/media/image2.jpeg  a294b617c719a476921e6f4ea7b9a2eaef926991e0e021d578dbf1cb8fa046c0  (30705 bytes)
+  word/settings.xml  504dcd19a8e604103038933b86e307f58aa47173da901a23a696a2f1d051f507  (4599 bytes)
+  word/styles.xml  603463426c5bb84898c810e46be5b35388d6bf8bb37eb177eb6c05de6eaedef7  (31662 bytes)
+  word/theme/theme1.xml  1b6a2c1d4d0c4b153096c30de17022de273656501d6d3cca91970f632e7f6623  (8394 bytes)
+  word/webSettings.xml  9e5ff45170cc4b468781099a7fb44c2361911247cdbcbbfbc0d513a0427ffd64  (2757 bytes)
+
+# [Content_Types].xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>
+
+# word/_rels/document.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/><Relationship Id="rId7" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/image2.jpeg"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/image1.jpeg"/></Relationships>
+
+# word/document.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:oel="http://schemas.microsoft.com/office/2019/extlst" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cex="http://schemas.microsoft.com/office/word/2018/wordml/cex" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16="http://schemas.microsoft.com/office/word/2018/wordml" xmlns:w16du="http://schemas.microsoft.com/office/word/2023/wordml/word16du" xmlns:w16sdtdh="http://schemas.microsoft.com/office/word/2020/wordml/sdtdatahash" xmlns:w16sdtfl="http://schemas.microsoft.com/office/word/2024/wordml/sdtformatlock" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid w16 w16cex w16sdtdh w16sdtfl w16du wp14">
+  <w:body>
+    <w:p w14:paraId="50F39454" w14:textId="422C6EB3" w:rsidR="00DD1849" w:rsidRPr="00CA417D" w:rsidRDefault="00DD1849" w:rsidP="00DD1849">
+      <w:pPr>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+        <w:t xml:space="preserve">Image within </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+        <w:t xml:space="preserve">truthy</w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+        <w:t xml:space="preserve"> block</w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="33B0ACC8" w14:textId="77777777" w:rsidR="000243B1" w:rsidRPr="00CA417D" w:rsidRDefault="000243B1" w:rsidP="000243B1">
+      <w:pPr>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+      </w:pPr>
+      <w:r w:rsidRPr="00CA417D">
+        <w:rPr>
+          <w:noProof/>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+        <w:drawing>
+          <wp:inline distT="0" distB="0" distL="0" distR="0" wp14:anchorId="658A41D1" wp14:editId="040BDA01">
+            <wp:extent cx="1371600" cy="913039"/>
+            <wp:effectExtent l="0" t="0" r="0" b="1905"/>
+            <wp:docPr id="2115928823" name="Picture 1"/>
+            <wp:cNvGraphicFramePr>
+              <a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/>
+            </wp:cNvGraphicFramePr>
+            <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+              <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                <pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                  <pic:nvPicPr>
+                    <pic:cNvPr id="603992497" name="Picture 603992497"/>
+                    <pic:cNvPicPr/>
+                  </pic:nvPicPr>
+                  <pic:blipFill>
+                    <a:blip r:embed="rId4" cstate="print">
+                      <a:extLst>
+                        <a:ext uri="{28A0092B-C50C-407E-A947-70E740481C1C}">
+                          <a14:useLocalDpi xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" val="0"/>
+                        </a:ext>
+                      </a:extLst>
+                    </a:blip>
+                    <a:stretch>
+                      <a:fillRect/>
+                    </a:stretch>
+                  </pic:blipFill>
+                  <pic:spPr>
+                    <a:xfrm>
+                      <a:off x="0" y="0"/>
+                      <a:ext cx="1398655" cy="931049"/>
+                    </a:xfrm>
+                    <a:prstGeom prst="rect">
+                      <a:avLst/>
+                    </a:prstGeom>
+                  </pic:spPr>
+                </pic:pic>
+              </a:graphicData>
+            </a:graphic>
+          </wp:inline>
+        </w:drawing>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="3ECC4B0B" w14:textId="4C45F24B" w:rsidR="00DD1849" w:rsidRPr="00CA417D" w:rsidRDefault="00DD1849" w:rsidP="00DD1849">
+      <w:pPr>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+      </w:pPr>
+      <w:r w:rsidRPr="00CA417D">
+        <w:rPr>
+          <w:noProof/>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+        <w:drawing>
+          <wp:anchor distT="0" distB="0" distL="114300" distR="114300" simplePos="0" relativeHeight="251660288" behindDoc="0" locked="0" layoutInCell="1" allowOverlap="1" wp14:anchorId="3E67AEBA" wp14:editId="2AA6E539">
+            <wp:simplePos x="0" y="0"/>
+            <wp:positionH relativeFrom="column">
+              <wp:posOffset>3442607</wp:posOffset>
+            </wp:positionH>
+            <wp:positionV relativeFrom="paragraph">
+              <wp:posOffset>23495</wp:posOffset>
+            </wp:positionV>
+            <wp:extent cx="1371600" cy="913039"/>
+            <wp:effectExtent l="0" t="0" r="0" b="1905"/>
+            <wp:wrapNone/>
+            <wp:docPr id="2115928824" name="Picture 1"/>
+            <wp:cNvGraphicFramePr>
+              <a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/>
+            </wp:cNvGraphicFramePr>
+            <a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+              <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                <pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                  <pic:nvPicPr>
+                    <pic:cNvPr id="603992497" name="Picture 603992497"/>
+                    <pic:cNvPicPr/>
+                  </pic:nvPicPr>
+                  <pic:blipFill>
+                    <a:blip r:embed="rId5" cstate="print">
+                      <a:extLst>
+                        <a:ext uri="{28A0092B-C50C-407E-A947-70E740481C1C}">
+                          <a14:useLocalDpi xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main" val="0"/>
+                        </a:ext>
+                      </a:extLst>
+                    </a:blip>
+                    <a:stretch>
+                      <a:fillRect/>
+                    </a:stretch>
+                  </pic:blipFill>
+                  <pic:spPr>
+                    <a:xfrm>
+                      <a:off x="0" y="0"/>
+                      <a:ext cx="1371600" cy="913039"/>
+                    </a:xfrm>
+                    <a:prstGeom prst="rect">
+                      <a:avLst/>
+                    </a:prstGeom>
+                  </pic:spPr>
+                </pic:pic>
+              </a:graphicData>
+            </a:graphic>
+            <wp14:sizeRelH relativeFrom="page">
+              <wp14:pctWidth>0</wp14:pctWidth>
+            </wp14:sizeRelH>
+            <wp14:sizeRelV relativeFrom="page">
+              <wp14:pctHeight>0</wp14:pctHeight>
+            </wp14:sizeRelV>
+          </wp:anchor>
+        </w:drawing>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+        <w:t xml:space="preserve">Anchored image within </w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+        <w:t xml:space="preserve">truthy</w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+        <w:t xml:space="preserve"> block</w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="0E0B60B9" w14:textId="5AD6B4DF" w:rsidR="000243B1" w:rsidRPr="00CA417D" w:rsidRDefault="000243B1" w:rsidP="000243B1">
+      <w:pPr>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:p w14:paraId="52CDE8CE" w14:textId="648BDFDA" w:rsidR="00DF7B61" w:rsidRPr="00CA417D" w:rsidRDefault="00DF7B61" w:rsidP="00CF06DC">
+      <w:pPr>
+        <w:rPr>
+          <w:lang w:val="en-GB"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+    <w:sectPr w:rsidR="00DF7B61" w:rsidRPr="00CA417D">
+      <w:pgSz w:w="11906" w:h="16838"/>
+      <w:pgMar w:top="1417" w:right="1417" w:bottom="1417" w:left="1417" w:header="708" w:footer="708" w:gutter="0"/>
+      <w:cols w:space="708"/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

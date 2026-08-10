@@ -1,5 +1,11 @@
 import { BUFFER_TAGS } from './ooxml';
-import { type Context, type CreateReportOptions } from './types';
+import { newResources } from './resources';
+import {
+  type Context,
+  type CreateReportOptions,
+  type Scope,
+  type WalkState,
+} from './types';
 
 /**
  * The mutable state of one pass over one XML part. `createReport` builds a
@@ -8,36 +14,43 @@ import { type Context, type CreateReportOptions } from './types';
  */
 export function newContext(
   options: CreateReportOptions,
-  imageAndShapeIdIncrement = 0
+  lastImageAndShapeId = 0
 ): Context {
   return {
-    gCntIf: 0,
-    gCntEndIf: 0,
+    options,
+    walk: newWalkState(),
+    scope: newScope(),
+    resources: newResources(lastImageAndShapeId),
+  };
+}
+
+function newWalkState(): WalkState {
+  return {
     level: 1,
-    fCmd: false,
-    cmd: '',
-    fSeekQuery: false,
+    jumpRequested: false,
     buffers: Object.fromEntries(
       BUFFER_TAGS.map(tag => [
         tag,
-        { text: '', cmds: '', fInsertedText: false },
+        { text: '', cmds: '', hasInsertedText: false },
       ])
-    ) as Context['buffers'],
-    imageAndShapeIdIncrement,
-    images: {},
-    linkId: 0,
-    links: {},
-    htmlId: 0,
-    htmls: {},
+    ) as WalkState['buffers'],
+    isCollectingCommand: false,
+    command: '',
+    openIfCount: 0,
+    closedIfCount: 0,
+    // To verify we don't have a nested IF within the same `w:p` or `w:tr` tag
+    ifByParagraph: new Map(),
+    ifByTableRow: new Map(),
+    ifNames: new Map(),
+  };
+}
+
+function newScope(): Scope {
+  return {
     // Keyed by names taken from the template, hence the null prototype: a plain
     // object would report `toString` and friends as defined.
     vars: Object.create(null),
     loops: [],
-    fJump: false,
     shorthands: Object.create(null),
-    options,
-    // To verify we don't have a nested IF within the same `w:p` or `w:tr` tag
-    pIfCheckMap: new Map(),
-    trIfCheckMap: new Map(),
   };
 }

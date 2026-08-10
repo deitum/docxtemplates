@@ -1,0 +1,54 @@
+# zip entries, in the order they are stored
+  [Content_Types].xml
+  _rels/.rels
+  word/_rels/document.xml.rels
+  word/document.xml
+  word/media/image1.jpeg
+  word/theme/_rels/theme1.xml.rels
+  word/theme/theme1.xml
+  word/settings.xml
+  word/styles.xml
+  word/webSettings.xml
+  docProps/core.xml
+  word/numbering.xml
+  word/fontTable.xml
+  docProps/app.xml
+  word/
+
+# path -> sha256
+  [Content_Types].xml  d031fe7ffe9b425c84195c40a47a41a775475bbd7705b48cc142e31eccaa2bfa  (1497 bytes)
+  _rels/.rels  e19238d7a71fa7a2490776252686f70e2de6238c87cd509b5e3a3cc07c2ea4df  (590 bytes)
+  docProps/app.xml  5c66824cb1045632c330183fb48189fd77c6a8f23d8d0f3e6d218eacbaaa7a79  (712 bytes)
+  docProps/core.xml  09ce5401a4eb181665118963fd8f177a76f8cc898c90026e9bd4686c34e47e89  (760 bytes)
+  word/_rels/document.xml.rels  88f80560ab13c082cc73a423a90131d6040dbb0ef7e655d797a214a2f481cf8f  (950 bytes)
+  word/document.xml  87ffc8d536088f765afec61ba271fcec0b9c0fae54668b47fbaec755e680ba08  (1689 bytes)
+  word/fontTable.xml  43f19a00fefd2200db5159beb223ba6bb6811bdfe90d3c43fa8493b606f7cea8  (2286 bytes)
+  word/media/image1.jpeg  0ed47c6580c7ac6d506026c728a40985bd06acfe2dfd0947c0590dfff98b15ac  (49384 bytes)
+  word/numbering.xml  276cf28bbd0085c768f6e196384e9e14b5e851dc3823651a6e51a7980843445a  (4829 bytes)
+  word/settings.xml  d5a9de749f4a9a8ea04d0c05527e4045ad6be807c8baecafaba55c55ce0b4850  (3610 bytes)
+  word/styles.xml  992ba63244119f491419deda8d8ecb4c82ab92d096ba024e6dec743a7854cb25  (62015 bytes)
+  word/theme/_rels/theme1.xml.rels  551874bae68eb9dcecb1875260e298e5644e8cfa6a4729e3ed687d419fdf5557  (293 bytes)
+  word/theme/theme1.xml  01857cd04d871d1c3523b9bec175acef398859e913b247122597dc37546d1cb4  (5233 bytes)
+  word/webSettings.xml  b03f0a862cb292e531c69288a893fed5ccffb95dc869d6bbae9985d8aa7ed7ea  (477 bytes)
+
+# [Content_Types].xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>
+
+# word/_rels/document.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering" Target="numbering.xml"/><Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/></Relationships>
+
+# word/document.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
+  <w:body>
+    <w:p w14:paraId="646BC231" w14:textId="77777777" w:rsidR="00CD7172" w:rsidRPr="00502BEA" w:rsidRDefault="00CD7172" w:rsidP="00502BEA"/>
+    <w:sectPr w:rsidR="00CD7172" w:rsidRPr="00502BEA" w:rsidSect="00143BCE">
+      <w:pgSz w:w="11900" w:h="16840"/>
+      <w:pgMar w:top="1440" w:right="1800" w:bottom="1440" w:left="1800" w:header="708" w:footer="708" w:gutter="0"/>
+      <w:cols w:space="708"/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

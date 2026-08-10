@@ -1,0 +1,3 @@
+IMAGE	"getImage()"	"IMAGE getImage()"
+IMAGE	"getImage45()"	"IMAGE getImage45()"
+IMAGE	"getImage180()"	"IMAGE getImage180()"

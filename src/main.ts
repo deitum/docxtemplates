@@ -1,6 +1,4 @@
-import { type CommandProcessor } from './commands/execute';
 import { findHighestImgId } from './commands/media';
-import { getCommand, splitCommand } from './commands/parse';
 import { newContext } from './context';
 import { logger } from './debug';
 import {
@@ -10,8 +8,10 @@ import {
   type TemplatePart,
 } from './docx/parts';
 import { writePartResources } from './docx/relationships';
+import { withPart } from './errors';
 import { PackagePath, partPathOf } from './ooxml';
 import { resolveOptions } from './options';
+import { validateTemplate } from './optionsSchema';
 import preprocessTemplate from './preprocessTemplate';
 import {
   type BuiltInCommand,
@@ -23,7 +23,8 @@ import {
   type UserOptions,
   type ZipInput,
 } from './types';
-import { extractQuery, produceJsReport, walkTemplate } from './walk';
+import { compileTemplate, extractQuery, resolveSite } from './template/compile';
+import { produceJsReport } from './walk';
 import { buildXml } from './xml';
 import { zipSave, zipSetText } from './zip';
 
@@ -70,6 +71,7 @@ async function createReport(
 ): Promise<Node | string | Uint8Array> {
   logger.debug('Report options:', { attach: options });
   const { template, data, queryVars } = options;
+  validateTemplate(template);
   const createOptions = resolveOptions(options);
   const xmlOptions = {
     literalXmlDelimiter: createOptions.literalXmlDelimiter,
@@ -93,7 +95,7 @@ async function createReport(
   let queryResult: ReportData;
   if (typeof data === 'function') {
     logger.debug('Looking for the query in the template...');
-    const query = await extractQuery(mainPart.template, createOptions);
+    const query = extractQuery(mainPart.template, createOptions);
     logger.debug(`Query: ${query || 'no query found'}`);
     queryResult = await data(query, queryVars);
   } else {
@@ -117,9 +119,18 @@ async function createReport(
     logger.debug(`Generating report for ${part.name}...`);
     // A fresh context per part: only the image/shape ids carry over.
     const ctx = newContext(createOptions, lastImageAndShapeId);
-    const result = await produceJsReport(queryResult, part.template, ctx);
-    if (result.status === 'errors') throw result.errors;
-    lastImageAndShapeId = ctx.imageAndShapeIdIncrement;
+    // The one place that knows which part is being rendered, and so the one
+    // place that can say which part an error came from. A report is built from
+    // `document.xml` plus every header and footer, and with `failFast: false`
+    // their errors all end up in the same array.
+    let result;
+    try {
+      result = await produceJsReport(queryResult, part.template, ctx);
+    } catch (err) {
+      throw withPart(err, part.name);
+    }
+    if (result.status === 'errors') throw withPart(result.errors, part.name);
+    lastImageAndShapeId = ctx.resources.lastShapeId;
 
     // The probes are a testing shortcut into the main document, and return
     // before the package is assembled.
@@ -195,23 +206,15 @@ export async function listCommands(
   ];
 
   const commands: CommandSummary[] = [];
-  const collectCommand: CommandProcessor = async (_data, _node, ctx) => {
-    const raw = getCommand(ctx.cmd, ctx.shorthands, ctx.options);
-    ctx.cmd = ''; // flush the context
-    const { cmdName, cmdRest: code } = splitCommand(
-      raw,
-      ctx.options.operatorAliases
-    );
-    // `CMD_NODE` is scaffolding left behind by `preprocessTemplate`, not
-    // something the template author wrote.
-    if (cmdName != null && cmdName !== Command.CMD_NODE) {
-      commands.push({ raw, type: cmdName as BuiltInCommand, code });
-    }
-    return undefined;
-  };
-
   for (const part of parts) {
-    await walkTemplate(undefined, part, newContext(options), collectCommand);
+    for (const site of compileTemplate(part, options.cmdDelimiter).commands) {
+      const { raw, name, code } = resolveSite(site, options);
+      // `CMD_NODE` is scaffolding left behind by `preprocessTemplate`, not
+      // something the template author wrote.
+      if (name != null && name !== Command.CMD_NODE) {
+        commands.push({ raw, type: name as BuiltInCommand, code });
+      }
+    }
   }
   return commands;
 }

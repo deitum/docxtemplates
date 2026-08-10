@@ -1,0 +1,96 @@
+# zip entries, in the order they are stored
+  [Content_Types].xml
+  _rels/.rels
+  word/_rels/document.xml.rels
+  word/document.xml
+  word/theme/theme1.xml
+  word/settings.xml
+  word/fontTable.xml
+  word/webSettings.xml
+  docProps/app.xml
+  docProps/core.xml
+  word/styles.xml
+  word/
+
+# path -> sha256
+  [Content_Types].xml  dfa90f373b8fd8147ee3e4bfe1ee059e536cc1b068f7ec140c3fc0e6554f331a  (1312 bytes)
+  _rels/.rels  e19238d7a71fa7a2490776252686f70e2de6238c87cd509b5e3a3cc07c2ea4df  (590 bytes)
+  docProps/app.xml  80064015bd87a3075fe3508da5b3492e1747d96be0096cf57aa97af971a637cf  (719 bytes)
+  docProps/core.xml  045df06bbe6d9e3c777af67da08349e0d7d16cf0034572fd19c976559124a350  (769 bytes)
+  word/_rels/document.xml.rels  b725d5476e76f555fc24ecb908474fd29b671687336e5e1177a5c4c35cb5939f  (817 bytes)
+  word/document.xml  d36fbe5129d8ef1bf002e2c1ab627f43ed7677ada1af8f832cada46d2ef0345d  (3096 bytes)
+  word/fontTable.xml  d6f9459b9743a7ef83947d8c474c8df6bbe0cbe58be8f766d0cd1fb5992df5c5  (1354 bytes)
+  word/settings.xml  05b388ccbf8ee78e0b95d38af1b91da679f167a5c60acf179b1c7f2cea677cb6  (2754 bytes)
+  word/styles.xml  f3edec0cce0deef57e1033fc96eda17e0adceb4e4912b4b68c59e213c14db437  (30801 bytes)
+  word/theme/theme1.xml  040607f8a3991530db11345e5f959e63c1447b25369b46ce8645b0ace2d6980f  (6797 bytes)
+  word/webSettings.xml  bd61ef210558842157cfa310ad326ae5b5bc5a7c6cee9a79cf973a35b103fd59  (503 bytes)
+
+# [Content_Types].xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>
+
+# word/_rels/document.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/></Relationships>
+
+# word/document.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 wp14">
+  <w:body>
+    <w:p w:rsidR="00426180" w:rsidRDefault="00BC1832">
+      <w:r w:rsidRPr="00BC1832">
+        <w:t xml:space="preserve">Simple case: all in a single node:</w:t>
+        <w:t xml:space="preserve">bar</w:t>
+      </w:r>
+    </w:p>
+    <w:p w:rsidR="00BC1832" w:rsidRDefault="00BC1832">
+      <w:r>
+        <w:t xml:space="preserve">Case 1: split in 2, but whole delimiters:</w:t>
+        <w:t xml:space="preserve">bar</w:t>
+      </w:r>
+      <w:r w:rsidRPr="002C0FE3">
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w:rsidR="00BC1832" w:rsidRDefault="00BC1832">
+      <w:r>
+        <w:t xml:space="preserve">Case 2: split in 2, affecting initial delimiter:</w:t>
+        <w:t xml:space="preserve">bar</w:t>
+      </w:r>
+      <w:r w:rsidRPr="002C0FE3">
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w:rsidR="00BC1832" w:rsidRDefault="00BC1832">
+      <w:r>
+        <w:t xml:space="preserve">Case 3: split in 2, affecting final delimiter:</w:t>
+        <w:t xml:space="preserve">bar</w:t>
+      </w:r>
+      <w:r w:rsidRPr="002C0FE3">
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w:rsidR="00BC1832" w:rsidRPr="00BC1832" w:rsidRDefault="00BC1832">
+      <w:r>
+        <w:t xml:space="preserve">All of them should work fine</w:t>
+      </w:r>
+      <w:bookmarkStart w:id="0" w:name="_GoBack"/>
+      <w:bookmarkEnd w:id="0"/>
+    </w:p>
+    <w:sectPr w:rsidR="00BC1832" w:rsidRPr="00BC1832">
+      <w:pgSz w:w="12240" w:h="15840"/>
+      <w:pgMar w:top="1417" w:right="1701" w:bottom="1417" w:left="1701" w:header="708" w:footer="708" w:gutter="0"/>
+      <w:cols w:space="708"/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

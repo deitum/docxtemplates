@@ -1,0 +1,1 @@
+INS	"Promise.resolve().then(() => 'hello')"	"INS Promise.resolve().then(() => 'hello')"

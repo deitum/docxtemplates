@@ -1,0 +1,7 @@
+FOR	"company IN companies"	"FOR company IN companies"
+EXEC	"name = $company.name"	"EXEC name = $company.name"
+INS	"$idx+1"	"INS $idx+1"
+INS	"companies.length"	"INS companies.length"
+INS	"name"	"INS name"
+INS	"$company.name"	"INS $company.name"
+END-FOR	"company"	"END-FOR company"

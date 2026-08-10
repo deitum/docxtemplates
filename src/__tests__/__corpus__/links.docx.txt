@@ -1,0 +1,132 @@
+# zip entries, in the order they are stored
+  [Content_Types].xml
+  _rels/.rels
+  word/_rels/document.xml.rels
+  word/document.xml
+  word/theme/theme1.xml
+  word/settings.xml
+  docProps/core.xml
+  word/fontTable.xml
+  word/webSettings.xml
+  word/styles.xml
+  docProps/app.xml
+  word/
+  word/_rels/
+
+# path -> sha256
+  [Content_Types].xml  dfa90f373b8fd8147ee3e4bfe1ee059e536cc1b068f7ec140c3fc0e6554f331a  (1312 bytes)
+  _rels/.rels  e19238d7a71fa7a2490776252686f70e2de6238c87cd509b5e3a3cc07c2ea4df  (590 bytes)
+  docProps/app.xml  8a3bf5554e1cf16d6c554a27b3372e96f03d14c6cd8ec1e909fbd20de3ababe6  (714 bytes)
+  docProps/core.xml  ec03876ae93a3ff4665c3e63fd287866c5c53b93a7a5339798db953e468b1783  (770 bytes)
+  word/_rels/document.xml.rels  4da56e9491e17af9a366ec4600af1c37d931fdac873c547e8f29fb1d66252cac  (1164 bytes)
+  word/document.xml  25d72d2c793e3f47ed5204101532f3bee54cc684a1f341fdbcfcb39a2a66b54e  (4810 bytes)
+  word/fontTable.xml  4b67ea4ffa54c8508abce864bf5192021e5f70c63241bceb0174a343374f6bd4  (1512 bytes)
+  word/settings.xml  ab076f845f88d976a776a9bd9e57e2698f67b187008b651a30b12b5d02221fb1  (3289 bytes)
+  word/styles.xml  4ce598a9a3de0b4c04ecdfe32984dac35654af76a85b346f987ddc5d48173f9b  (30841 bytes)
+  word/theme/theme1.xml  db367b38f016b90fd78774f93979d557266b518645f9b6d71393bdf46a469521  (6795 bytes)
+  word/webSettings.xml  e32a5e98b812c65292c9ce10545091c2ec5fc16bd0a4ae450c00c4df7b6c4ade  (635 bytes)
+
+# [Content_Types].xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>
+
+# word/_rels/document.xml.rels
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings" Target="webSettings.xml"/>
+  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+  <Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>
+  <Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/>
+  <Relationship Id="link1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="http://www.apple.com" TargetMode="External"/>
+  <Relationship Id="link2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="http://www.apple.com" TargetMode="External"/>
+</Relationships>
+
+# word/document.xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:cx="http://schemas.microsoft.com/office/drawing/2014/chartex" xmlns:cx1="http://schemas.microsoft.com/office/drawing/2015/9/8/chartex" xmlns:cx2="http://schemas.microsoft.com/office/drawing/2015/10/21/chartex" xmlns:cx3="http://schemas.microsoft.com/office/drawing/2016/5/9/chartex" xmlns:cx4="http://schemas.microsoft.com/office/drawing/2016/5/10/chartex" xmlns:cx5="http://schemas.microsoft.com/office/drawing/2016/5/11/chartex" xmlns:cx6="http://schemas.microsoft.com/office/drawing/2016/5/12/chartex" xmlns:cx7="http://schemas.microsoft.com/office/drawing/2016/5/13/chartex" xmlns:cx8="http://schemas.microsoft.com/office/drawing/2016/5/14/chartex" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:aink="http://schemas.microsoft.com/office/drawing/2016/ink" xmlns:am3d="http://schemas.microsoft.com/office/drawing/2017/model3d" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:w15="http://schemas.microsoft.com/office/word/2012/wordml" xmlns:w16cid="http://schemas.microsoft.com/office/word/2016/wordml/cid" xmlns:w16se="http://schemas.microsoft.com/office/word/2015/wordml/symex" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 w15 w16se w16cid wp14">
+  <w:body>
+    <w:p w14:paraId="308C509A" w14:textId="5E0E591D" w:rsidR="00FD129A" w:rsidRDefault="004C35D4">
+      <w:r>
+        <w:t xml:space="preserve">There</w:t>
+      </w:r>
+      <w:r w:rsidR="00FD129A">
+        <w:t xml:space="preserve"> should be </w:t>
+      </w:r>
+      <w:r w:rsidR="00AC055A">
+        <w:t xml:space="preserve">two hyperlinks </w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve">below</w:t>
+      </w:r>
+      <w:r w:rsidR="00507C27">
+        <w:t xml:space="preserve">, the first one in red</w:t>
+      </w:r>
+      <w:bookmarkStart w:id="0" w:name="_GoBack"/>
+      <w:bookmarkEnd w:id="0"/>
+      <w:r w:rsidR="00FD129A">
+        <w:t xml:space="preserve">:</w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="4BC1E1BB" w14:textId="2B023FD3" w:rsidR="00AC055A" w:rsidRPr="00507C27" w:rsidRDefault="00AC055A">
+      <w:pPr>
+        <w:rPr>
+          <w:color w:val="FF0000"/>
+        </w:rPr>
+      </w:pPr>
+      <w:hyperlink r:id="link1" w:history="1">
+        <w:r>
+          <w:rPr>
+            <w:color w:val="FF0000"/>
+          </w:rPr>
+          <w:t>Apple</w:t>
+        </w:r>
+      </w:hyperlink>
+      <w:proofErr w:type="spellStart"/>
+      <w:r w:rsidRPr="00507C27">
+        <w:rPr>
+          <w:color w:val="FF0000"/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellEnd"/>
+      <w:r w:rsidRPr="00507C27">
+        <w:rPr>
+          <w:color w:val="FF0000"/>
+        </w:rPr>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="6A7A98AC" w14:textId="7C3FF667" w:rsidR="00AC055A" w:rsidRDefault="00AC055A" w:rsidP="00AC055A">
+      <w:hyperlink r:id="link2" w:history="1">
+        <w:r>
+          <w:rPr>
+            <w:u w:val="single"/>
+          </w:rPr>
+          <w:t>http://www.apple.com</w:t>
+        </w:r>
+      </w:hyperlink>
+      <w:proofErr w:type="spellStart"/>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+      <w:proofErr w:type="spellEnd"/>
+      <w:r>
+        <w:t xml:space="preserve"></w:t>
+      </w:r>
+    </w:p>
+    <w:p w14:paraId="3A62A2B1" w14:textId="3CDCD5F0" w:rsidR="00904BD3" w:rsidRDefault="00904BD3" w:rsidP="00B9506E">
+      <w:pPr>
+        <w:tabs>
+          <w:tab w:val="left" w:pos="1478"/>
+        </w:tabs>
+      </w:pPr>
+    </w:p>
+    <w:sectPr w:rsidR="00904BD3" w:rsidSect="00A0490B">
+      <w:pgSz w:w="11900" w:h="16840"/>
+      <w:pgMar w:top="1417" w:right="1701" w:bottom="1417" w:left="1701" w:header="708" w:footer="708" w:gutter="0"/>
+      <w:cols w:space="708"/>
+      <w:docGrid w:linePitch="360"/>
+    </w:sectPr>
+  </w:body>
+</w:document>

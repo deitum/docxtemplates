@@ -1,0 +1,3 @@
+INS	"body_command"	"INS body_command"
+INS	"footer_command"	"INS footer_command"
+INS	"header_command"	"INS header_command"

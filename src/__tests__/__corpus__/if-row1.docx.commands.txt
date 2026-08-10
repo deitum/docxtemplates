@@ -1,0 +1,4 @@
+IF	"true"	"IF true"
+END-IF	""	"END-IF"
+IF	"false"	"IF false"
+END-IF	""	"END-IF"

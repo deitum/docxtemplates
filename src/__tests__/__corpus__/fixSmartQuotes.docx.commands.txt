@@ -1,0 +1,2 @@
+EXEC	"a = { b: 4, c: 5 }; reverse = (str) => str.split('').reverse().join('');"	"EXEC a = { b: 4, c: 5 }; reverse = (str) => str.split('').reverse().join('');"
+INS	"reverse(‘aubergine’)"	"INS reverse(‘aubergine’)"

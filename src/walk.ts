@@ -7,7 +7,11 @@
  * paragraph holding nothing but `+++END-FOR+++` vanishes from the report).
  */
 import { type CommandProcessor, processCmd } from './commands/execute';
-import { newContext } from './context';
+import {
+  DROP_RULES,
+  fillRequiredChildren,
+  PENDING_SLOTS,
+} from './docx/structure';
 import { BUFFER_TAGS, DrawAttr, isBufferTag, VTag, WpTag, WTag } from './ooxml';
 import { DEFAULT_MAXIMUM_WALKING_DEPTH } from './options';
 import { logger } from './debug';
@@ -19,17 +23,14 @@ import {
 import {
   cloneNodeWithoutChildren,
   debugPrintNode,
-  doesCellSpanCells,
   getCurLoop,
   getFirstChild,
   getNextSibling,
   isLoopExploring,
-  nextNodeInTree,
   tagOf,
 } from './reportUtils';
 import {
   type Context,
-  type CreateReportOptions,
   type Htmls,
   type Images,
   type Links,
@@ -69,27 +70,6 @@ export async function produceJsReport(
   return walkTemplate(data, template, ctx, processCmd);
 }
 
-/**
- * Goes through the document until the QUERY command is found (normally right at
- * the beginning), ignoring every other command on the way.
- */
-export async function extractQuery(
-  template: Node,
-  options: CreateReportOptions
-): Promise<string | undefined> {
-  const ctx: Context = newContext(options);
-  ctx.fSeekQuery = true;
-
-  let nodeIn: Node | null = template;
-  while ((nodeIn = nextNodeInTree(nodeIn)) != null) {
-    if (isTextNodeInsideWt(nodeIn)) {
-      await processText(null, nodeIn, ctx, processCmd);
-    }
-    if (ctx.query != null) break;
-  }
-  return ctx.query;
-}
-
 const isTextNodeInsideWt = (node: Node): node is TextNode =>
   node._fTextNode && tagOf(node._parent) === WTag.t;
 
@@ -126,7 +106,7 @@ export async function walkTemplate(
 
     if (logger.enabled)
       logger.debug(
-        `Next node [${move}, level ${ctx.level}]`,
+        `Next node [${move}, level ${ctx.walk.level}]`,
         debugPrintNode(nodeIn)
       );
 
@@ -164,9 +144,9 @@ export async function walkTemplate(
   return {
     status: 'success',
     report: out,
-    images: ctx.images,
-    links: ctx.links,
-    htmls: ctx.htmls,
+    images: ctx.resources.images,
+    links: ctx.resources.links,
+    htmls: ctx.resources.htmls,
   };
 }
 
@@ -196,16 +176,16 @@ function advance({
   loopCount: number;
   maximumWalkingDepth: number;
 }): Step | null {
-  if (ctx.fJump) {
+  if (ctx.walk.jumpRequested) {
     if (!curLoop) throw new InternalError('jumping while curLoop is null');
     if (logger.enabled)
       logger.debug(
         `Jumping to level ${curLoop.refNodeLevel}...`,
         debugPrintNode(curLoop.refNode)
       );
-    const deltaJump = ctx.level - curLoop.refNodeLevel;
-    ctx.level = curLoop.refNodeLevel;
-    ctx.fJump = false;
+    const deltaJump = ctx.walk.level - curLoop.refNodeLevel;
+    ctx.walk.level = curLoop.refNodeLevel;
+    ctx.walk.jumpRequested = false;
     return { node: curLoop.refNode, move: Move.jump, deltaJump };
   }
 
@@ -213,7 +193,7 @@ function advance({
   if (previousMove !== Move.up) {
     const firstChild = getFirstChild(nodeIn);
     if (firstChild) {
-      ctx.level += 1;
+      ctx.walk.level += 1;
       return { node: firstChild, move: Move.down, deltaJump: 0 };
     }
   }
@@ -237,7 +217,7 @@ function advance({
       'infinite loop or massive dataset detected. Please review and try again'
     );
   }
-  ctx.level -= 1;
+  ctx.walk.level -= 1;
   return { node: parent, move: Move.up, deltaJump: 0 };
 }
 
@@ -245,6 +225,8 @@ function advance({
  * Removes the output node we have just finished building, in the cases where it
  * should never have been emitted: nodes produced while exploring a loop, and
  * paragraphs, rows or cells that held nothing but commands.
+ *
+ * Which of the latter survive anyway is stated in `DROP_RULES`, not here.
  */
 function dropDeadOutputNode(nodeIn: Node, nodeOut: Node, ctx: Context): void {
   const tag = tagOf(nodeOut);
@@ -255,45 +237,19 @@ function dropDeadOutputNode(nodeIn: Node, nodeOut: Node, ctx: Context): void {
     // Nothing generated during an exploration pass belongs in the output.
     fRemoveNode = true;
   } else if (isBufferTag(tag)) {
-    const buffers = ctx.buffers[tag];
-    fRemoveNode =
-      buffers.text === '' && buffers.cmds !== '' && !buffers.fInsertedText;
-
-    if (fRemoveNode && tag === WTag.p) {
-      // A paragraph anchoring a drawing carries content even with no text.
-      fRemoveNode = !hasDrawingElements(nodeOut);
-    }
-    if (fRemoveNode && tag === WTag.tr) {
-      // Keep a row that wraps exactly one nested row (i.e. a nested table).
-      const nestedRows = nodeIn._children.filter(
-        child => tagOf(child) === WTag.tr
-      );
-      fRemoveNode = nestedRows.length !== 1;
-    }
-    if (fRemoveNode && tag === WTag.tc) {
-      // A cell holding only commands is deleted only when those commands are
-      // part of a FOR/IF construct spanning several cells (see "dynamic
-      // columns" in the README). A construct that opens and closes within the
-      // cell leaves an empty cell behind: deleting it would shift the rest of
-      // the row into the wrong columns. Cells containing a nested table are
-      // never deleted.
-      fRemoveNode =
-        doesCellSpanCells(ctx) &&
-        !nodeOut._children.some(child => tagOf(child) === WTag.tbl);
-    }
+    const buffers = ctx.walk.buffers[tag];
+    const heldOnlyCommands =
+      buffers.text === '' && buffers.cmds !== '' && !buffers.hasInsertedText;
+    const rule = DROP_RULES[tag];
+    fRemoveNode = heldOnlyCommands && !rule.keep({ nodeIn, nodeOut, ctx });
+    if (heldOnlyCommands && !fRemoveNode && logger.enabled)
+      logger.debug(`Keeping empty ${tag}: ${rule.name}`);
   }
 
   // The node leaves the output, but keeps its parent link, so that the walk can
   // still move up the tree through it.
   if (fRemoveNode && nodeOut._parent != null) nodeOut._parent._children.pop();
 }
-
-const hasDrawingElements = (node: Node): boolean => {
-  const tag = tagOf(node);
-  if (tag === WpTag.anchor || tag === WpTag.inline || tag === WTag.drawing)
-    return true;
-  return node._children.some(hasDrawingElements);
-};
 
 /**
  * Moves the output cursor up one level, and finishes off the node being left
@@ -321,39 +277,20 @@ function moveOutputUp(
   nodeOut = nodeOutParent;
 
   const tag = tagOf(nodeOut);
-  if (ctx.pendingImageNode && tag === WTag.t) {
-    const { image, caption } = ctx.pendingImageNode;
-    replaceOutputNode(nodeOut, ctx, image, caption);
-    delete ctx.pendingImageNode;
-  }
-  if (ctx.pendingLinkNode && tag === WTag.r) {
-    replaceOutputNode(nodeOut, ctx, ctx.pendingLinkNode);
-    delete ctx.pendingLinkNode;
-  }
-  if (ctx.pendingHtmlNode && tag === WTag.p) {
-    replaceOutputNode(nodeOut, ctx, ctx.pendingHtmlNode);
-    delete ctx.pendingHtmlNode;
+
+  // Splice in whatever an IMAGE/LINK/HTML command parked for this level.
+  for (const slot of PENDING_SLOTS) {
+    if (tag !== slot.tag) continue;
+    const pending = ctx.resources.takePending(slot.kind);
+    if (pending != null)
+      replaceOutputNode(nodeOut, ctx, pending.node, pending.extra);
   }
 
-  // A `w:tc` may not be left without a `w:p` or `w:altChunk` child
-  if (
-    tag === WTag.tc &&
-    !nodeOut._children.some(
-      o => tagOf(o) === WTag.p || tagOf(o) === WTag.altChunk
-    )
-  ) {
-    nodeOut._children.push({
-      _parent: nodeOut,
-      _children: [],
-      _fTextNode: false,
-      _tag: WTag.p,
-      _attrs: {},
-    });
-  }
+  fillRequiredChildren(nodeOut);
 
   // Remember the last `w:rPr` seen, so that a LINK can inherit its formatting
-  if (tag === WTag.rPr) ctx.textRunPropsNode = nodeOut as NonTextNode;
-  if (tagOf(nodeIn) === WTag.r) delete ctx.textRunPropsNode;
+  if (tag === WTag.rPr) ctx.resources.textRunProps = nodeOut as NonTextNode;
+  if (tagOf(nodeIn) === WTag.r) ctx.resources.textRunProps = undefined;
 
   return nodeOut;
 }
@@ -374,7 +311,7 @@ function replaceOutputNode(
   parent._children.pop();
   parent._children.push(replacement);
   if (extra) parent._children.push(...extra);
-  for (const key of BUFFER_TAGS) ctx.buffers[key].fInsertedText = true;
+  for (const key of BUFFER_TAGS) ctx.walk.buffers[key].hasInsertedText = true;
 }
 
 /**
@@ -400,8 +337,8 @@ async function appendOutputNode(
   // Reset the buffers when a new `w:p`, `w:tr` or `w:tc` starts
   const tag = tagOf(nodeIn);
   if (isBufferTag(tag)) {
-    ctx.buffers[tag] = { text: '', cmds: '', fInsertedText: false };
-    if (tag === WTag.tc) ctx.cell = { node: nodeIn, fSpansCells: false };
+    ctx.walk.buffers[tag] = { text: '', cmds: '', hasInsertedText: false };
+    if (tag === WTag.tc) ctx.walk.cell = { node: nodeIn, spansCells: false };
   }
 
   const newNode: Node = cloneNodeWithoutChildren(nodeIn);
@@ -437,11 +374,12 @@ function collectUnterminatedConstructErrors(ctx: Context, errors: Error[]) {
     errors.push(err);
   };
 
-  if (ctx.gCntIf !== ctx.gCntEndIf) {
+  if (ctx.walk.openIfCount !== ctx.walk.closedIfCount) {
     report(new IncompleteConditionalStatementError());
   }
-  const innermostLoop = ctx.loops[ctx.loops.length - 1];
-  if (innermostLoop != null && ctx.loops.some(l => !l.isIf)) {
+  const { loops } = ctx.scope;
+  const innermostLoop = loops[loops.length - 1];
+  if (innermostLoop != null && loops.some(l => !l.isIf)) {
     report(new UnterminatedForLoopError(innermostLoop));
   }
 }
@@ -473,25 +411,28 @@ const processText = async (
   for (let idx = 0; idx < segments.length; idx++) {
     // Include the separators in the buffers, so that a paragraph holding only a
     // command is recognised as such
-    if (idx > 0) appendTextToTagBuffers(cmdDelimiter[0], ctx, { fCmd: true });
+    if (idx > 0)
+      appendTextToTagBuffers(cmdDelimiter[0], ctx, { isCommand: true });
 
     // Append the segment either to the command being collected or to the output
     const segment = segments[idx] ?? '';
-    if (ctx.fCmd) ctx.cmd += segment;
+    if (ctx.walk.isCollectingCommand) ctx.walk.command += segment;
     else if (!isLoopExploring(ctx)) outText += segment;
-    appendTextToTagBuffers(segment, ctx, { fCmd: ctx.fCmd });
+    appendTextToTagBuffers(segment, ctx, {
+      isCommand: ctx.walk.isCollectingCommand,
+    });
 
     // A delimiter follows: run the command if one was being collected, then
     // toggle between "command" and "text" mode
     if (idx < segments.length - 1) {
-      if (ctx.fCmd) {
+      if (ctx.walk.isCollectingCommand) {
         const cmdResultText = await onCommand(data, node, ctx);
         if (cmdResultText != null) {
           if (typeof cmdResultText === 'string') {
             outText += cmdResultText;
             appendTextToTagBuffers(cmdResultText, ctx, {
-              fCmd: false,
-              fInsertedText: true,
+              isCommand: false,
+              hasInsertedText: true,
             });
           } else {
             if (failFast) throw cmdResultText;
@@ -499,7 +440,7 @@ const processText = async (
           }
         }
       }
-      ctx.fCmd = !ctx.fCmd;
+      ctx.walk.isCollectingCommand = !ctx.walk.isCollectingCommand;
     }
   }
   if (errors.length > 0) return errors;
@@ -509,22 +450,20 @@ const processText = async (
 const appendTextToTagBuffers = (
   text: string,
   ctx: Context,
-  options: { fCmd?: boolean; fInsertedText?: boolean }
+  options: { isCommand?: boolean; hasInsertedText?: boolean }
 ) => {
-  if (ctx.fSeekQuery) return;
-  const { fCmd, fInsertedText } = options;
-  const type = fCmd ? 'cmds' : 'text';
+  const { isCommand, hasInsertedText } = options;
+  const type = isCommand ? 'cmds' : 'text';
   for (const key of BUFFER_TAGS) {
-    const buf = ctx.buffers[key];
+    const buf = ctx.walk.buffers[key];
     buf[type] += text;
-    if (fInsertedText) buf.fInsertedText = true;
+    if (hasInsertedText) buf.hasInsertedText = true;
   }
 };
 
 function assignNewShapeId(newNode: NonTextNode, ctx: Context) {
-  ctx.imageAndShapeIdIncrement += 1;
   newNode._attrs = {
     ...newNode._attrs,
-    [DrawAttr.id]: String(ctx.imageAndShapeIdIncrement),
+    [DrawAttr.id]: String(ctx.resources.nextShapeId()),
   };
 }
