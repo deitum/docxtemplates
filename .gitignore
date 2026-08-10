@@ -1,18 +1,22 @@
-# All projects
+# Logs and process files
 logs
 *.log
 npm-debug.log*
 pids
 *.pid
 *.seed
+
+# Dependencies and build output
 node_modules
+dist
 coverage
-.nyc_output
-.nyc_tmp
+
+# Editors and OS
+.idea
+.vscode
 *.sublime-project
 *.sublime-workspace
 .DS_Store
 
 # Project-specific
 **/~$*.docx
-lib

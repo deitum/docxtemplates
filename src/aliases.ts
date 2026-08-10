@@ -1,4 +1,8 @@
-import { AliasList, BUILT_IN_COMMANDS, BuiltInCommand } from './types';
+import {
+  type AliasList,
+  BUILT_IN_COMMANDS,
+  type BuiltInCommand,
+} from './types';
 import { InvalidAliasError } from './errors';
 
 // Characters that can never be part of an "alias word". Everything else
@@ -9,7 +13,8 @@ const NON_WORD_CHAR = /[\s!"#%&'()*+,\-./:;<=>?[\\\]^`{|}~]/;
 const isWordChar = (char: string | undefined): boolean =>
   char != null && char !== '' && !NON_WORD_CHAR.test(char);
 
-const isWhitespace = (char: string): boolean => /\s/.test(char);
+const isWhitespace = (char: string | undefined): boolean =>
+  char != null && /\s/.test(char);
 
 /**
  * Turns a user-provided alias map into a list that is sorted so that the
@@ -68,6 +73,7 @@ const matchTokensAt = (text: string, idx: number, tokens: string[]): number => {
       if (i === startOfGap) return -1;
     }
     const token = tokens[t];
+    if (token == null) return -1;
     const candidate = text.slice(i, i + token.length);
     if (candidate.length < token.length) return -1;
     if (candidate.toLowerCase() !== token) return -1;
@@ -81,10 +87,12 @@ const matchTokensAt = (text: string, idx: number, tokens: string[]): number => {
 // character, so that e.g. `>=` can be aliased too).
 const matchAliasAt = (text: string, idx: number, tokens: string[]): number => {
   const firstToken = tokens[0];
+  const lastToken = tokens[tokens.length - 1];
+  // An empty alias can never match anything.
+  if (firstToken == null || lastToken == null) return -1;
   if (isWordChar(firstToken[0]) && isWordChar(text[idx - 1])) return -1;
   const end = matchTokensAt(text, idx, tokens);
   if (end < 0) return -1;
-  const lastToken = tokens[tokens.length - 1];
   if (isWordChar(lastToken[lastToken.length - 1]) && isWordChar(text[end]))
     return -1;
   return end;

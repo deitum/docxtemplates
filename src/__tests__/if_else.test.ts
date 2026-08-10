@@ -1,15 +1,10 @@
-/* eslint-env jest */
-
-import path from 'path';
-import fs from 'fs';
+import { describe, it, expect } from 'vitest';
+import { readFixture } from './helpers';
 import { createReport } from '../index';
-import { Node } from '../types';
+import { type Node } from '../types';
 import { setDebugLogSink } from '../debug';
 
 if (process.env.DEBUG) setDebugLogSink(console.log);
-
-const readFixture = (name: string) =>
-  fs.promises.readFile(path.join(__dirname, 'fixtures', name));
 
 // Concatenates the text of all the text nodes below the given node
 const nodeText = (node: Node): string =>

@@ -1,6 +1,6 @@
-import vm from 'vm';
+import vm from 'node:vm';
 import { getCurLoop } from './reportUtils';
-import { ReportData, Context, SandBox } from './types';
+import { type ReportData, type Context, type SandBox } from './types';
 import {
   isError,
   CommandExecutionError,

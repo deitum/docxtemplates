@@ -1,0 +1,24 @@
+name: Feature request
+description: Suggest a new command, option or capability
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the use case rather than the solution you have in mind.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API or template syntax
+      description: How would it look in a template, or in the `createReport` options?
+      render: js
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you have considered
+      description: Including anything you can already do today as a workaround.

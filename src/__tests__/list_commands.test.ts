@@ -1,11 +1,12 @@
-import path from 'path';
+import { describe, it, expect } from 'vitest';
+import { fixturePath } from './helpers';
 import fs from 'fs';
 import { listCommands } from '../main';
 
 describe('listCommands', () => {
   it('handles simple INS', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'noQuerySimpleInserts.docx')
+      fixturePath('noQuerySimpleInserts.docx')
     );
     expect(await listCommands(template)).toEqual([
       { raw: 'INS a', code: 'a', type: 'INS' },
@@ -15,7 +16,7 @@ describe('listCommands', () => {
 
   it('handles INS in header and footer', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'insertInHeaderAndFooter.docx')
+      fixturePath('insertInHeaderAndFooter.docx')
     );
     expect(await listCommands(template)).toMatchInlineSnapshot(`
       [
@@ -39,9 +40,7 @@ describe('listCommands', () => {
   });
 
   it('handles IMAGE', async () => {
-    const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'imagesSVG.docx')
-    );
+    const template = await fs.promises.readFile(fixturePath('imagesSVG.docx'));
     expect(await listCommands(template, '+++')).toEqual([
       { raw: 'IMAGE svgImgFile()', code: 'svgImgFile()', type: 'IMAGE' },
       { raw: 'IMAGE svgImgStr()', code: 'svgImgStr()', type: 'IMAGE' },
@@ -50,7 +49,7 @@ describe('listCommands', () => {
 
   it('handles IMAGE in header', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'imageHeader.docx')
+      fixturePath('imageHeader.docx')
     );
     expect(await listCommands(template, '+++')).toMatchInlineSnapshot(`
       [
@@ -69,9 +68,7 @@ describe('listCommands', () => {
   });
 
   it('handles inline FOR loops', async () => {
-    const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'for1inline.docx')
-    );
+    const template = await fs.promises.readFile(fixturePath('for1inline.docx'));
     expect(await listCommands(template)).toMatchInlineSnapshot(`
       [
         {
@@ -94,9 +91,7 @@ describe('listCommands', () => {
   });
 
   it('handles IF clausess', async () => {
-    const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'if2.docx')
-    );
+    const template = await fs.promises.readFile(fixturePath('if2.docx'));
     expect(await listCommands(template)).toMatchInlineSnapshot(`
       [
         {
@@ -164,9 +159,7 @@ describe('listCommands', () => {
   });
 
   it('handles IF / ELSE-IF / ELSE', async () => {
-    const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'ifElseIf.docx')
-    );
+    const template = await fs.promises.readFile(fixturePath('ifElseIf.docx'));
     expect(await listCommands(template)).toEqual([
       { raw: 'IF value > 10', code: 'value > 10', type: 'IF' },
       { raw: 'ELSE-IF value > 5', code: 'value > 5', type: 'ELSE-IF' },
@@ -178,7 +171,7 @@ describe('listCommands', () => {
 
   it('handles custom delimiter', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'for1customDelimiter.docx')
+      fixturePath('for1customDelimiter.docx')
     );
     expect(await listCommands(template, '***')).toMatchInlineSnapshot(`
       [

@@ -1,5 +1,5 @@
 import { insertTextSiblingAfter, getNextSibling } from './reportUtils';
-import { Node } from './types';
+import { type Node } from './types';
 
 // In-place
 // In case of split commands (or even split delimiters), joins all the pieces
@@ -87,7 +87,7 @@ const preprocessTemplate = (
     }
 
     // Find next node to process
-    if (node._children.length) node = node._children[0];
+    if (node._children.length) node = node._children[0] ?? null;
     else {
       let fFound = false;
       while (node._parent != null) {
