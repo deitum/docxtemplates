@@ -3,6 +3,7 @@ import { createRequire } from 'node:module';
 import commonjs from '@rollup/plugin-commonjs';
 import node from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
+import MagicString from 'magic-string';
 import { defineConfig } from 'rollup';
 import dtsPlugin from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
@@ -52,6 +53,28 @@ const selfContainedDts = {
       );
     }
     return stripped;
+  },
+};
+
+// Tools that sniff a file's module format (publint, mlly, ...) only recognise
+// the `export {...}` that ends an ESM bundle when it starts a line or follows a
+// semicolon. Minification happily glues it to the previous statement
+// (`...}export{...}`), and the bundle then reads as CommonJS — which, for a
+// `.mjs` file, publint reports as a packaging error. Put the line break back.
+const GLUED_EXPORTS = /(?<=[^\s;])export\s*\{/;
+
+const exportsOnOwnLine = {
+  name: 'exports-on-own-line',
+  // After the minifier, which is what removed the line break.
+  renderChunk: {
+    order: 'post',
+    handler(code) {
+      const match = GLUED_EXPORTS.exec(code);
+      if (!match) return null;
+      const s = new MagicString(code);
+      s.appendLeft(match.index, '\n');
+      return { code: s.toString(), map: s.generateMap({ hires: true }) };
+    },
   },
 };
 
@@ -173,6 +196,7 @@ export default defineConfig([
         target: 'es2017',
         minify: true,
       }),
+      exportsOnOwnLine,
       // Map modules to polyfill
       {
         name: 'module-map',

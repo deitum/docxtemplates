@@ -137,11 +137,11 @@ describe('headers and footers', () => {
     expect(files).toContain('word/media/template_header1.xml_img2.png');
   });
 
-  it('writes hyperlinks of a header into the main document relationships', async () => {
-    // NOTE: this is a known defect, pinned here so that a fix is a conscious
-    // decision rather than an accident: `createReport` passes `mainDocument`
-    // (instead of the secondary part's own name) to `processLinks` for
-    // header/footer parts, so Word cannot resolve the `r:id` in the header.
+  it('writes hyperlinks of a header into that header own relationships', async () => {
+    // Relationship ids are scoped to the part that references them, so a
+    // hyperlink used in a header must be declared in `header1.xml.rels`;
+    // declaring it in `document.xml.rels` leaves Word unable to resolve the
+    // `r:id` and it refuses to open the file.
     const template = await makeDocx({
       body: ['no link here'],
       header: [`+++LINK ({ url: 'https://example.test/h' })+++`],
@@ -151,12 +151,55 @@ describe('headers and footers', () => {
     expect(await readReportFile(report, 'word/header1.xml')).toContain(
       '<w:hyperlink r:id="link1"'
     );
-    expect(await readReportFile(report, 'word/_rels/header1.xml.rels')).toBe(
+    expect(
+      await readReportFile(report, 'word/_rels/header1.xml.rels')
+    ).toContain('Target="https://example.test/h"');
+    expect(await readReportFile(report, 'word/_rels/document.xml.rels')).toBe(
       null
     );
+  });
+
+  it('keeps the relationships of each part to itself', async () => {
+    // Both parts number their links from 1: that is only correct as long as
+    // each `link1` lives in the .rels of the part that uses it.
+    const template = await makeDocx({
+      body: [`+++LINK ({ url: 'https://example.test/body' })+++`],
+      header: [`+++LINK ({ url: 'https://example.test/header' })+++`],
+    });
+    const report = await createReport({ template, data: {} });
+
+    const documentRels = await readReportFile(
+      report,
+      'word/_rels/document.xml.rels'
+    );
+    const headerRels = await readReportFile(
+      report,
+      'word/_rels/header1.xml.rels'
+    );
+    expect(documentRels).toContain('Target="https://example.test/body"');
+    expect(documentRels).not.toContain('example.test/header');
+    expect(headerRels).toContain('Target="https://example.test/header"');
+    expect(headerRels).not.toContain('example.test/body');
+  });
+
+  it('writes the html chunk of a header into its own file and relationships', async () => {
+    const template = await makeDocx({
+      body: [`+++HTML '<p>body</p>'+++`],
+      header: [`+++HTML '<p>header</p>'+++`],
+    });
+    const report = await createReport({ template, data: {} });
+
+    // One chunk per part: naming both after the main document would have the
+    // header overwrite the body's chunk.
     expect(
-      await readReportFile(report, 'word/_rels/document.xml.rels')
-    ).toContain('Target="https://example.test/h"');
+      await readReportFile(report, 'word/template_header1_xml_html1.html')
+    ).toBe('<p>header</p>');
+    expect(
+      await readReportFile(report, 'word/template_document_xml_html1.html')
+    ).toBe('<p>body</p>');
+    expect(
+      await readReportFile(report, 'word/_rels/header1.xml.rels')
+    ).toContain('Target="template_header1_xml_html1.html"');
   });
 });
 

@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { i as isEntryPoint, r as runMain, e as parseArgs, j as requireFile, k as readJson, a as readDocParts, w as writeDocParts, l as listCommands, m as wrapParagraphs, o as replaceTextAll, D as DEFAULT_CMD_DELIMITER, n as command, t as topLevelTables, d as directChildren, c as textOf, z as replaceText, A as setParagraphText, q as remove, B as insertBefore, C as commandRowLike, s as insertAfter } from './shared-docxXml.mjs';
+import 'node:vm';
 import 'node:url';
 import 'stream';
 import 'events';
 import 'buffer';
 import 'util';
-import 'node:vm';
 
 const DEFAULT_COMMAND_NAMES = {
   INS: "INS",

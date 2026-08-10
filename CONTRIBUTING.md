@@ -27,6 +27,38 @@ $ npm test
 
 Run `npm run verify` before opening a pull request.
 
+## How the source is laid out
+
+Rendering a report is a pipeline: unzip the package, parse each XML part, walk
+it while executing the commands it contains, and zip the result back up.
+
+| Module                                                                      | Responsibility                                                            |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `index.ts`                                                                  | The public API, and the only file that decides what is public             |
+| `main.ts`                                                                   | Orchestration: `createReport` and `listCommands`                          |
+| `docx/parts.ts`                                                             | Reading the package: which parts are templates, and `[Content_Types].xml` |
+| `docx/relationships.ts`                                                     | Writing embedded images/HTML and the `.rels` entries that point at them   |
+| `docx/metadata.ts`                                                          | `getMetadata`                                                             |
+| `preprocessTemplate.ts`                                                     | Joins commands that Word split across several text nodes                  |
+| `walk.ts`                                                                   | The walk itself: moves over the input tree and builds the output tree     |
+| `commands/parse.ts`                                                         | Turns the raw text between delimiters into a command name and its payload |
+| `commands/execute.ts`                                                       | Executes one command; control flow drives the loop stack `walk.ts` reads  |
+| `commands/media.ts`                                                         | The OOXML that IMAGE, LINK and HTML insert                                |
+| `jsSandbox.ts`                                                              | Evaluates the JS in a command                                             |
+| `context.ts`, `options.ts`                                                  | Per-part mutable state, and the defaults behind every option              |
+| `ooxml.ts`                                                                  | The OOXML vocabulary: tags, attributes, namespaces, paths, media types    |
+| `types.ts`                                                                  | Shared types, the `Command` enum and the built-in command list            |
+| `xml.ts`, `zip.ts`, `reportUtils.ts`, `aliases.ts`, `errors.ts`, `debug.ts` | Supporting layers                                                         |
+
+Two conventions worth knowing:
+
+- **No bare OOXML strings.** Tags, attributes and package paths come from
+  `ooxml.ts`; a typo there fails the build instead of producing a document Word
+  refuses to open.
+- **Debug logging is off unless a sink is installed** (`setDebugLogSink`).
+  Hot paths check `logger.enabled` before building a message, because
+  serializing a node once per node is expensive on a large document.
+
 ## Tests
 
 Tests live in `src/__tests__` and run on [Vitest](https://vitest.dev). Most of them

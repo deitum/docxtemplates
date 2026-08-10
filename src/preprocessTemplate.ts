@@ -1,5 +1,6 @@
-import { insertTextSiblingAfter, getNextSibling } from './reportUtils';
-import { type Node } from './types';
+import { WTag, XML_SPACE_PRESERVE, XmlAttr } from './ooxml';
+import { insertTextSiblingAfter, nextNodeInTree, tagOf } from './reportUtils';
+import { Command, type Node } from './types';
 
 // In-place
 // In case of split commands (or even split delimiters), joins all the pieces
@@ -13,26 +14,23 @@ const preprocessTemplate = (
   let fCmd = false;
   let openNode = null;
   let idxDelimiter = 0;
-  const placeholderCmd = `${delimiter[0]}CMD_NODE${delimiter[1]}`;
+  const placeholderCmd = `${delimiter[0]}${Command.CMD_NODE}${delimiter[1]}`;
 
   while (node != null) {
+    const tag = tagOf(node);
+
     // Add `xml:space` attr `preserve` to `w:t` tags
-    if (preserveSpace && !node._fTextNode && node._tag === 'w:t') {
-      node._attrs['xml:space'] = 'preserve';
+    if (preserveSpace && !node._fTextNode && tag === WTag.t) {
+      node._attrs[XmlAttr.space] = XML_SPACE_PRESERVE;
     }
 
     // Add a space if we reach a new `w:p` tag and there's an open node (hence, in a command)
-    if (!node._fTextNode && node._tag === 'w:p' && openNode) {
+    if (tag === WTag.p && openNode) {
       openNode._text += ' ';
     }
 
     // Process text nodes inside `w:t` tags
-    if (
-      node._fTextNode &&
-      node._parent &&
-      !node._parent._fTextNode &&
-      node._parent._tag === 'w:t'
-    ) {
+    if (node._fTextNode && tagOf(node._parent) === WTag.t) {
       if (openNode == null) openNode = node;
       const textIn = node._text;
       node._text = '';
@@ -86,22 +84,7 @@ const preprocessTemplate = (
       if (textIn.length && !node._text.length) node._text = placeholderCmd;
     }
 
-    // Find next node to process
-    if (node._children.length) node = node._children[0] ?? null;
-    else {
-      let fFound = false;
-      while (node._parent != null) {
-        const nodeParent: Node = node._parent;
-        const nextSibling = getNextSibling(node);
-        if (nextSibling) {
-          fFound = true;
-          node = nextSibling;
-          break;
-        }
-        node = nodeParent;
-      }
-      if (!fFound) node = null;
-    }
+    node = nextNodeInTree(node);
   }
   return template;
 };
