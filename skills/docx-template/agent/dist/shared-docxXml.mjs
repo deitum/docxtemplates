@@ -7,13 +7,6 @@ import require$$2 from 'events';
 import require$$0$1 from 'buffer';
 import require$$1 from 'util';
 
-const noSink = () => {
-};
-const logger = {
-  debug: noSink,
-  enabled: false
-};
-
 var WTag = /* @__PURE__ */ ((WTag2) => {
   WTag2["p"] = "w:p";
   WTag2["r"] = "w:r";
@@ -173,6 +166,13 @@ const EMU_PER_CM = 36e4;
 const ROTATION_UNITS_PER_DEGREE = 6e4;
 const BUFFER_TAGS = ["w:p" /* p */, "w:tr" /* tr */, "w:tc" /* tc */];
 const isBufferTag = (tag) => tag === "w:p" /* p */ || tag === "w:tr" /* tr */ || tag === "w:tc" /* tc */;
+
+const noSink = () => {
+};
+const logger = {
+  debug: noSink,
+  enabled: false
+};
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -2059,6 +2059,60 @@ function requireSax () {
 var saxExports = requireSax();
 var sax = /*@__PURE__*/getDefaultExportFromCjs(saxExports);
 
+const REL_ID_PREFIX = {
+  image: "img",
+  link: "link",
+  html: "html"
+};
+function newResources(lastImageAndShapeId = 0) {
+  const images = {};
+  const links = {};
+  const htmls = {};
+  const pending = /* @__PURE__ */ new Map();
+  let shapeId = lastImageAndShapeId;
+  let linkId = 0;
+  let htmlId = 0;
+  return {
+    images,
+    links,
+    htmls,
+    addImage(image) {
+      shapeId += 1;
+      const relId = `${REL_ID_PREFIX.image}${shapeId}`;
+      images[relId] = image;
+      return relId;
+    },
+    addLink(url) {
+      linkId += 1;
+      const relId = `${REL_ID_PREFIX.link}${linkId}`;
+      links[relId] = { url };
+      return relId;
+    },
+    addHtml(html) {
+      htmlId += 1;
+      const relId = `${REL_ID_PREFIX.html}${htmlId}`;
+      htmls[relId] = html;
+      return relId;
+    },
+    get lastShapeId() {
+      return shapeId;
+    },
+    nextShapeId() {
+      shapeId += 1;
+      return shapeId;
+    },
+    park(kind, node) {
+      pending.set(kind, node);
+    },
+    takePending(kind) {
+      const node = pending.get(kind);
+      if (node != null) pending.delete(kind);
+      return node;
+    },
+    textRunProps: void 0
+  };
+}
+
 var Command = /* @__PURE__ */ ((Command2) => {
   Command2["QUERY"] = "QUERY";
   Command2["CMD_NODE"] = "CMD_NODE";
@@ -2095,81 +2149,176 @@ const ImageExtensions = [
 function isError(err) {
   return err instanceof Error || typeof err === "object" && !!err && "name" in err && "message" in err;
 }
-class NullishCommandResultError extends Error {
+const ErrorId = {
+  nullishCommandResult: "nullish_command_result",
+  objectCommandResult: "object_command_result",
+  commandSyntax: "command_syntax",
+  invalidCommand: "invalid_command",
+  invalidAlias: "invalid_alias",
+  commandExecution: "command_execution",
+  image: "image",
+  internal: "internal",
+  templateParse: "template_parse",
+  incompleteConditional: "incomplete_conditional",
+  unterminatedForLoop: "unterminated_for_loop",
+  invalidOption: "invalid_option"
+};
+class TemplateError extends Error {
+  properties;
+  constructor(message, properties) {
+    super(message);
+    Object.setPrototypeOf(this, new.target.prototype);
+    this.properties = properties;
+  }
+}
+function withPart(err, part) {
+  for (const one of Array.isArray(err) ? err : [err]) {
+    if (one instanceof TemplateError && one.properties.part == null) {
+      one.properties.part = part;
+    }
+  }
+  return err;
+}
+class NullishCommandResultError extends TemplateError {
   command;
   constructor(command) {
     super(
-      `Result of command ${command} is null or undefined and rejectNullish is set`
+      `Result of command ${command} is null or undefined and rejectNullish is set`,
+      {
+        id: ErrorId.nullishCommandResult,
+        command,
+        explanation: "The command returned nothing. With `rejectNullish` set that is treated as a mistake, on the assumption that a value was meant to be there."
+      }
     );
     Object.setPrototypeOf(this, NullishCommandResultError.prototype);
     this.command = command;
   }
 }
-class ObjectCommandResultError extends Error {
+class ObjectCommandResultError extends TemplateError {
   command;
   result;
   constructor(command, result) {
-    super(`Result of command '${command}' is an object`);
+    super(`Result of command '${command}' is an object`, {
+      id: ErrorId.objectCommandResult,
+      command,
+      explanation: "Inserting an object would put the text `[object Object]` in the report. Pick a property of it, or format it into a string first."
+    });
     Object.setPrototypeOf(this, ObjectCommandResultError.prototype);
     this.command = command;
     this.result = result;
   }
 }
-class CommandSyntaxError extends Error {
+class CommandSyntaxError extends TemplateError {
   command;
   constructor(command) {
-    super(`Invalid command syntax: ${command}`);
+    super(`Invalid command syntax: ${command}`, {
+      id: ErrorId.commandSyntax,
+      command,
+      explanation: "The text between the delimiters does not name a command, and could not be read as an expression to insert either."
+    });
     Object.setPrototypeOf(this, CommandSyntaxError.prototype);
     this.command = command;
   }
 }
-class InvalidCommandError extends Error {
+class InvalidCommandError extends TemplateError {
   command;
   constructor(msg, command) {
-    super(`${msg}: ${command}`);
+    super(`${msg}: ${command}`, {
+      id: ErrorId.invalidCommand,
+      command,
+      explanation: msg
+    });
     Object.setPrototypeOf(this, InvalidCommandError.prototype);
     this.command = command;
   }
 }
-class InvalidAliasError extends Error {
+class InvalidAliasError extends TemplateError {
   alias;
   constructor(msg, alias) {
-    super(`${msg}: ${alias}`);
+    super(`${msg}: ${alias}`, {
+      id: ErrorId.invalidAlias,
+      explanation: msg
+    });
     Object.setPrototypeOf(this, InvalidAliasError.prototype);
     this.alias = alias;
   }
 }
-class CommandExecutionError extends Error {
+class CommandExecutionError extends TemplateError {
   command;
   err;
   constructor(err, command) {
-    super(`Error executing command '${command}': ${err.name}: ${err.message}`);
+    super(`Error executing command '${command}': ${err.name}: ${err.message}`, {
+      id: ErrorId.commandExecution,
+      command,
+      explanation: "The JavaScript in the command threw. Usually the data the template expects is shaped differently, or is not there at all."
+    });
     Object.setPrototypeOf(this, new.target.prototype);
     this.command = command;
     this.err = err;
   }
 }
 class ImageError extends CommandExecutionError {
-}
-class InternalError extends Error {
-  constructor(msg) {
-    super(`INTERNAL ERROR: ${msg}`);
+  constructor(err, command) {
+    super(err, command);
+    this.properties = {
+      ...this.properties,
+      id: ErrorId.image,
+      explanation: "The IMAGE command returned something that could not be embedded. It must be an object with `width`, `height`, `data` and a supported `extension`."
+    };
   }
 }
-class TemplateParseError extends Error {
+class InternalError extends TemplateError {
+  constructor(msg) {
+    super(`INTERNAL ERROR: ${msg}`, {
+      id: ErrorId.internal,
+      explanation: "The engine reached a state it believes to be impossible. This is a bug in the library rather than in the template."
+    });
+    Object.setPrototypeOf(this, InternalError.prototype);
+  }
 }
-class IncompleteConditionalStatementError extends Error {
+class TemplateParseError extends TemplateError {
+  constructor(msg) {
+    super(msg, {
+      id: ErrorId.templateParse,
+      explanation: "The .docx could not be read. Either it is not a Word file, or the part the template was expected in is missing or malformed."
+    });
+    Object.setPrototypeOf(this, TemplateParseError.prototype);
+  }
+}
+class IncompleteConditionalStatementError extends TemplateError {
   constructor() {
     super(
-      "Incomplete IF/END-IF statement. Make sure each IF-statement has a corresponding END-IF command."
+      "Incomplete IF/END-IF statement. Make sure each IF-statement has a corresponding END-IF command.",
+      {
+        id: ErrorId.incompleteConditional,
+        explanation: "The template has a different number of IF and END-IF commands."
+      }
     );
+    Object.setPrototypeOf(this, IncompleteConditionalStatementError.prototype);
   }
 }
-class UnterminatedForLoopError extends Error {
+class UnterminatedForLoopError extends TemplateError {
   constructor(loop) {
     super(
-      `Unterminated FOR-loop ('FOR ${loop.varName}'). Make sure each FOR loop has a corresponding END-FOR command.`
+      `Unterminated FOR-loop ('FOR ${loop.varName}'). Make sure each FOR loop has a corresponding END-FOR command.`,
+      {
+        id: ErrorId.unterminatedForLoop,
+        command: `FOR ${loop.varName}`,
+        explanation: "The template reached its end with a FOR loop still open. Every FOR needs a matching END-FOR."
+      }
     );
+    Object.setPrototypeOf(this, UnterminatedForLoopError.prototype);
+  }
+}
+class InvalidOptionError extends TemplateError {
+  option;
+  constructor(option, expected, received) {
+    super(`Option '${option}' must be ${expected}, but received ${received}`, {
+      id: ErrorId.invalidOption,
+      explanation: "The option was passed with a value of the wrong type. It used to be ignored, which meant the setting silently did nothing."
+    });
+    Object.setPrototypeOf(this, InvalidOptionError.prototype);
+    this.option = option;
   }
 }
 
@@ -2190,11 +2339,14 @@ const cloneNodeWithoutChildren = (node) => {
   };
 };
 const getFirstChild = (node) => node._children[0] ?? null;
+const nextIdxByParent = /* @__PURE__ */ new WeakMap();
 const getNextSibling = (node) => {
   const parent = node._parent;
   if (parent == null) return null;
   const siblings = parent._children;
-  const idx = siblings.indexOf(node);
+  const guess = nextIdxByParent.get(parent);
+  const idx = guess != null && siblings[guess] === node ? guess : siblings.indexOf(node);
+  nextIdxByParent.set(parent, idx + 1);
   if (idx < 0 || idx >= siblings.length - 1) return null;
   return siblings[idx + 1] ?? null;
 };
@@ -2257,7 +2409,7 @@ const addChild = (parent, child) => {
   child._parent = parent;
   return child;
 };
-const getCurLoop = (ctx) => ctx.loops[ctx.loops.length - 1] ?? null;
+const getCurLoop = (ctx) => ctx.scope.loops[ctx.scope.loops.length - 1] ?? null;
 const isIfBranchSuppressed = (loop) => loop.isIf === true && loop.ifCurrentBranch != null && loop.ifActiveBranch != null && loop.ifCurrentBranch !== loop.ifActiveBranch;
 const isLoopSkippingOutput = (loop) => loop.idx <= EXPLORATION_PASS || isIfBranchSuppressed(loop);
 const isLoopExploring = (ctx) => {
@@ -2289,82 +2441,19 @@ const findCellNode = (node) => {
   return null;
 };
 const markCellIfLoopSpansCells = (ctx, node, loop) => {
-  const cell = ctx.cell;
+  const cell = ctx.walk.cell;
   if (cell == null) return;
   const cmdCell = findCellNode(node);
   if (cmdCell !== cell.node) return;
-  if (findCellNode(loop.refNode) !== cmdCell) cell.fSpansCells = true;
+  if (findCellNode(loop.refNode) !== cmdCell) cell.spansCells = true;
 };
 const doesCellSpanCells = (ctx) => {
-  const cell = ctx.cell;
+  const cell = ctx.walk.cell;
   if (cell == null) return false;
-  return cell.fSpansCells || ctx.loops.some((loop) => findCellNode(loop.refNode) === cell.node);
+  return cell.spansCells || ctx.scope.loops.some((loop) => findCellNode(loop.refNode) === cell.node);
 };
-
-const SandboxKey = {
-  code: "__code__",
-  result: "__result__",
-  varPrefix: "$",
-  /** Index of the innermost loop's current iteration. */
-  loopIndex: "$idx"
-};
-const UNSANDBOXED_SOURCE = `with(this) { return eval(${SandboxKey.code}); }`;
-async function runUserJsAndGetRaw(data, code, ctx) {
-  const sandbox = {
-    ...ctx.jsSandbox || {},
-    [SandboxKey.code]: code,
-    [SandboxKey.result]: void 0,
-    ...data,
-    ...ctx.options.additionalJsContext
-  };
-  const curLoop = getCurLoop(ctx);
-  if (curLoop) sandbox[SandboxKey.loopIndex] = curLoop.idx;
-  Object.keys(ctx.vars).forEach((varName) => {
-    sandbox[`${SandboxKey.varPrefix}${varName}`] = ctx.vars[varName];
-  });
-  let context;
-  let result;
-  try {
-    if (ctx.options.runJs) {
-      const temp = ctx.options.runJs({ sandbox, ctx });
-      context = temp.modifiedSandbox;
-      result = await temp.result;
-    } else if (ctx.options.noSandbox) {
-      context = sandbox;
-      const wrapper = new Function(UNSANDBOXED_SOURCE);
-      result = await wrapper.call(context);
-    } else {
-      const script = new vm.Script(sandbox[SandboxKey.code] ?? "");
-      context = vm.createContext(sandbox);
-      result = await script.runInContext(context);
-    }
-  } catch (err) {
-    const e = isError(err) ? err : new Error(`${err}`);
-    if (ctx.options.errorHandler != null) {
-      context = sandbox;
-      result = await ctx.options.errorHandler(e, code);
-    } else {
-      throw new CommandExecutionError(e, code);
-    }
-  }
-  if (ctx.options.rejectNullish && result == null) {
-    const nerr = new NullishCommandResultError(code);
-    if (ctx.options.errorHandler != null) {
-      result = await ctx.options.errorHandler(nerr, code);
-    } else {
-      throw nerr;
-    }
-  }
-  ctx.jsSandbox = {
-    ...context,
-    [SandboxKey.code]: void 0,
-    [SandboxKey.result]: void 0
-  };
-  return result;
-}
 
 const node$1 = newNonTextNode;
-const REL_ID_PREFIX = { image: "img", link: "link", html: "html" };
 const SVG_EXTENSION = ".svg";
 const LINK_KEEP_HISTORY = "1";
 const UNDERLINE_SINGLE = "single";
@@ -2408,10 +2497,7 @@ function validateImagePars(pars) {
 }
 const imageToContext = (ctx, img) => {
   validateImage(img);
-  ctx.imageAndShapeIdIncrement += 1;
-  const relId = `${REL_ID_PREFIX.image}${ctx.imageAndShapeIdIncrement}`;
-  ctx.images[relId] = img;
-  return relId;
+  return ctx.resources.addImage(img);
 };
 function getImageData(imagePars) {
   const { data, extension } = imagePars;
@@ -2431,7 +2517,7 @@ function buildImageExtensions(ctx, imagePars, imgRelId) {
       })
     ])
   ];
-  if (ctx.images[imgRelId]?.extension !== SVG_EXTENSION) {
+  if (ctx.resources.images[imgRelId]?.extension !== SVG_EXTENSION) {
     return { extNodes, renderedRelId: imgRelId };
   }
   const thumbnail = imagePars.thumbnail ?? PLACEHOLDER_THUMBNAIL;
@@ -2451,7 +2537,7 @@ const processImage = (ctx, imagePars) => {
   const cx = (imagePars.width * EMU_PER_CM).toFixed(0);
   const cy = (imagePars.height * EMU_PER_CM).toFixed(0);
   const relId = imageToContext(ctx, getImageData(imagePars));
-  const id = String(ctx.imageAndShapeIdIncrement);
+  const id = String(ctx.resources.lastShapeId);
   const alt = imagePars.alt || "";
   const rot = imagePars.rotation ? (imagePars.rotation * ROTATION_UNITS_PER_DEGREE).toString() : void 0;
   const { extNodes, renderedRelId } = buildImageExtensions(
@@ -2511,13 +2597,15 @@ const processImage = (ctx, imagePars) => {
       ])
     ])
   ]);
-  ctx.pendingImageNode = { image: drawing };
-  if (imagePars.caption) {
-    ctx.pendingImageNode.caption = [
-      node$1(WTag.br),
-      node$1(WTag.t, {}, [newTextNode(imagePars.caption)])
-    ];
-  }
+  ctx.resources.park("image", {
+    node: drawing,
+    ...imagePars.caption ? {
+      extra: [
+        node$1(WTag.br),
+        node$1(WTag.t, {}, [newTextNode(imagePars.caption)])
+      ]
+    } : {}
+  });
 };
 function findHighestImgId(mainDoc) {
   const ids = [];
@@ -2539,494 +2627,66 @@ function findHighestImgId(mainDoc) {
 }
 const processLink = (ctx, linkPars) => {
   const { url, label = url } = linkPars;
-  ctx.linkId += 1;
-  const relId = `${REL_ID_PREFIX.link}${ctx.linkId}`;
-  ctx.links[relId] = { url };
-  const { textRunPropsNode } = ctx;
-  ctx.pendingLinkNode = node$1(
-    WTag.hyperlink,
-    { [RAttr.id]: relId, [WAttr.history]: LINK_KEEP_HISTORY },
-    [
-      node$1(WTag.r, {}, [
-        // A link with no formatting of its own gets the conventional underline
-        textRunPropsNode || node$1(WTag.rPr, {}, [node$1(WTag.u, { [WAttr.val]: UNDERLINE_SINGLE })]),
-        node$1(WTag.t, {}, [newTextNode(label)])
-      ])
-    ]
-  );
+  const relId = ctx.resources.addLink(url);
+  const { textRunProps } = ctx.resources;
+  ctx.resources.park("link", {
+    node: node$1(
+      WTag.hyperlink,
+      { [RAttr.id]: relId, [WAttr.history]: LINK_KEEP_HISTORY },
+      [
+        node$1(WTag.r, {}, [
+          // A link with no formatting of its own gets the conventional underline
+          textRunProps || node$1(WTag.rPr, {}, [
+            node$1(WTag.u, { [WAttr.val]: UNDERLINE_SINGLE })
+          ]),
+          node$1(WTag.t, {}, [newTextNode(label)])
+        ])
+      ]
+    )
+  });
 };
 const processHtml = (ctx, data) => {
-  ctx.htmlId += 1;
-  const relId = `${REL_ID_PREFIX.html}${ctx.htmlId}`;
-  ctx.htmls[relId] = data;
-  ctx.pendingHtmlNode = node$1(WTag.altChunk, { [RAttr.id]: relId });
-};
-
-const NON_WORD_CHAR = /[\s!"#%&'()*+,\-./:;<=>?[\\\]^`{|}~]/;
-const isWordChar = (char) => char != null && char !== "" && !NON_WORD_CHAR.test(char);
-const isWhitespace = (char) => char != null && /\s/.test(char);
-function compileAliases(aliases) {
-  const out = [];
-  if (aliases == null) return out;
-  for (const alias of Object.keys(aliases)) {
-    const tokens = alias.trim().split(/\s+/).filter((token) => token !== "");
-    if (!tokens.length) throw new InvalidAliasError("Empty alias", alias);
-    const replacement = aliases[alias];
-    if (typeof replacement !== "string")
-      throw new InvalidAliasError("Alias replacement must be a string", alias);
-    out.push({ tokens: tokens.map((token) => token.toLowerCase()), replacement });
-  }
-  out.sort((a, b) => b.tokens.join(" ").length - a.tokens.join(" ").length);
-  return out;
-}
-function compileCommandAliases(aliases) {
-  const out = compileAliases(aliases);
-  for (const alias of out) {
-    alias.replacement = alias.replacement.trim().toUpperCase();
-    if (!BUILT_IN_COMMANDS.includes(alias.replacement))
-      throw new InvalidAliasError(
-        `Command aliases must point to one of ${BUILT_IN_COMMANDS.join(", ")}`,
-        `${alias.tokens.join(" ")} -> ${alias.replacement}`
-      );
-  }
-  return out;
-}
-const matchTokensAt = (text, idx, tokens) => {
-  let i = idx;
-  for (let t = 0; t < tokens.length; t++) {
-    if (t > 0) {
-      const startOfGap = i;
-      while (i < text.length && isWhitespace(text[i])) i++;
-      if (i === startOfGap) return -1;
-    }
-    const token = tokens[t];
-    if (token == null) return -1;
-    const candidate = text.slice(i, i + token.length);
-    if (candidate.length < token.length) return -1;
-    if (candidate.toLowerCase() !== token) return -1;
-    i += token.length;
-  }
-  return i;
-};
-const matchAliasAt = (text, idx, tokens) => {
-  const firstToken = tokens[0];
-  const lastToken = tokens[tokens.length - 1];
-  if (firstToken == null || lastToken == null) return -1;
-  if (isWordChar(firstToken[0]) && isWordChar(text[idx - 1])) return -1;
-  const end = matchTokensAt(text, idx, tokens);
-  if (end < 0) return -1;
-  if (isWordChar(lastToken[lastToken.length - 1]) && isWordChar(text[end]))
-    return -1;
-  return end;
-};
-function substituteAliases(text, aliases) {
-  if (!aliases.length || !text) return text;
-  let out = "";
-  let idx = 0;
-  let openQuote = null;
-  while (idx < text.length) {
-    const char = text[idx];
-    if (openQuote != null) {
-      out += char;
-      if (char === "\\") {
-        if (idx + 1 < text.length) out += text[idx + 1];
-        idx += 2;
-        continue;
-      }
-      if (char === openQuote) openQuote = null;
-      idx += 1;
-      continue;
-    }
-    if (char === "'" || char === '"' || char === "`") {
-      openQuote = char;
-      out += char;
-      idx += 1;
-      continue;
-    }
-    let matched = false;
-    for (const { tokens, replacement } of aliases) {
-      const end = matchAliasAt(text, idx, tokens);
-      if (end < 0) continue;
-      out += replacement;
-      idx = end;
-      matched = true;
-      break;
-    }
-    if (!matched) {
-      out += char;
-      idx += 1;
-    }
-  }
-  return out;
-}
-function resolveCommandAlias(cmd, aliases) {
-  for (const { tokens, replacement } of aliases) {
-    const end = matchAliasAt(cmd, 0, tokens);
-    if (end < 0) continue;
-    return `${replacement} ${cmd.slice(end).trim()}`.trim();
-  }
-  return void 0;
-}
-
-const builtInRegexes = BUILT_IN_COMMANDS.map((word) => new RegExp(`^${word}\\b`));
-const isBuiltIn = (cmd) => builtInRegexes.some((r) => r.test(cmd.toUpperCase()));
-const SMART_DOUBLE_QUOTES = /[“”„]/g;
-const SMART_SINGLE_QUOTES = /[‘’‚]/g;
-function getCommand(command, shorthands, options) {
-  let cmd = command.trim();
-  if (cmd[0] === CommandPrefix.shorthand) {
-    const aliasName = cmd.slice(1).trim();
-    const shorthand = shorthands[aliasName];
-    if (!shorthand) throw new InvalidCommandError("Unknown alias", cmd);
-    cmd = resolveCommandAlias(shorthand, options.commandAliases) ?? shorthand;
-  } else if (cmd[0] === CommandPrefix.ins) {
-    cmd = `${Command.INS} ${cmd.slice(1).trim()}`;
-  } else if (cmd[0] === CommandPrefix.exec) {
-    cmd = `${Command.EXEC} ${cmd.slice(1).trim()}`;
-  } else {
-    const aliased = resolveCommandAlias(cmd, options.commandAliases);
-    if (aliased != null) cmd = aliased;
-    else if (!isBuiltIn(cmd)) cmd = `${Command.INS} ${cmd}`;
-  }
-  if (options.fixSmartQuotes) {
-    cmd = cmd.replace(SMART_DOUBLE_QUOTES, '"').replace(SMART_SINGLE_QUOTES, "'");
-  }
-  return cmd.trim();
-}
-const EXPRESSION_COMMANDS = [
-  Command.FOR,
-  Command.IF,
-  Command.ELSE_IF,
-  Command.INS,
-  Command.EXEC,
-  Command.IMAGE,
-  Command.LINK,
-  Command.HTML
-];
-function splitCommand(cmd, operatorAliases) {
-  const cmdNameMatch = /^(\S+)\s*/.exec(cmd);
-  let cmdName;
-  let cmdRest = "";
-  if (cmdNameMatch?.[1] != null) {
-    cmdName = cmdNameMatch[1].toUpperCase();
-    cmdRest = cmd.slice(cmdName.length).trim();
-    if (operatorAliases?.length && EXPRESSION_COMMANDS.includes(cmdName)) {
-      cmdRest = substituteAliases(cmdRest, operatorAliases);
-    }
-  }
-  return { cmdName, cmdRest };
-}
-
-const IF_VAR_PREFIX = "__if_";
-const NO_BRANCH = -1;
-const NEWLINE = /\n/g;
-const IF_RENDER_ONCE = [1];
-const IF_RENDER_NEVER = [];
-const processCmd = async (data, node, ctx) => {
-  const cmd = getCommand(ctx.cmd, ctx.shorthands, ctx.options);
-  ctx.cmd = "";
-  const { cmdName, cmdRest } = splitCommand(cmd, ctx.options.operatorAliases);
-  try {
-    if (cmdName !== Command.CMD_NODE) logger.debug(`Processing cmd: ${cmd}`);
-    if (ctx.fSeekQuery) {
-      if (cmdName === Command.QUERY) ctx.query = cmdRest;
-      return;
-    }
-    switch (cmdName) {
-      // `CMD_NODE` marks a text node emptied out by `preprocessTemplate`;
-      // `QUERY` was already consumed above.
-      case Command.QUERY:
-      case Command.CMD_NODE:
-        return;
-      case Command.ALIAS:
-        processAlias(ctx, cmd, cmdRest);
-        return;
-      case Command.FOR:
-      case Command.IF:
-        await processForIf(data, node, ctx, cmd, cmdName, cmdRest);
-        return;
-      case Command.ELSE_IF:
-      case Command.ELSE:
-        await processElse(data, node, ctx, cmd, cmdName, cmdRest);
-        return;
-      case Command.END_FOR:
-      case Command.END_IF:
-        processEndForIf(node, ctx, cmd, cmdName, cmdRest);
-        return;
-      case Command.INS:
-        if (isLoopExploring(ctx)) return;
-        return await processIns(data, ctx, cmdRest);
-      case Command.EXEC:
-        if (isLoopExploring(ctx)) return;
-        await runUserJsAndGetRaw(data, cmdRest, ctx);
-        return;
-      case Command.IMAGE:
-        if (isLoopExploring(ctx)) return;
-        await processImageCmd(data, ctx, cmd, cmdRest);
-        return;
-      case Command.LINK: {
-        if (isLoopExploring(ctx)) return;
-        const pars = await runUserJsAndGetRaw(
-          data,
-          cmdRest,
-          ctx
-        );
-        if (pars != null) processLink(ctx, pars);
-        return;
-      }
-      case Command.HTML: {
-        if (isLoopExploring(ctx)) return;
-        const html = await runUserJsAndGetRaw(
-          data,
-          cmdRest,
-          ctx
-        );
-        if (html != null) processHtml(ctx, html);
-        return;
-      }
-      default:
-        throw new CommandSyntaxError(cmd);
-    }
-  } catch (err) {
-    if (!isError(err)) throw err;
-    if (ctx.options.errorHandler != null) {
-      return ctx.options.errorHandler(err, cmdRest);
-    }
-    return err;
-  }
-};
-const processAlias = (ctx, cmd, cmdRest) => {
-  const aliasMatch = /^(\S+)\s+(.+)/.exec(cmdRest);
-  const [, aliasName, fullCmd] = aliasMatch ?? [];
-  if (aliasName == null || fullCmd == null)
-    throw new InvalidCommandError("Invalid ALIAS command", cmd);
-  ctx.shorthands[aliasName] = fullCmd;
-};
-const processIns = async (data, ctx, cmdRest) => {
-  let result = await runUserJsAndGetRaw(data, cmdRest, ctx);
-  if (result == null) return "";
-  if (typeof result === "object" && !Array.isArray(result)) {
-    const err = new ObjectCommandResultError(cmdRest, result);
-    if (ctx.options.errorHandler == null) throw err;
-    result = await ctx.options.errorHandler(err, cmdRest);
-  }
-  const str = String(result);
-  return ctx.options.processLineBreaks ? insertLineBreaks(str, ctx) : str;
-};
-const insertLineBreaks = (str, ctx) => {
-  const { literalXmlDelimiter: d } = ctx.options;
-  const lineBreak = `${d}<${WTag.br}/>${d}`;
-  if (!ctx.options.processLineBreaksAsNewText) {
-    return str.replace(NEWLINE, lineBreak);
-  }
-  const endOfText = `${d}</${WTag.t}>${d}`;
-  const startOfText = `${d}<${WTag.t} ${XmlAttr.space}="${XML_SPACE_PRESERVE}">${d}`;
-  return str.split("\n").join(`${endOfText}${lineBreak}${startOfText}`);
-};
-const processImageCmd = async (data, ctx, cmd, cmdRest) => {
-  const img = await runUserJsAndGetRaw(
-    data,
-    cmdRest,
-    ctx
-  );
-  if (img == null) return;
-  try {
-    processImage(ctx, img);
-  } catch (e) {
-    if (!isError(e)) throw e;
-    throw new ImageError(e, cmd);
-  }
-};
-const processForIf = async (data, node, ctx, cmd, cmdName, cmdRest) => {
-  const isIf = cmdName === Command.IF;
-  let forMatch = null;
-  let varName;
-  if (isIf) {
-    if (!node._ifName) {
-      node._ifName = `${IF_VAR_PREFIX}${ctx.gCntIf}`;
-      ctx.gCntIf += 1;
-    }
-    varName = node._ifName;
-  } else {
-    forMatch = /^(\S+)\s+IN\s+(.+)/i.exec(cmdRest);
-    if (forMatch?.[1] == null || forMatch[2] == null)
-      throw new InvalidCommandError("Invalid FOR command", cmd);
-    varName = forMatch[1];
-  }
-  const curLoop = getCurLoop(ctx);
-  if (curLoop && curLoop.varName === varName) {
-    if (isIf) restartIfBranches(curLoop);
-    logLoop(ctx.loops);
-    return;
-  }
-  if (isIf) checkNoNestedIfInSameScope(ctx, node, cmd);
-  const parentLoop = getCurLoop(ctx);
-  const fParentIsExploring = parentLoop != null && isLoopSkippingOutput(parentLoop);
-  let loopOver;
-  let ifBranchTaken = false;
-  let ifActiveBranch = NO_BRANCH;
-  if (fParentIsExploring) {
-    loopOver = [];
-    if (isIf) ifBranchTaken = true;
-  } else if (isIf) {
-    loopOver = [];
-    ifBranchTaken = !!await runUserJsAndGetRaw(data, cmdRest, ctx);
-    if (ifBranchTaken) ifActiveBranch = 0;
-  } else {
-    const loopExpression = forMatch?.[2];
-    if (loopExpression == null)
-      throw new InvalidCommandError("Invalid FOR command", cmd);
-    loopOver = await runUserJsAndGetRaw(data, loopExpression, ctx);
-    if (!Array.isArray(loopOver))
-      throw new InvalidCommandError(
-        "Invalid FOR command (can only iterate over Array)",
-        cmd
-      );
-  }
-  ctx.loops.push({
-    refNode: node,
-    refNodeLevel: ctx.level,
-    varName,
-    loopOver,
-    isIf,
-    // Run through the loop once first without outputting anything; otherwise
-    // empty loops could not be detected.
-    idx: EXPLORATION_PASS,
-    ...isIf ? { ifCurrentBranch: 0, ifActiveBranch, ifBranchTaken } : {}
+  const relId = ctx.resources.addHtml(data);
+  ctx.resources.park("html", {
+    node: node$1(WTag.altChunk, { [RAttr.id]: relId })
   });
-  logLoop(ctx.loops);
-};
-const checkNoNestedIfInSameScope = (ctx, node, cmd) => {
-  const scopeNode = findParentPorTrNode(node);
-  if (scopeNode == null) return;
-  const tag = tagOf(scopeNode);
-  const seen = tag === WTag.p ? ctx.pIfCheckMap : tag === WTag.tr ? ctx.trIfCheckMap : null;
-  if (seen == null) return;
-  if (seen.has(scopeNode) && seen.get(scopeNode) !== cmd) {
-    throw new InvalidCommandError(
-      `Invalid IF command nested into another IF command on the same ${tag === WTag.p ? "line" : "table row"}`,
-      cmd
-    );
-  }
-  seen.set(scopeNode, cmd);
-};
-const restartIfBranches = (loop) => {
-  loop.ifCurrentBranch = 0;
-  loop.ifElseBranch = void 0;
-};
-const processElse = async (data, node, ctx, cmd, cmdName, cmdRest) => {
-  const isElseIf = cmdName === Command.ELSE_IF;
-  const curLoop = getCurLoop(ctx);
-  if (!curLoop || !curLoop.isIf)
-    throw new InvalidCommandError(
-      `Unexpected ${cmdName} outside of IF statement context`,
-      cmd
-    );
-  if (isElseIf && !cmdRest)
-    throw new InvalidCommandError(
-      "Invalid ELSE-IF command (missing condition)",
-      cmd
-    );
-  if (curLoop.ifElseBranch != null)
-    throw new InvalidCommandError(
-      `Unexpected ${cmdName} after an ELSE command`,
-      cmd
-    );
-  markCellIfLoopSpansCells(ctx, node, curLoop);
-  const branch = (curLoop.ifCurrentBranch ?? 0) + 1;
-  curLoop.ifCurrentBranch = branch;
-  if (!isElseIf) curLoop.ifElseBranch = branch;
-  if (curLoop.idx <= EXPLORATION_PASS && !curLoop.ifBranchTaken) {
-    let shouldRun = true;
-    if (isElseIf) {
-      const ifLoop = ctx.loops.pop();
-      try {
-        shouldRun = !!await runUserJsAndGetRaw(data, cmdRest, ctx);
-      } finally {
-        if (ifLoop) ctx.loops.push(ifLoop);
-      }
-    }
-    if (shouldRun) {
-      curLoop.ifBranchTaken = true;
-      curLoop.ifActiveBranch = branch;
-    }
-  }
-  logLoop(ctx.loops);
-};
-const processEndForIf = (node, ctx, cmd, cmdName, cmdRest) => {
-  const isIf = cmdName === Command.END_IF;
-  const curLoop = getCurLoop(ctx);
-  if (!curLoop)
-    throw new InvalidCommandError(
-      `Unexpected ${cmdName} outside of ${isIf ? "IF statement" : "FOR loop"} context`,
-      cmd
-    );
-  const scopeNode = findParentPorTrNode(node);
-  if (scopeNode != null) {
-    const tag = tagOf(scopeNode);
-    if (tag === WTag.p) ctx.pIfCheckMap.delete(scopeNode);
-    else if (tag === WTag.tr) ctx.trIfCheckMap.delete(scopeNode);
-  }
-  if (isIf && !node._ifName) {
-    node._ifName = curLoop.varName;
-    ctx.gCntEndIf += 1;
-  }
-  const varName = isIf ? node._ifName : cmdRest;
-  if (curLoop.varName !== varName) {
-    if (ctx.loops.find((o) => o.varName === varName) == null) {
-      logger.debug(
-        `Ignoring ${cmd} (${varName}, but we're expecting ${curLoop.varName})`
-      );
-      return;
-    }
-    throw new InvalidCommandError("Invalid command", cmd);
-  }
-  markCellIfLoopSpansCells(ctx, node, curLoop);
-  if (isIf && curLoop.idx <= EXPLORATION_PASS) {
-    curLoop.loopOver = (curLoop.ifActiveBranch ?? NO_BRANCH) >= 0 ? IF_RENDER_ONCE : IF_RENDER_NEVER;
-  }
-  const nextIdx = curLoop.idx + 1;
-  const nextItem = curLoop.loopOver[nextIdx];
-  if (nextItem != null) {
-    ctx.vars[varName] = nextItem;
-    ctx.fJump = true;
-    curLoop.idx = nextIdx;
-    if (isIf) restartIfBranches(curLoop);
-  } else {
-    ctx.loops.pop();
-  }
 };
 
-function newContext(options, imageAndShapeIdIncrement = 0) {
+function newContext(options, lastImageAndShapeId = 0) {
   return {
-    gCntIf: 0,
-    gCntEndIf: 0,
+    options,
+    walk: newWalkState(),
+    scope: newScope(),
+    resources: newResources(lastImageAndShapeId)
+  };
+}
+function newWalkState() {
+  return {
     level: 1,
-    fCmd: false,
-    cmd: "",
-    fSeekQuery: false,
+    jumpRequested: false,
     buffers: Object.fromEntries(
       BUFFER_TAGS.map((tag) => [
         tag,
-        { text: "", cmds: "", fInsertedText: false }
+        { text: "", cmds: "", hasInsertedText: false }
       ])
     ),
-    imageAndShapeIdIncrement,
-    images: {},
-    linkId: 0,
-    links: {},
-    htmlId: 0,
-    htmls: {},
+    isCollectingCommand: false,
+    command: "",
+    openIfCount: 0,
+    closedIfCount: 0,
+    // To verify we don't have a nested IF within the same `w:p` or `w:tr` tag
+    ifByParagraph: /* @__PURE__ */ new Map(),
+    ifByTableRow: /* @__PURE__ */ new Map(),
+    ifNames: /* @__PURE__ */ new Map()
+  };
+}
+function newScope() {
+  return {
     // Keyed by names taken from the template, hence the null prototype: a plain
     // object would report `toString` and friends as defined.
     vars: /* @__PURE__ */ Object.create(null),
     loops: [],
-    fJump: false,
-    shorthands: /* @__PURE__ */ Object.create(null),
-    options,
-    // To verify we don't have a nested IF within the same `w:p` or `w:tr` tag
-    pIfCheckMap: /* @__PURE__ */ new Map(),
-    trIfCheckMap: /* @__PURE__ */ new Map()
+    shorthands: /* @__PURE__ */ Object.create(null)
   };
 }
 
@@ -3130,43 +2790,36 @@ const parseXml = (templateXml) => {
 };
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 const INDENT_STEP = "  ";
-function buildXml(node, options, indent = "", firstRun = true) {
-  const xmlBuffers = [
-    Buffer.from(firstRun ? XML_DECLARATION : "", "utf-8")
-  ];
-  if (node._fTextNode)
-    xmlBuffers.push(Buffer.from(sanitizeText(node._text, options)));
-  else {
-    let attrs = "";
-    const nodeAttrs = node._attrs;
-    Object.entries(nodeAttrs).forEach(([key, value]) => {
-      if (value == null) return;
-      attrs += ` ${key}="${sanitizeAttr(value)}"`;
-    });
-    const fHasChildren = node._children.length > 0;
-    const suffix = fHasChildren ? "" : "/";
-    const newline = options.indentXml ? `
-${indent}` : "";
-    xmlBuffers.push(Buffer.from(`${newline}<${node._tag}${attrs}${suffix}>`));
-    let fLastChildIsNode = false;
-    node._children.forEach((child) => {
-      xmlBuffers.push(
-        buildXml(
-          child,
-          options,
-          options.indentXml ? `${indent}${INDENT_STEP}` : "",
-          false
-        )
-      );
-      fLastChildIsNode = !child._fTextNode;
-    });
-    if (fHasChildren) {
-      const indent2 = options.indentXml && fLastChildIsNode ? `
-${indent}` : "";
-      xmlBuffers.push(Buffer.from(`${indent2}</${node._tag}>`));
-    }
+function buildXml(node, options) {
+  const out = [XML_DECLARATION];
+  appendNode(node, options, "", out);
+  return Buffer.from(out.join(""), "utf-8");
+}
+function appendNode(node, options, indent, out) {
+  if (node._fTextNode) {
+    out.push(sanitizeText(node._text, options));
+    return;
   }
-  return Buffer.concat(xmlBuffers);
+  let attrs = "";
+  for (const [key, value] of Object.entries(node._attrs)) {
+    if (value == null) continue;
+    attrs += ` ${key}="${sanitizeAttr(value)}"`;
+  }
+  const fHasChildren = node._children.length > 0;
+  const suffix = fHasChildren ? "" : "/";
+  const newline = options.indentXml ? `
+${indent}` : "";
+  out.push(`${newline}<${node._tag}${attrs}${suffix}>`);
+  if (!fHasChildren) return;
+  const childIndent = options.indentXml ? `${indent}${INDENT_STEP}` : "";
+  let fLastChildIsNode = false;
+  for (const child of node._children) {
+    appendNode(child, options, childIndent, out);
+    fLastChildIsNode = !child._fTextNode;
+  }
+  const closingIndent = options.indentXml && fLastChildIsNode ? `
+${indent}` : "";
+  out.push(`${closingIndent}</${node._tag}>`);
 }
 const XML_ENTITIES = {
   "&": "&amp;",
@@ -17913,7 +17566,7 @@ const zipGetText = (zip, filename) => {
   if (!file_in_zip) return null;
   return file_in_zip.async("text");
 };
-const zipSetText = (zip, filename, data) => zip.file(filename, data, { binary: false });
+const zipSetText = (zip, filename, data) => zip.file(filename, data, { binary: true });
 const zipSave = (zip, compressionLevel) => zip.generateAsync({
   type: "uint8array",
   compression: "DEFLATE",
@@ -18015,6 +17668,192 @@ function ensureContentTypes(contentTypes, embedded) {
   }
 }
 
+const NON_WORD_CHAR = /[\s!"#%&'()*+,\-./:;<=>?[\\\]^`{|}~]/;
+const isWordChar$1 = (char) => char != null && char !== "" && !NON_WORD_CHAR.test(char);
+const isWhitespace = (char) => char != null && /\s/.test(char);
+function compileAliases(aliases) {
+  const out = [];
+  if (aliases == null) return out;
+  for (const alias of Object.keys(aliases)) {
+    const tokens = alias.trim().split(/\s+/).filter((token) => token !== "");
+    if (!tokens.length) throw new InvalidAliasError("Empty alias", alias);
+    const replacement = aliases[alias];
+    if (typeof replacement !== "string")
+      throw new InvalidAliasError("Alias replacement must be a string", alias);
+    out.push({ tokens: tokens.map((token) => token.toLowerCase()), replacement });
+  }
+  out.sort((a, b) => b.tokens.join(" ").length - a.tokens.join(" ").length);
+  return out;
+}
+function compileCommandAliases(aliases) {
+  const out = compileAliases(aliases);
+  for (const alias of out) {
+    alias.replacement = alias.replacement.trim().toUpperCase();
+    if (!BUILT_IN_COMMANDS.includes(alias.replacement))
+      throw new InvalidAliasError(
+        `Command aliases must point to one of ${BUILT_IN_COMMANDS.join(", ")}`,
+        `${alias.tokens.join(" ")} -> ${alias.replacement}`
+      );
+  }
+  return out;
+}
+const matchTokensAt = (text, idx, tokens) => {
+  let i = idx;
+  for (let t = 0; t < tokens.length; t++) {
+    if (t > 0) {
+      const startOfGap = i;
+      while (i < text.length && isWhitespace(text[i])) i++;
+      if (i === startOfGap) return -1;
+    }
+    const token = tokens[t];
+    if (token == null) return -1;
+    const candidate = text.slice(i, i + token.length);
+    if (candidate.length < token.length) return -1;
+    if (candidate.toLowerCase() !== token) return -1;
+    i += token.length;
+  }
+  return i;
+};
+const matchAliasAt = (text, idx, tokens) => {
+  const firstToken = tokens[0];
+  const lastToken = tokens[tokens.length - 1];
+  if (firstToken == null || lastToken == null) return -1;
+  if (isWordChar$1(firstToken[0]) && isWordChar$1(text[idx - 1])) return -1;
+  const end = matchTokensAt(text, idx, tokens);
+  if (end < 0) return -1;
+  if (isWordChar$1(lastToken[lastToken.length - 1]) && isWordChar$1(text[end]))
+    return -1;
+  return end;
+};
+function substituteAliases(text, aliases) {
+  if (!aliases.length || !text) return text;
+  let out = "";
+  let idx = 0;
+  let openQuote = null;
+  while (idx < text.length) {
+    const char = text[idx];
+    if (openQuote != null) {
+      out += char;
+      if (char === "\\") {
+        if (idx + 1 < text.length) out += text[idx + 1];
+        idx += 2;
+        continue;
+      }
+      if (char === openQuote) openQuote = null;
+      idx += 1;
+      continue;
+    }
+    if (char === "'" || char === '"' || char === "`") {
+      openQuote = char;
+      out += char;
+      idx += 1;
+      continue;
+    }
+    let matched = false;
+    for (const { tokens, replacement } of aliases) {
+      const end = matchAliasAt(text, idx, tokens);
+      if (end < 0) continue;
+      out += replacement;
+      idx = end;
+      matched = true;
+      break;
+    }
+    if (!matched) {
+      out += char;
+      idx += 1;
+    }
+  }
+  return out;
+}
+function resolveCommandAlias(cmd, aliases) {
+  for (const { tokens, replacement } of aliases) {
+    const end = matchAliasAt(cmd, 0, tokens);
+    if (end < 0) continue;
+    return `${replacement} ${cmd.slice(end).trim()}`.trim();
+  }
+  return void 0;
+}
+
+const isString = (v) => typeof v === "string";
+const isBoolean = (v) => typeof v === "boolean";
+const isNumber = (v) => typeof v === "number" && !Number.isNaN(v);
+const isFunction = (v) => typeof v === "function";
+const isObject = (v) => typeof v === "object" && v !== null && !Array.isArray(v);
+const check = (expected, ok) => ({
+  expected,
+  ok
+});
+const ANYTHING = check("anything", () => true);
+const BINARY = check(
+  "a Uint8Array (e.g. a Buffer), an ArrayBuffer or a string",
+  (v) => v instanceof Uint8Array || v instanceof ArrayBuffer || isString(v)
+);
+const DELIMITER = check(
+  "a string, or an array of two strings",
+  (v) => isString(v) || Array.isArray(v) && v.length === 2 && v.every(isString)
+);
+const ALIAS_MAP = check(
+  "an object mapping each alias to a string",
+  (v) => isObject(v) && Object.values(v).every(isString)
+);
+const OPTION_CHECKS = {
+  template: BINARY,
+  data: ANYTHING,
+  queryVars: ANYTHING,
+  cmdDelimiter: DELIMITER,
+  literalXmlDelimiter: check("a string", isString),
+  processLineBreaks: check("a boolean", isBoolean),
+  noSandbox: check("a boolean", isBoolean),
+  runJs: check("a function", isFunction),
+  additionalJsContext: check("an object", isObject),
+  failFast: check("a boolean", isBoolean),
+  rejectNullish: check("a boolean", isBoolean),
+  errorHandler: check("a function", isFunction),
+  fixSmartQuotes: check("a boolean", isBoolean),
+  processLineBreaksAsNewText: check("a boolean", isBoolean),
+  maximumWalkingDepth: check("a number", isNumber),
+  indentXml: check("a boolean", isBoolean),
+  preserveSpace: check("a boolean", isBoolean),
+  compressionLevel: check("a number", isNumber),
+  commandAliases: ALIAS_MAP,
+  operatorAliases: ALIAS_MAP
+};
+const KNOWN_OPTIONS = new Set(Object.keys(OPTION_CHECKS));
+const describe$1 = (value) => {
+  if (value === null) return "null";
+  if (Array.isArray(value)) return "an array";
+  const type = typeof value;
+  return type === "object" ? "an object" : `a ${type}`;
+};
+function validateOptions(options) {
+  if (!isObject(options)) {
+    throw new InvalidOptionError(
+      "options",
+      "an object",
+      describe$1(options)
+    );
+  }
+  for (const [name, value] of Object.entries(options)) {
+    if (!KNOWN_OPTIONS.has(name)) {
+      continue;
+    }
+    if (value === void 0) continue;
+    const rule = OPTION_CHECKS[name];
+    if (!rule.ok(value)) {
+      throw new InvalidOptionError(name, rule.expected, describe$1(value));
+    }
+  }
+}
+function validateTemplate(template) {
+  if (template === void 0 || !BINARY.ok(template)) {
+    throw new InvalidOptionError(
+      "template",
+      BINARY.expected,
+      template === void 0 ? "nothing" : describe$1(template)
+    );
+  }
+}
+
 const DEFAULT_CMD_DELIMITER$1 = "+++";
 const DEFAULT_LITERAL_XML_DELIMITER = "||";
 const DEFAULT_COMPRESSION_LEVEL = 1;
@@ -18036,6 +17875,7 @@ const getCmdDelimiter = (delimiter) => {
   return delimiter;
 };
 function resolveOptions(options) {
+  validateOptions(options);
   return {
     cmdDelimiter: getCmdDelimiter(options.cmdDelimiter),
     literalXmlDelimiter: options.literalXmlDelimiter || DEFAULT_LITERAL_XML_DELIMITER,
@@ -18046,9 +17886,7 @@ function resolveOptions(options) {
     additionalJsContext: options.additionalJsContext ?? {},
     failFast: options.failFast ?? OPTION_DEFAULTS.failFast,
     rejectNullish: options.rejectNullish ?? OPTION_DEFAULTS.rejectNullish,
-    // Anything that isn't callable is treated as "no handler", rather than
-    // failing later at the point of call.
-    errorHandler: typeof options.errorHandler === "function" ? options.errorHandler : null,
+    errorHandler: options.errorHandler ?? null,
     fixSmartQuotes: options.fixSmartQuotes ?? OPTION_DEFAULTS.fixSmartQuotes,
     maximumWalkingDepth: options.maximumWalkingDepth,
     indentXml: options.indentXml ?? OPTION_DEFAULTS.indentXml,
@@ -18130,20 +17968,592 @@ const getRels = async (zip, relsPath) => {
   return parseXml(relsXml || EMPTY_RELS_XML);
 };
 
+const SandboxKey = {
+  code: "__code__",
+  result: "__result__",
+  varPrefix: "$",
+  /** Index of the innermost loop's current iteration. */
+  loopIndex: "$idx"
+};
+const UNSANDBOXED_SOURCE = `with(this) { return eval(${SandboxKey.code}); }`;
+const newSandbox = () => ({
+  [SandboxKey.code]: void 0,
+  [SandboxKey.result]: void 0
+});
+const getRuntime = (ctx) => {
+  const existing = ctx.scope.jsRuntime;
+  if (existing != null) return existing;
+  const context = vm.createContext(newSandbox());
+  const runtime = { context, scripts: /* @__PURE__ */ new Map() };
+  ctx.scope.jsRuntime = runtime;
+  return runtime;
+};
+const assignInto = (target, source) => {
+  if (source == null) return;
+  Object.assign(target, source);
+};
+function prepareSandbox(sandbox, data, code, ctx) {
+  sandbox[SandboxKey.code] = code;
+  sandbox[SandboxKey.result] = void 0;
+  assignInto(sandbox, data);
+  assignInto(sandbox, ctx.options.additionalJsContext);
+  const curLoop = getCurLoop(ctx);
+  if (curLoop) sandbox[SandboxKey.loopIndex] = curLoop.idx;
+  for (const varName of Object.keys(ctx.scope.vars)) {
+    sandbox[`${SandboxKey.varPrefix}${varName}`] = ctx.scope.vars[varName];
+  }
+  return sandbox;
+}
+const runJsContextOf = (ctx) => ({
+  options: ctx.options,
+  vars: ctx.scope.vars,
+  loops: ctx.scope.loops,
+  jsSandbox: ctx.scope.jsSandbox
+});
+function compile(ctx, code) {
+  const { scripts } = getRuntime(ctx);
+  let script = scripts.get(code);
+  if (script == null) {
+    script = new vm.Script(code);
+    scripts.set(code, script);
+  }
+  return script;
+}
+async function runUserJsAndGetRaw(data, code, ctx) {
+  const usesSharedContext = !ctx.options.runJs && !ctx.options.noSandbox;
+  const sandbox = prepareSandbox(
+    usesSharedContext ? getRuntime(ctx).context : { ...ctx.scope.jsSandbox ?? newSandbox() },
+    data,
+    code,
+    ctx
+  );
+  let context;
+  let result;
+  try {
+    if (ctx.options.runJs) {
+      const temp = ctx.options.runJs({ sandbox, ctx: runJsContextOf(ctx) });
+      context = temp.modifiedSandbox;
+      result = await temp.result;
+    } else if (ctx.options.noSandbox) {
+      context = sandbox;
+      const wrapper = new Function(UNSANDBOXED_SOURCE);
+      result = await wrapper.call(context);
+    } else {
+      context = sandbox;
+      const script = compile(ctx, sandbox[SandboxKey.code] ?? "");
+      result = await script.runInContext(context);
+    }
+  } catch (err) {
+    const e = isError(err) ? err : new Error(`${err}`);
+    if (ctx.options.errorHandler != null) {
+      context = sandbox;
+      result = await ctx.options.errorHandler(e, code);
+    } else {
+      throw new CommandExecutionError(e, code);
+    }
+  }
+  if (ctx.options.rejectNullish && result == null) {
+    const nerr = new NullishCommandResultError(code);
+    if (ctx.options.errorHandler != null) {
+      result = await ctx.options.errorHandler(nerr, code);
+    } else {
+      throw nerr;
+    }
+  }
+  ctx.scope.jsSandbox = {
+    ...context,
+    [SandboxKey.code]: void 0,
+    [SandboxKey.result]: void 0
+  };
+  return result;
+}
+
+const IF_VAR_PREFIX = "__if_";
+const NO_BRANCH = -1;
+const NEWLINE = /\n/g;
+const IF_RENDER_ONCE = [1];
+const IF_RENDER_NEVER = [];
+const processAlias = ({ ctx, cmd, rest }) => {
+  const aliasMatch = /^(\S+)\s+(.+)/.exec(rest);
+  const [, aliasName, fullCmd] = aliasMatch ?? [];
+  if (aliasName == null || fullCmd == null)
+    throw new InvalidCommandError("Invalid ALIAS command", cmd);
+  ctx.scope.shorthands[aliasName] = fullCmd;
+};
+const processIns = async ({
+  data,
+  ctx,
+  rest
+}) => {
+  let result = await runUserJsAndGetRaw(data, rest, ctx);
+  if (result == null) return "";
+  if (typeof result === "object" && !Array.isArray(result)) {
+    const err = new ObjectCommandResultError(rest, result);
+    if (ctx.options.errorHandler == null) throw err;
+    result = await ctx.options.errorHandler(err, rest);
+  }
+  const str = String(result);
+  return ctx.options.processLineBreaks ? insertLineBreaks(str, ctx) : str;
+};
+const insertLineBreaks = (str, ctx) => {
+  const { literalXmlDelimiter: d } = ctx.options;
+  const lineBreak = `${d}<${WTag.br}/>${d}`;
+  if (!ctx.options.processLineBreaksAsNewText) {
+    return str.replace(NEWLINE, lineBreak);
+  }
+  const endOfText = `${d}</${WTag.t}>${d}`;
+  const startOfText = `${d}<${WTag.t} ${XmlAttr.space}="${XML_SPACE_PRESERVE}">${d}`;
+  return str.split("\n").join(`${endOfText}${lineBreak}${startOfText}`);
+};
+const processExec = async ({ data, ctx, rest }) => {
+  await runUserJsAndGetRaw(data, rest, ctx);
+};
+const processImageCmd = async ({ data, ctx, cmd, rest }) => {
+  const img = await runUserJsAndGetRaw(data, rest, ctx);
+  if (img == null) return;
+  try {
+    processImage(ctx, img);
+  } catch (e) {
+    if (!isError(e)) throw e;
+    throw new ImageError(e, cmd);
+  }
+};
+const processLinkCmd = async ({ data, ctx, rest }) => {
+  const pars = await runUserJsAndGetRaw(data, rest, ctx);
+  if (pars != null) processLink(ctx, pars);
+};
+const processHtmlCmd = async ({ data, ctx, rest }) => {
+  const html = await runUserJsAndGetRaw(data, rest, ctx);
+  if (html != null) processHtml(ctx, html);
+};
+const processForIf = async ({
+  data,
+  node,
+  ctx,
+  cmd,
+  name,
+  rest
+}) => {
+  const isIf = name === Command.IF;
+  let forMatch = null;
+  let varName;
+  if (isIf) {
+    let ifName = ctx.walk.ifNames.get(node);
+    if (ifName == null) {
+      ifName = `${IF_VAR_PREFIX}${ctx.walk.openIfCount}`;
+      ctx.walk.ifNames.set(node, ifName);
+      ctx.walk.openIfCount += 1;
+    }
+    varName = ifName;
+  } else {
+    forMatch = /^(\S+)\s+IN\s+(.+)/i.exec(rest);
+    if (forMatch?.[1] == null || forMatch[2] == null)
+      throw new InvalidCommandError("Invalid FOR command", cmd);
+    varName = forMatch[1];
+  }
+  const curLoop = getCurLoop(ctx);
+  if (curLoop && curLoop.varName === varName) {
+    if (isIf) restartIfBranches(curLoop);
+    logLoop(ctx.scope.loops);
+    return;
+  }
+  if (isIf) checkNoNestedIfInSameScope(ctx, node, cmd);
+  const parentLoop = getCurLoop(ctx);
+  const fParentIsExploring = parentLoop != null && isLoopSkippingOutput(parentLoop);
+  let loopOver;
+  let ifBranchTaken = false;
+  let ifActiveBranch = NO_BRANCH;
+  if (fParentIsExploring) {
+    loopOver = [];
+    if (isIf) ifBranchTaken = true;
+  } else if (isIf) {
+    loopOver = [];
+    ifBranchTaken = !!await runUserJsAndGetRaw(data, rest, ctx);
+    if (ifBranchTaken) ifActiveBranch = 0;
+  } else {
+    const loopExpression = forMatch?.[2];
+    if (loopExpression == null)
+      throw new InvalidCommandError("Invalid FOR command", cmd);
+    loopOver = await runUserJsAndGetRaw(data, loopExpression, ctx);
+    if (!Array.isArray(loopOver))
+      throw new InvalidCommandError(
+        "Invalid FOR command (can only iterate over Array)",
+        cmd
+      );
+  }
+  ctx.scope.loops.push({
+    refNode: node,
+    refNodeLevel: ctx.walk.level,
+    varName,
+    loopOver,
+    isIf,
+    // Run through the loop once first without outputting anything; otherwise
+    // empty loops could not be detected.
+    idx: EXPLORATION_PASS,
+    ...isIf ? { ifCurrentBranch: 0, ifActiveBranch, ifBranchTaken } : {}
+  });
+  logLoop(ctx.scope.loops);
+};
+const checkNoNestedIfInSameScope = (ctx, node, cmd) => {
+  const scopeNode = findParentPorTrNode(node);
+  if (scopeNode == null) return;
+  const tag = tagOf(scopeNode);
+  const seen = tag === WTag.p ? ctx.walk.ifByParagraph : tag === WTag.tr ? ctx.walk.ifByTableRow : null;
+  if (seen == null) return;
+  if (seen.has(scopeNode) && seen.get(scopeNode) !== cmd) {
+    throw new InvalidCommandError(
+      `Invalid IF command nested into another IF command on the same ${tag === WTag.p ? "line" : "table row"}`,
+      cmd
+    );
+  }
+  seen.set(scopeNode, cmd);
+};
+const restartIfBranches = (loop) => {
+  loop.ifCurrentBranch = 0;
+  loop.ifElseBranch = void 0;
+};
+const processElse = async ({
+  data,
+  node,
+  ctx,
+  cmd,
+  name,
+  rest
+}) => {
+  const isElseIf = name === Command.ELSE_IF;
+  const curLoop = getCurLoop(ctx);
+  if (!curLoop || !curLoop.isIf)
+    throw new InvalidCommandError(
+      `Unexpected ${name} outside of IF statement context`,
+      cmd
+    );
+  if (isElseIf && !rest)
+    throw new InvalidCommandError(
+      "Invalid ELSE-IF command (missing condition)",
+      cmd
+    );
+  if (curLoop.ifElseBranch != null)
+    throw new InvalidCommandError(
+      `Unexpected ${name} after an ELSE command`,
+      cmd
+    );
+  markCellIfLoopSpansCells(ctx, node, curLoop);
+  const branch = (curLoop.ifCurrentBranch ?? 0) + 1;
+  curLoop.ifCurrentBranch = branch;
+  if (!isElseIf) curLoop.ifElseBranch = branch;
+  if (curLoop.idx <= EXPLORATION_PASS && !curLoop.ifBranchTaken) {
+    let shouldRun = true;
+    if (isElseIf) {
+      const ifLoop = ctx.scope.loops.pop();
+      try {
+        shouldRun = !!await runUserJsAndGetRaw(data, rest, ctx);
+      } finally {
+        if (ifLoop) ctx.scope.loops.push(ifLoop);
+      }
+    }
+    if (shouldRun) {
+      curLoop.ifBranchTaken = true;
+      curLoop.ifActiveBranch = branch;
+    }
+  }
+  logLoop(ctx.scope.loops);
+};
+const processEndForIf = ({ node, ctx, cmd, name, rest }) => {
+  const isIf = name === Command.END_IF;
+  const curLoop = getCurLoop(ctx);
+  if (!curLoop)
+    throw new InvalidCommandError(
+      `Unexpected ${name} outside of ${isIf ? "IF statement" : "FOR loop"} context`,
+      cmd
+    );
+  const scopeNode = findParentPorTrNode(node);
+  if (scopeNode != null) {
+    const tag = tagOf(scopeNode);
+    if (tag === WTag.p) ctx.walk.ifByParagraph.delete(scopeNode);
+    else if (tag === WTag.tr) ctx.walk.ifByTableRow.delete(scopeNode);
+  }
+  if (isIf && !ctx.walk.ifNames.has(node)) {
+    ctx.walk.ifNames.set(node, curLoop.varName);
+    ctx.walk.closedIfCount += 1;
+  }
+  const varName = isIf ? ctx.walk.ifNames.get(node) : rest;
+  if (curLoop.varName !== varName) {
+    if (ctx.scope.loops.find((o) => o.varName === varName) == null) {
+      logger.debug(
+        `Ignoring ${cmd} (${varName}, but we're expecting ${curLoop.varName})`
+      );
+      return;
+    }
+    throw new InvalidCommandError("Invalid command", cmd);
+  }
+  markCellIfLoopSpansCells(ctx, node, curLoop);
+  if (isIf && curLoop.idx <= EXPLORATION_PASS) {
+    curLoop.loopOver = (curLoop.ifActiveBranch ?? NO_BRANCH) >= 0 ? IF_RENDER_ONCE : IF_RENDER_NEVER;
+  }
+  const nextIdx = curLoop.idx + 1;
+  const nextItem = curLoop.loopOver[nextIdx];
+  if (nextItem != null) {
+    ctx.scope.vars[varName] = nextItem;
+    ctx.walk.jumpRequested = true;
+    curLoop.idx = nextIdx;
+    if (isIf) restartIfBranches(curLoop);
+  } else {
+    ctx.scope.loops.pop();
+  }
+};
+const noop = () => {
+};
+const COMMANDS = {
+  // Read before rendering starts, by the compile-time query scan.
+  [Command.QUERY]: {
+    isExpression: false,
+    skipWhileExploring: false,
+    run: noop
+  },
+  // Scaffolding left in emptied-out text nodes by `preprocessTemplate`, not
+  // something a template author writes.
+  [Command.CMD_NODE]: {
+    isExpression: false,
+    skipWhileExploring: false,
+    run: noop
+  },
+  [Command.ALIAS]: {
+    isExpression: false,
+    skipWhileExploring: false,
+    run: processAlias
+  },
+  [Command.FOR]: {
+    isExpression: true,
+    skipWhileExploring: false,
+    run: processForIf
+  },
+  [Command.END_FOR]: {
+    isExpression: false,
+    skipWhileExploring: false,
+    run: processEndForIf
+  },
+  [Command.IF]: {
+    isExpression: true,
+    skipWhileExploring: false,
+    run: processForIf
+  },
+  [Command.ELSE_IF]: {
+    isExpression: true,
+    skipWhileExploring: false,
+    run: processElse
+  },
+  [Command.ELSE]: {
+    isExpression: false,
+    skipWhileExploring: false,
+    run: processElse
+  },
+  [Command.END_IF]: {
+    isExpression: false,
+    skipWhileExploring: false,
+    run: processEndForIf
+  },
+  [Command.INS]: {
+    isExpression: true,
+    skipWhileExploring: true,
+    run: processIns
+  },
+  [Command.EXEC]: {
+    isExpression: true,
+    skipWhileExploring: true,
+    run: processExec
+  },
+  [Command.IMAGE]: {
+    isExpression: true,
+    skipWhileExploring: true,
+    run: processImageCmd
+  },
+  [Command.LINK]: {
+    isExpression: true,
+    skipWhileExploring: true,
+    run: processLinkCmd
+  },
+  [Command.HTML]: {
+    isExpression: true,
+    skipWhileExploring: true,
+    run: processHtmlCmd
+  }
+};
+const SPECS = new Map(Object.entries(COMMANDS));
+const specOf = (name) => SPECS.get(name);
+const EXPRESSION_COMMANDS = new Set(
+  Object.entries(COMMANDS).filter(([, spec]) => spec.isExpression).map(([name]) => name)
+);
+
+const BUILT_IN_NAMES = new Set(BUILT_IN_COMMANDS);
+const isWordChar = (char) => char != null && /[A-Za-z0-9_]/.test(char);
+const endOfWord = (cmd, from) => {
+  let idx = from;
+  while (idx < cmd.length && isWordChar(cmd[idx])) idx += 1;
+  return idx;
+};
+const isBuiltIn = (cmd) => {
+  const firstEnd = endOfWord(cmd, 0);
+  if (BUILT_IN_NAMES.has(cmd.slice(0, firstEnd).toUpperCase())) return true;
+  if (cmd[firstEnd] !== "-") return false;
+  const secondEnd = endOfWord(cmd, firstEnd + 1);
+  return BUILT_IN_NAMES.has(cmd.slice(0, secondEnd).toUpperCase());
+};
+const SMART_DOUBLE_QUOTES = /[“”„]/g;
+const SMART_SINGLE_QUOTES = /[‘’‚]/g;
+const PREFIX_EXPANSIONS = {
+  [CommandPrefix.shorthand]: ({ rest, cmd, shorthands, options }) => {
+    const shorthand = shorthands[rest];
+    if (!shorthand) throw new InvalidCommandError("Unknown alias", cmd);
+    return resolveCommandAlias(shorthand, options.commandAliases) ?? shorthand;
+  },
+  [CommandPrefix.ins]: ({ rest }) => `${Command.INS} ${rest}`,
+  [CommandPrefix.exec]: ({ rest }) => `${Command.EXEC} ${rest}`
+};
+function getCommand(command, shorthands, options) {
+  let cmd = command.trim();
+  const expandPrefix = PREFIX_EXPANSIONS[cmd[0] ?? ""];
+  if (expandPrefix != null) {
+    cmd = expandPrefix({ rest: cmd.slice(1).trim(), cmd, shorthands, options });
+  } else {
+    const aliased = resolveCommandAlias(cmd, options.commandAliases);
+    if (aliased != null) cmd = aliased;
+    else if (!isBuiltIn(cmd)) cmd = `${Command.INS} ${cmd}`;
+  }
+  if (options.fixSmartQuotes) {
+    cmd = cmd.replace(SMART_DOUBLE_QUOTES, '"').replace(SMART_SINGLE_QUOTES, "'");
+  }
+  return cmd.trim();
+}
+function splitCommand(cmd, operatorAliases) {
+  const cmdNameMatch = /^(\S+)\s*/.exec(cmd);
+  let cmdName;
+  let cmdRest = "";
+  if (cmdNameMatch?.[1] != null) {
+    cmdName = cmdNameMatch[1].toUpperCase();
+    cmdRest = cmd.slice(cmdName.length).trim();
+    if (operatorAliases?.length && EXPRESSION_COMMANDS.has(cmdName)) {
+      cmdRest = substituteAliases(cmdRest, operatorAliases);
+    }
+  }
+  return { cmdName, cmdRest };
+}
+
+const isTextNodeInsideWt$1 = (node) => node._fTextNode && tagOf(node._parent) === WTag.t;
+function compileTemplate(template, cmdDelimiter) {
+  const commands = [];
+  const [open, close] = cmdDelimiter;
+  let collecting = false;
+  let raw = "";
+  let node = template;
+  while ((node = nextNodeInTree(node)) != null) {
+    if (!isTextNodeInsideWt$1(node)) continue;
+    const text = node._text;
+    if (text == null || text === "") continue;
+    const segments = text.split(open).flatMap((s) => s.split(close));
+    for (let idx = 0; idx < segments.length; idx++) {
+      if (collecting) raw += segments[idx] ?? "";
+      if (idx < segments.length - 1) {
+        if (collecting) {
+          commands.push({ node, raw });
+          raw = "";
+        }
+        collecting = !collecting;
+      }
+    }
+  }
+  return { commands };
+}
+const NO_SHORTHANDS = /* @__PURE__ */ Object.create(null);
+function resolveSite(site, options) {
+  const raw = getCommand(site.raw, NO_SHORTHANDS, options);
+  const { cmdName, cmdRest } = splitCommand(raw, options.operatorAliases);
+  return { raw, name: cmdName, code: cmdRest };
+}
+function extractQuery(template, options) {
+  for (const site of compileTemplate(template, options.cmdDelimiter).commands) {
+    const { name, code } = resolveSite(site, options);
+    if (name === Command.QUERY) return code;
+  }
+  return void 0;
+}
+
+const processCmd = async (data, node, ctx) => {
+  const cmd = getCommand(ctx.walk.command, ctx.scope.shorthands, ctx.options);
+  ctx.walk.command = "";
+  const { cmdName, cmdRest } = splitCommand(cmd, ctx.options.operatorAliases);
+  try {
+    if (cmdName !== Command.CMD_NODE) logger.debug(`Processing cmd: ${cmd}`);
+    const spec = cmdName != null ? specOf(cmdName) : void 0;
+    if (spec == null || cmdName == null) throw new CommandSyntaxError(cmd);
+    if (spec.skipWhileExploring && isLoopExploring(ctx)) return;
+    const result = await spec.run({
+      data,
+      node,
+      ctx,
+      cmd,
+      name: cmdName,
+      rest: cmdRest
+    });
+    return result ?? void 0;
+  } catch (err) {
+    if (!isError(err)) throw err;
+    if (ctx.options.errorHandler != null) {
+      return ctx.options.errorHandler(err, cmdRest);
+    }
+    return err;
+  }
+};
+
+const TAG_SHOULD_CONTAIN = [
+  { tag: WTag.tc, oneOf: [WTag.p, WTag.altChunk], fill: WTag.p }
+];
+function fillRequiredChildren(node) {
+  const tag = tagOf(node);
+  for (const rule of TAG_SHOULD_CONTAIN) {
+    if (tag !== rule.tag) continue;
+    if (node._children.some((child) => rule.oneOf.includes(tagOf(child) ?? "")))
+      continue;
+    node._children.push({
+      _parent: node,
+      _children: [],
+      _fTextNode: false,
+      _tag: rule.fill,
+      _attrs: {}
+    });
+  }
+}
+const PENDING_SLOTS = [
+  { tag: WTag.t, kind: "image" },
+  { tag: WTag.r, kind: "link" },
+  { tag: WTag.p, kind: "html" }
+];
+const hasDrawing = (node) => {
+  const tag = tagOf(node);
+  if (tag === WpTag.anchor || tag === WpTag.inline || tag === WTag.drawing)
+    return true;
+  return node._children.some(hasDrawing);
+};
+const hasChildTagged = (node, tag) => node._children.some((child) => tagOf(child) === tag);
+const DROP_RULES = {
+  [WTag.p]: {
+    name: "paragraph anchoring a drawing",
+    reason: "A paragraph with no text still carries content when a drawing is anchored to it; removing it takes the image with it.",
+    keep: ({ nodeOut }) => hasDrawing(nodeOut)
+  },
+  [WTag.tr]: {
+    name: "row wrapping a nested table",
+    reason: "A row whose only content is a single nested row is the wrapper of a nested table, not an empty row.",
+    keep: ({ nodeIn }) => nodeIn._children.filter((child) => tagOf(child) === WTag.tr).length === 1
+  },
+  [WTag.tc]: {
+    name: "cell that is not part of a multi-cell construct",
+    reason: 'A cell is only removed when the commands in it belong to a FOR/IF construct spanning several cells (the "dynamic columns" pattern). A construct opening and closing inside one cell leaves the cell empty but present, since removing it would shift the rest of the row into the wrong columns. A cell holding a nested table always stays.',
+    keep: ({ nodeOut, ctx }) => !doesCellSpanCells(ctx) || hasChildTagged(nodeOut, WTag.tbl)
+  }
+};
+
 async function produceJsReport(data, template, ctx) {
   return walkTemplate(data, template, ctx, processCmd);
-}
-async function extractQuery(template, options) {
-  const ctx = newContext(options);
-  ctx.fSeekQuery = true;
-  let nodeIn = template;
-  while ((nodeIn = nextNodeInTree(nodeIn)) != null) {
-    if (isTextNodeInsideWt(nodeIn)) {
-      await processText(null, nodeIn, ctx, processCmd);
-    }
-    if (ctx.query != null) break;
-  }
-  return ctx.query;
 }
 const isTextNodeInsideWt = (node) => node._fTextNode && tagOf(node._parent) === WTag.t;
 async function walkTemplate(data, template, ctx, processor) {
@@ -18193,9 +18603,9 @@ async function walkTemplate(data, template, ctx, processor) {
   return {
     status: "success",
     report: out,
-    images: ctx.images,
-    links: ctx.links,
-    htmls: ctx.htmls
+    images: ctx.resources.images,
+    links: ctx.resources.links,
+    htmls: ctx.resources.htmls
   };
 }
 function advance({
@@ -18206,17 +18616,17 @@ function advance({
   loopCount,
   maximumWalkingDepth
 }) {
-  if (ctx.fJump) {
+  if (ctx.walk.jumpRequested) {
     if (!curLoop) throw new InternalError("jumping while curLoop is null");
-    const deltaJump = ctx.level - curLoop.refNodeLevel;
-    ctx.level = curLoop.refNodeLevel;
-    ctx.fJump = false;
+    const deltaJump = ctx.walk.level - curLoop.refNodeLevel;
+    ctx.walk.level = curLoop.refNodeLevel;
+    ctx.walk.jumpRequested = false;
     return { node: curLoop.refNode, move: "JUMP" /* jump */, deltaJump };
   }
   if (previousMove !== "UP" /* up */) {
     const firstChild = getFirstChild(nodeIn);
     if (firstChild) {
-      ctx.level += 1;
+      ctx.walk.level += 1;
       return { node: firstChild, move: "DOWN" /* down */, deltaJump: 0 };
     }
   }
@@ -18231,7 +18641,7 @@ function advance({
       "infinite loop or massive dataset detected. Please review and try again"
     );
   }
-  ctx.level -= 1;
+  ctx.walk.level -= 1;
   return { node: parent, move: "UP" /* up */, deltaJump: 0 };
 }
 function dropDeadOutputNode(nodeIn, nodeOut, ctx) {
@@ -18241,29 +18651,13 @@ function dropDeadOutputNode(nodeIn, nodeOut, ctx) {
   if (isLoopExploring(ctx)) {
     fRemoveNode = true;
   } else if (isBufferTag(tag)) {
-    const buffers = ctx.buffers[tag];
-    fRemoveNode = buffers.text === "" && buffers.cmds !== "" && !buffers.fInsertedText;
-    if (fRemoveNode && tag === WTag.p) {
-      fRemoveNode = !hasDrawingElements(nodeOut);
-    }
-    if (fRemoveNode && tag === WTag.tr) {
-      const nestedRows = nodeIn._children.filter(
-        (child) => tagOf(child) === WTag.tr
-      );
-      fRemoveNode = nestedRows.length !== 1;
-    }
-    if (fRemoveNode && tag === WTag.tc) {
-      fRemoveNode = doesCellSpanCells(ctx) && !nodeOut._children.some((child) => tagOf(child) === WTag.tbl);
-    }
+    const buffers = ctx.walk.buffers[tag];
+    const heldOnlyCommands = buffers.text === "" && buffers.cmds !== "" && !buffers.hasInsertedText;
+    const rule = DROP_RULES[tag];
+    fRemoveNode = heldOnlyCommands && !rule.keep({ nodeIn, nodeOut, ctx });
   }
   if (fRemoveNode && nodeOut._parent != null) nodeOut._parent._children.pop();
 }
-const hasDrawingElements = (node) => {
-  const tag = tagOf(node);
-  if (tag === WpTag.anchor || tag === WpTag.inline || tag === WTag.drawing)
-    return true;
-  return node._children.some(hasDrawingElements);
-};
 function moveOutputUp(nodeIn, nodeOut, ctx, curLoop) {
   if (isLoopExploring(ctx) && curLoop && nodeIn === curLoop.refNode._parent) {
     curLoop.refNode = nodeIn;
@@ -18273,32 +18667,15 @@ function moveOutputUp(nodeIn, nodeOut, ctx, curLoop) {
   if (nodeOutParent == null) throw new InternalError("node parent is null");
   nodeOut = nodeOutParent;
   const tag = tagOf(nodeOut);
-  if (ctx.pendingImageNode && tag === WTag.t) {
-    const { image, caption } = ctx.pendingImageNode;
-    replaceOutputNode(nodeOut, ctx, image, caption);
-    delete ctx.pendingImageNode;
+  for (const slot of PENDING_SLOTS) {
+    if (tag !== slot.tag) continue;
+    const pending = ctx.resources.takePending(slot.kind);
+    if (pending != null)
+      replaceOutputNode(nodeOut, ctx, pending.node, pending.extra);
   }
-  if (ctx.pendingLinkNode && tag === WTag.r) {
-    replaceOutputNode(nodeOut, ctx, ctx.pendingLinkNode);
-    delete ctx.pendingLinkNode;
-  }
-  if (ctx.pendingHtmlNode && tag === WTag.p) {
-    replaceOutputNode(nodeOut, ctx, ctx.pendingHtmlNode);
-    delete ctx.pendingHtmlNode;
-  }
-  if (tag === WTag.tc && !nodeOut._children.some(
-    (o) => tagOf(o) === WTag.p || tagOf(o) === WTag.altChunk
-  )) {
-    nodeOut._children.push({
-      _parent: nodeOut,
-      _children: [],
-      _fTextNode: false,
-      _tag: WTag.p,
-      _attrs: {}
-    });
-  }
-  if (tag === WTag.rPr) ctx.textRunPropsNode = nodeOut;
-  if (tagOf(nodeIn) === WTag.r) delete ctx.textRunPropsNode;
+  fillRequiredChildren(nodeOut);
+  if (tag === WTag.rPr) ctx.resources.textRunProps = nodeOut;
+  if (tagOf(nodeIn) === WTag.r) ctx.resources.textRunProps = void 0;
   return nodeOut;
 }
 function replaceOutputNode(nodeOut, ctx, replacement, extra) {
@@ -18308,7 +18685,7 @@ function replaceOutputNode(nodeOut, ctx, replacement, extra) {
   parent._children.pop();
   parent._children.push(replacement);
   if (extra) parent._children.push(...extra);
-  for (const key of BUFFER_TAGS) ctx.buffers[key].fInsertedText = true;
+  for (const key of BUFFER_TAGS) ctx.walk.buffers[key].hasInsertedText = true;
 }
 async function appendOutputNode(data, nodeIn, nodeOut, ctx, move, processor, errors) {
   if (move === "SIDE" /* side */) {
@@ -18317,8 +18694,8 @@ async function appendOutputNode(data, nodeIn, nodeOut, ctx, move, processor, err
   }
   const tag = tagOf(nodeIn);
   if (isBufferTag(tag)) {
-    ctx.buffers[tag] = { text: "", cmds: "", fInsertedText: false };
-    if (tag === WTag.tc) ctx.cell = { node: nodeIn, fSpansCells: false };
+    ctx.walk.buffers[tag] = { text: "", cmds: "", hasInsertedText: false };
+    if (tag === WTag.tc) ctx.walk.cell = { node: nodeIn, spansCells: false };
   }
   const newNode = cloneNodeWithoutChildren(nodeIn);
   newNode._parent = nodeOut;
@@ -18341,11 +18718,12 @@ function collectUnterminatedConstructErrors(ctx, errors) {
     if (ctx.options.failFast) throw err;
     errors.push(err);
   };
-  if (ctx.gCntIf !== ctx.gCntEndIf) {
+  if (ctx.walk.openIfCount !== ctx.walk.closedIfCount) {
     report(new IncompleteConditionalStatementError());
   }
-  const innermostLoop = ctx.loops[ctx.loops.length - 1];
-  if (innermostLoop != null && ctx.loops.some((l) => !l.isIf)) {
+  const { loops } = ctx.scope;
+  const innermostLoop = loops[loops.length - 1];
+  if (innermostLoop != null && loops.some((l) => !l.isIf)) {
     report(new UnterminatedForLoopError(innermostLoop));
   }
 }
@@ -18357,20 +18735,23 @@ const processText = async (data, node, ctx, onCommand) => {
   let outText = "";
   const errors = [];
   for (let idx = 0; idx < segments.length; idx++) {
-    if (idx > 0) appendTextToTagBuffers(cmdDelimiter[0], ctx, { fCmd: true });
+    if (idx > 0)
+      appendTextToTagBuffers(cmdDelimiter[0], ctx, { isCommand: true });
     const segment = segments[idx] ?? "";
-    if (ctx.fCmd) ctx.cmd += segment;
+    if (ctx.walk.isCollectingCommand) ctx.walk.command += segment;
     else if (!isLoopExploring(ctx)) outText += segment;
-    appendTextToTagBuffers(segment, ctx, { fCmd: ctx.fCmd });
+    appendTextToTagBuffers(segment, ctx, {
+      isCommand: ctx.walk.isCollectingCommand
+    });
     if (idx < segments.length - 1) {
-      if (ctx.fCmd) {
+      if (ctx.walk.isCollectingCommand) {
         const cmdResultText = await onCommand(data, node, ctx);
         if (cmdResultText != null) {
           if (typeof cmdResultText === "string") {
             outText += cmdResultText;
             appendTextToTagBuffers(cmdResultText, ctx, {
-              fCmd: false,
-              fInsertedText: true
+              isCommand: false,
+              hasInsertedText: true
             });
           } else {
             if (failFast) throw cmdResultText;
@@ -18378,32 +18759,31 @@ const processText = async (data, node, ctx, onCommand) => {
           }
         }
       }
-      ctx.fCmd = !ctx.fCmd;
+      ctx.walk.isCollectingCommand = !ctx.walk.isCollectingCommand;
     }
   }
   if (errors.length > 0) return errors;
   return outText;
 };
 const appendTextToTagBuffers = (text, ctx, options) => {
-  if (ctx.fSeekQuery) return;
-  const { fCmd, fInsertedText } = options;
-  const type = fCmd ? "cmds" : "text";
+  const { isCommand, hasInsertedText } = options;
+  const type = isCommand ? "cmds" : "text";
   for (const key of BUFFER_TAGS) {
-    const buf = ctx.buffers[key];
+    const buf = ctx.walk.buffers[key];
     buf[type] += text;
-    if (fInsertedText) buf.fInsertedText = true;
+    if (hasInsertedText) buf.hasInsertedText = true;
   }
 };
 function assignNewShapeId(newNode, ctx) {
-  ctx.imageAndShapeIdIncrement += 1;
   newNode._attrs = {
     ...newNode._attrs,
-    [DrawAttr.id]: String(ctx.imageAndShapeIdIncrement)
+    [DrawAttr.id]: String(ctx.resources.nextShapeId())
   };
 }
 
 async function createReport(options, _probe) {
   const { template, data, queryVars } = options;
+  validateTemplate(template);
   const createOptions = resolveOptions(options);
   const xmlOptions = {
     literalXmlDelimiter: createOptions.literalXmlDelimiter,
@@ -18420,7 +18800,7 @@ async function createReport(options, _probe) {
   };
   let queryResult;
   if (typeof data === "function") {
-    const query = await extractQuery(mainPart.template, createOptions);
+    const query = extractQuery(mainPart.template, createOptions);
     queryResult = await data(query, queryVars);
   } else {
     queryResult = data;
@@ -18437,9 +18817,14 @@ async function createReport(options, _probe) {
   for (const part of parts) {
     logger.debug(`Generating report for ${part.name}...`);
     const ctx = newContext(createOptions, lastImageAndShapeId);
-    const result = await produceJsReport(queryResult, part.template, ctx);
-    if (result.status === "errors") throw result.errors;
-    lastImageAndShapeId = ctx.imageAndShapeIdIncrement;
+    let result;
+    try {
+      result = await produceJsReport(queryResult, part.template, ctx);
+    } catch (err) {
+      throw withPart(err, part.name);
+    }
+    if (result.status === "errors") throw withPart(result.errors, part.name);
+    lastImageAndShapeId = ctx.resources.lastShapeId;
     logger.debug(`Writing ${part.name}...`);
     zipSetText(zip, partPathOf(part.name), buildXml(result.report, xmlOptions));
     numImages += Object.keys(result.images).length;
@@ -18477,20 +18862,13 @@ async function listCommands(template, delimiter, aliasOptions) {
     )
   ];
   const commands = [];
-  const collectCommand = async (_data, _node, ctx) => {
-    const raw = getCommand(ctx.cmd, ctx.shorthands, ctx.options);
-    ctx.cmd = "";
-    const { cmdName, cmdRest: code } = splitCommand(
-      raw,
-      ctx.options.operatorAliases
-    );
-    if (cmdName != null && cmdName !== Command.CMD_NODE) {
-      commands.push({ raw, type: cmdName, code });
-    }
-    return void 0;
-  };
   for (const part of parts) {
-    await walkTemplate(void 0, part, newContext(options), collectCommand);
+    for (const site of compileTemplate(part, options.cmdDelimiter).commands) {
+      const { raw, name, code } = resolveSite(site, options);
+      if (name != null && name !== Command.CMD_NODE) {
+        commands.push({ raw, type: name, code });
+      }
+    }
   }
   return commands;
 }
