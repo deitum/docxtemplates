@@ -13,7 +13,7 @@ import { pathToFileURL } from 'node:url';
 
 import type JSZip from 'jszip';
 
-import { getMainDoc, readContentTypes } from '../../../src/main';
+import { getMainDoc, readContentTypes } from '../../../src/docx/parts';
 import { newNonTextNode, newTextNode } from '../../../src/reportUtils';
 import { type Node, type NonTextNode, type TextNode } from '../../../src/types';
 import { buildXml, parseXml } from '../../../src/xml';

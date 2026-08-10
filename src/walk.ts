@@ -1,0 +1,530 @@
+/**
+ * The template walk.
+ *
+ * `walkTemplate` moves a cursor over the input tree and builds a second tree as
+ * it goes. Commands can make it jump backwards (that is how FOR loops repeat),
+ * and can make nodes it already emitted disappear again (that is how a
+ * paragraph holding nothing but `+++END-FOR+++` vanishes from the report).
+ */
+import { type CommandProcessor, processCmd } from './commands/execute';
+import { newContext } from './context';
+import { BUFFER_TAGS, DrawAttr, isBufferTag, VTag, WpTag, WTag } from './ooxml';
+import { DEFAULT_MAXIMUM_WALKING_DEPTH } from './options';
+import { logger } from './debug';
+import {
+  IncompleteConditionalStatementError,
+  InternalError,
+  UnterminatedForLoopError,
+} from './errors';
+import {
+  cloneNodeWithoutChildren,
+  debugPrintNode,
+  doesCellSpanCells,
+  getCurLoop,
+  getFirstChild,
+  getNextSibling,
+  isLoopExploring,
+  nextNodeInTree,
+  tagOf,
+} from './reportUtils';
+import {
+  type Context,
+  type CreateReportOptions,
+  type Htmls,
+  type Images,
+  type Links,
+  type LoopStatus,
+  type Node,
+  type NonTextNode,
+  type ReportData,
+  type TextNode,
+} from './types';
+
+/** How the cursor got to the node it is on. */
+enum Move {
+  jump = 'JUMP',
+  down = 'DOWN',
+  side = 'SIDE',
+  up = 'UP',
+}
+
+type ReportOutput =
+  | {
+      status: 'success';
+      report: Node;
+      images: Images;
+      links: Links;
+      htmls: Htmls;
+    }
+  | {
+      status: 'errors';
+      errors: Error[];
+    };
+
+export async function produceJsReport(
+  data: ReportData | undefined,
+  template: Node,
+  ctx: Context
+): Promise<ReportOutput> {
+  return walkTemplate(data, template, ctx, processCmd);
+}
+
+/**
+ * Goes through the document until the QUERY command is found (normally right at
+ * the beginning), ignoring every other command on the way.
+ */
+export async function extractQuery(
+  template: Node,
+  options: CreateReportOptions
+): Promise<string | undefined> {
+  const ctx: Context = newContext(options);
+  ctx.fSeekQuery = true;
+
+  let nodeIn: Node | null = template;
+  while ((nodeIn = nextNodeInTree(nodeIn)) != null) {
+    if (isTextNodeInsideWt(nodeIn)) {
+      await processText(null, nodeIn, ctx, processCmd);
+    }
+    if (ctx.query != null) break;
+  }
+  return ctx.query;
+}
+
+const isTextNodeInsideWt = (node: Node): node is TextNode =>
+  node._fTextNode && tagOf(node._parent) === WTag.t;
+
+export async function walkTemplate(
+  data: ReportData | undefined,
+  template: Node,
+  ctx: Context,
+  processor: CommandProcessor
+): Promise<ReportOutput> {
+  const out: Node = cloneNodeWithoutChildren(template);
+  let nodeIn: Node = template;
+  let nodeOut: Node = out;
+  let move: Move | undefined;
+  const errors: Error[] = [];
+
+  let loopCount = 0;
+  const maximumWalkingDepth =
+    ctx.options.maximumWalkingDepth || DEFAULT_MAXIMUM_WALKING_DEPTH;
+
+  for (;;) {
+    const curLoop = getCurLoop(ctx);
+
+    // 1. Move the input cursor. `null` means the walk is over.
+    const step = advance({
+      nodeIn,
+      ctx,
+      previousMove: move,
+      curLoop,
+      loopCount,
+      maximumWalkingDepth,
+    });
+    if (step == null) break;
+    ({ node: nodeIn, move } = step);
+
+    if (logger.enabled)
+      logger.debug(
+        `Next node [${move}, level ${ctx.level}]`,
+        debugPrintNode(nodeIn)
+      );
+
+    // 2. The node we just finished may have to be dropped from the output.
+    if (move !== Move.down) dropDeadOutputNode(nodeIn, nodeOut, ctx);
+
+    // 3. Apply the move to the output tree, and run the phase it triggers.
+    if (move === Move.up) {
+      nodeOut = moveOutputUp(nodeIn, nodeOut, ctx, curLoop);
+    } else if (move === Move.down || move === Move.side) {
+      nodeOut = await appendOutputNode(
+        data,
+        nodeIn,
+        nodeOut,
+        ctx,
+        move,
+        processor,
+        errors
+      );
+    } else {
+      // JUMP: climb the output tree back to the level the loop opened at.
+      for (let climb = step.deltaJump; climb > 0; climb -= 1) {
+        if (nodeOut._parent == null)
+          throw new InternalError('node parent is null');
+        nodeOut = nodeOut._parent;
+      }
+    }
+
+    loopCount++;
+  }
+
+  collectUnterminatedConstructErrors(ctx, errors);
+
+  if (errors.length > 0) return { status: 'errors', errors };
+  return {
+    status: 'success',
+    report: out,
+    images: ctx.images,
+    links: ctx.links,
+    htmls: ctx.htmls,
+  };
+}
+
+// ==========================================
+// The phases of one step
+// ==========================================
+
+type Step = { node: Node; move: Move; deltaJump: number };
+
+/**
+ * Picks the next input node: back to a loop's reference node if a command asked
+ * for a jump, otherwise down, sideways or up, in that order. Returns `null`
+ * when the root has been walked out of.
+ */
+function advance({
+  nodeIn,
+  ctx,
+  previousMove,
+  curLoop,
+  loopCount,
+  maximumWalkingDepth,
+}: {
+  nodeIn: Node;
+  ctx: Context;
+  previousMove: Move | undefined;
+  curLoop: LoopStatus | null;
+  loopCount: number;
+  maximumWalkingDepth: number;
+}): Step | null {
+  if (ctx.fJump) {
+    if (!curLoop) throw new InternalError('jumping while curLoop is null');
+    if (logger.enabled)
+      logger.debug(
+        `Jumping to level ${curLoop.refNodeLevel}...`,
+        debugPrintNode(curLoop.refNode)
+      );
+    const deltaJump = ctx.level - curLoop.refNodeLevel;
+    ctx.level = curLoop.refNodeLevel;
+    ctx.fJump = false;
+    return { node: curLoop.refNode, move: Move.jump, deltaJump };
+  }
+
+  // Down — but not if we have just come up, or we would walk in circles.
+  if (previousMove !== Move.up) {
+    const firstChild = getFirstChild(nodeIn);
+    if (firstChild) {
+      ctx.level += 1;
+      return { node: firstChild, move: Move.down, deltaJump: 0 };
+    }
+  }
+
+  const nextSibling = getNextSibling(nodeIn);
+  if (nextSibling) return { node: nextSibling, move: Move.side, deltaJump: 0 };
+
+  const parent = nodeIn._parent;
+  if (parent == null) {
+    logger.debug(`=== parent is null, breaking after ${loopCount} loops...`);
+    return null;
+  }
+  if (loopCount > maximumWalkingDepth) {
+    // Emergency exit, in case a template manages to make the walk loop forever
+    if (logger.enabled)
+      logger.debug(
+        `=== parent is still not null after ${loopCount} loops, something must be wrong ...`,
+        debugPrintNode(parent)
+      );
+    throw new InternalError(
+      'infinite loop or massive dataset detected. Please review and try again'
+    );
+  }
+  ctx.level -= 1;
+  return { node: parent, move: Move.up, deltaJump: 0 };
+}
+
+/**
+ * Removes the output node we have just finished building, in the cases where it
+ * should never have been emitted: nodes produced while exploring a loop, and
+ * paragraphs, rows or cells that held nothing but commands.
+ */
+function dropDeadOutputNode(nodeIn: Node, nodeOut: Node, ctx: Context): void {
+  const tag = tagOf(nodeOut);
+  if (!isBufferTag(tag) && tag !== WTag.tbl) return;
+
+  let fRemoveNode = false;
+  if (isLoopExploring(ctx)) {
+    // Nothing generated during an exploration pass belongs in the output.
+    fRemoveNode = true;
+  } else if (isBufferTag(tag)) {
+    const buffers = ctx.buffers[tag];
+    fRemoveNode =
+      buffers.text === '' && buffers.cmds !== '' && !buffers.fInsertedText;
+
+    if (fRemoveNode && tag === WTag.p) {
+      // A paragraph anchoring a drawing carries content even with no text.
+      fRemoveNode = !hasDrawingElements(nodeOut);
+    }
+    if (fRemoveNode && tag === WTag.tr) {
+      // Keep a row that wraps exactly one nested row (i.e. a nested table).
+      const nestedRows = nodeIn._children.filter(
+        child => tagOf(child) === WTag.tr
+      );
+      fRemoveNode = nestedRows.length !== 1;
+    }
+    if (fRemoveNode && tag === WTag.tc) {
+      // A cell holding only commands is deleted only when those commands are
+      // part of a FOR/IF construct spanning several cells (see "dynamic
+      // columns" in the README). A construct that opens and closes within the
+      // cell leaves an empty cell behind: deleting it would shift the rest of
+      // the row into the wrong columns. Cells containing a nested table are
+      // never deleted.
+      fRemoveNode =
+        doesCellSpanCells(ctx) &&
+        !nodeOut._children.some(child => tagOf(child) === WTag.tbl);
+    }
+  }
+
+  // The node leaves the output, but keeps its parent link, so that the walk can
+  // still move up the tree through it.
+  if (fRemoveNode && nodeOut._parent != null) nodeOut._parent._children.pop();
+}
+
+const hasDrawingElements = (node: Node): boolean => {
+  const tag = tagOf(node);
+  if (tag === WpTag.anchor || tag === WpTag.inline || tag === WTag.drawing)
+    return true;
+  return node._children.some(hasDrawingElements);
+};
+
+/**
+ * Moves the output cursor up one level, and finishes off the node being left
+ * behind: splicing in whatever an IMAGE/LINK/HTML command produced, and keeping
+ * table cells structurally valid.
+ */
+function moveOutputUp(
+  nodeIn: Node,
+  nodeOut: Node,
+  ctx: Context,
+  curLoop: LoopStatus | null
+): Node {
+  // Loop exploring? Update the reference node for the current loop
+  if (isLoopExploring(ctx) && curLoop && nodeIn === curLoop.refNode._parent) {
+    curLoop.refNode = nodeIn;
+    curLoop.refNodeLevel -= 1;
+    if (logger.enabled)
+      logger.debug(
+        `Updated loop '${curLoop.varName}' refNode: ` + debugPrintNode(nodeIn)
+      );
+  }
+
+  const nodeOutParent = nodeOut._parent;
+  if (nodeOutParent == null) throw new InternalError('node parent is null');
+  nodeOut = nodeOutParent;
+
+  const tag = tagOf(nodeOut);
+  if (ctx.pendingImageNode && tag === WTag.t) {
+    const { image, caption } = ctx.pendingImageNode;
+    replaceOutputNode(nodeOut, ctx, image, caption);
+    delete ctx.pendingImageNode;
+  }
+  if (ctx.pendingLinkNode && tag === WTag.r) {
+    replaceOutputNode(nodeOut, ctx, ctx.pendingLinkNode);
+    delete ctx.pendingLinkNode;
+  }
+  if (ctx.pendingHtmlNode && tag === WTag.p) {
+    replaceOutputNode(nodeOut, ctx, ctx.pendingHtmlNode);
+    delete ctx.pendingHtmlNode;
+  }
+
+  // A `w:tc` may not be left without a `w:p` or `w:altChunk` child
+  if (
+    tag === WTag.tc &&
+    !nodeOut._children.some(
+      o => tagOf(o) === WTag.p || tagOf(o) === WTag.altChunk
+    )
+  ) {
+    nodeOut._children.push({
+      _parent: nodeOut,
+      _children: [],
+      _fTextNode: false,
+      _tag: WTag.p,
+      _attrs: {},
+    });
+  }
+
+  // Remember the last `w:rPr` seen, so that a LINK can inherit its formatting
+  if (tag === WTag.rPr) ctx.textRunPropsNode = nodeOut as NonTextNode;
+  if (tagOf(nodeIn) === WTag.r) delete ctx.textRunPropsNode;
+
+  return nodeOut;
+}
+
+/**
+ * Swaps the node the cursor is leaving for the one a command produced, and
+ * marks the enclosing paragraph/row/cell as non-empty so that it survives.
+ */
+function replaceOutputNode(
+  nodeOut: Node,
+  ctx: Context,
+  replacement: Node,
+  extra?: Node[]
+): void {
+  const parent = nodeOut._parent;
+  if (!parent) return;
+  replacement._parent = parent;
+  parent._children.pop();
+  parent._children.push(replacement);
+  if (extra) parent._children.push(...extra);
+  for (const key of BUFFER_TAGS) ctx.buffers[key].fInsertedText = true;
+}
+
+/**
+ * Copies the input node into the output tree and, when it is a text node,
+ * processes the commands it contains. Note that being copied is no guarantee of
+ * survival: `dropDeadOutputNode` may remove it again later.
+ */
+async function appendOutputNode(
+  data: ReportData | undefined,
+  nodeIn: Node,
+  nodeOut: Node,
+  ctx: Context,
+  move: Move.down | Move.side,
+  processor: CommandProcessor,
+  errors: Error[]
+): Promise<Node> {
+  // Point at the new node's parent
+  if (move === Move.side) {
+    if (nodeOut._parent == null) throw new InternalError('node parent is null');
+    nodeOut = nodeOut._parent;
+  }
+
+  // Reset the buffers when a new `w:p`, `w:tr` or `w:tc` starts
+  const tag = tagOf(nodeIn);
+  if (isBufferTag(tag)) {
+    ctx.buffers[tag] = { text: '', cmds: '', fInsertedText: false };
+    if (tag === WTag.tc) ctx.cell = { node: nodeIn, fSpansCells: false };
+  }
+
+  const newNode: Node = cloneNodeWithoutChildren(nodeIn);
+  newNode._parent = nodeOut;
+  nodeOut._children.push(newNode);
+
+  // Renumber shapes, so that copies made by a FOR loop don't share an id
+  if (!isLoopExploring(ctx) && (tag === WpTag.docPr || tag === VTag.shape)) {
+    if (logger.enabled) logger.debug('detected a - ', debugPrintNode(newNode));
+    assignNewShapeId(newNode as NonTextNode, ctx);
+  }
+
+  if (isTextNodeInsideWt(nodeIn)) {
+    const result = await processText(data, nodeIn, ctx, processor);
+    if (typeof result === 'string') {
+      (newNode as TextNode)._text = result;
+      if (logger.enabled)
+        logger.debug(
+          `Inserted command result string into node. Updated node: ` +
+            debugPrintNode(newNode)
+        );
+    } else {
+      errors.push(...result);
+    }
+  }
+
+  return newNode;
+}
+
+function collectUnterminatedConstructErrors(ctx: Context, errors: Error[]) {
+  const report = (err: Error) => {
+    if (ctx.options.failFast) throw err;
+    errors.push(err);
+  };
+
+  if (ctx.gCntIf !== ctx.gCntEndIf) {
+    report(new IncompleteConditionalStatementError());
+  }
+  const innermostLoop = ctx.loops[ctx.loops.length - 1];
+  if (innermostLoop != null && ctx.loops.some(l => !l.isIf)) {
+    report(new UnterminatedForLoopError(innermostLoop));
+  }
+}
+
+// ==========================================
+// Text and command extraction
+// ==========================================
+
+/**
+ * Splits a text node on the command delimiters and alternates between copying
+ * text to the output and feeding commands to `onCommand`, whose result (if any)
+ * is inserted in the command's place.
+ */
+const processText = async (
+  data: ReportData | undefined,
+  node: TextNode,
+  ctx: Context,
+  onCommand: CommandProcessor
+): Promise<string | Error[]> => {
+  const { cmdDelimiter, failFast } = ctx.options;
+  const text = node._text;
+  if (text == null || text === '') return '';
+  const segments = text
+    .split(cmdDelimiter[0])
+    .flatMap(s => s.split(cmdDelimiter[1]));
+
+  let outText = '';
+  const errors: Error[] = [];
+  for (let idx = 0; idx < segments.length; idx++) {
+    // Include the separators in the buffers, so that a paragraph holding only a
+    // command is recognised as such
+    if (idx > 0) appendTextToTagBuffers(cmdDelimiter[0], ctx, { fCmd: true });
+
+    // Append the segment either to the command being collected or to the output
+    const segment = segments[idx] ?? '';
+    if (ctx.fCmd) ctx.cmd += segment;
+    else if (!isLoopExploring(ctx)) outText += segment;
+    appendTextToTagBuffers(segment, ctx, { fCmd: ctx.fCmd });
+
+    // A delimiter follows: run the command if one was being collected, then
+    // toggle between "command" and "text" mode
+    if (idx < segments.length - 1) {
+      if (ctx.fCmd) {
+        const cmdResultText = await onCommand(data, node, ctx);
+        if (cmdResultText != null) {
+          if (typeof cmdResultText === 'string') {
+            outText += cmdResultText;
+            appendTextToTagBuffers(cmdResultText, ctx, {
+              fCmd: false,
+              fInsertedText: true,
+            });
+          } else {
+            if (failFast) throw cmdResultText;
+            errors.push(cmdResultText);
+          }
+        }
+      }
+      ctx.fCmd = !ctx.fCmd;
+    }
+  }
+  if (errors.length > 0) return errors;
+  return outText;
+};
+
+const appendTextToTagBuffers = (
+  text: string,
+  ctx: Context,
+  options: { fCmd?: boolean; fInsertedText?: boolean }
+) => {
+  if (ctx.fSeekQuery) return;
+  const { fCmd, fInsertedText } = options;
+  const type = fCmd ? 'cmds' : 'text';
+  for (const key of BUFFER_TAGS) {
+    const buf = ctx.buffers[key];
+    buf[type] += text;
+    if (fInsertedText) buf.fInsertedText = true;
+  }
+};
+
+function assignNewShapeId(newNode: NonTextNode, ctx: Context) {
+  ctx.imageAndShapeIdIncrement += 1;
+  newNode._attrs = {
+    ...newNode._attrs,
+    [DrawAttr.id]: String(ctx.imageAndShapeIdIncrement),
+  };
+}

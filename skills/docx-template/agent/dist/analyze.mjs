@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { i as isEntryPoint, r as runMain, a as readDocParts, p as plainTextLines, l as listCommands, t as topLevelTables, b as paragraphsOutsideTables, d as directChildren, c as textOf, f as firstChild, e as parseArgs, g as readDelimiter, h as readAliases, j as requireFile } from './shared-docxXml.mjs';
+import 'node:vm';
 import 'node:url';
 import 'stream';
 import 'events';
 import 'buffer';
 import 'util';
-import 'node:vm';
 
 function attr(node, name) {
   const value = node._attrs[name];

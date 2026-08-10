@@ -1,13 +1,13 @@
 import path from 'node:path';
 import { i as isEntryPoint, r as runMain, e as parseArgs, j as requireFile, k as readJson, a as readDocParts, w as writeDocParts, m as wrapParagraphs, n as command, o as replaceTextAll, t as topLevelTables, d as directChildren, q as remove, s as insertAfter, f as firstChild, u as isTag, c as textOf, v as newElement, x as indexText, y as spliceText } from './shared-docxXml.mjs';
 import { normalizeDelimiter } from './generate.mjs';
+import 'node:vm';
 import 'node:fs';
 import 'node:url';
 import 'stream';
 import 'events';
 import 'buffer';
 import 'util';
-import 'node:vm';
 
 function findCommandSpans(index, delimiter) {
   const [open, close] = delimiter;

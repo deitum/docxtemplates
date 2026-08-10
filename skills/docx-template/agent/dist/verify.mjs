@@ -2,11 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { i as isEntryPoint, r as runMain, e as parseArgs, j as requireFile, g as readDelimiter, h as readAliases, l as listCommands, E as createReport, k as readJson, a as readDocParts, p as plainTextLines } from './shared-docxXml.mjs';
+import 'node:vm';
 import 'stream';
 import 'events';
 import 'buffer';
 import 'util';
-import 'node:vm';
 
 const SMART_QUOTES = /[‘’‚“”„]/;
 const loopVarOf = (code) => code.trim().split(/\s+/)[0] ?? "";

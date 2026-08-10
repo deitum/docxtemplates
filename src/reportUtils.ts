@@ -1,17 +1,24 @@
-import {
-  type Node,
-  type TextNode,
-  type NonTextNode,
-  type Context,
-  type LoopStatus,
-} from './types';
-import { TemplateParseError } from './errors';
 import { logger } from './debug';
+import { TemplateParseError } from './errors';
+import { WTag } from './ooxml';
+import {
+  type Context,
+  EXPLORATION_PASS,
+  type LoopStatus,
+  type Node,
+  type NonTextNode,
+  type TextNode,
+} from './types';
 
 // ==========================================
 // Nodes and trees
 // ==========================================
-const cloneNodeWithoutChildren = (node: Node): Node => {
+
+/** The tag of a node, or `null` if it is a text node (or there is no node). */
+export const tagOf = (node: Node | null | undefined): string | null =>
+  node == null || node._fTextNode ? null : node._tag;
+
+export const cloneNodeWithoutChildren = (node: Node): Node => {
   if (node._fTextNode) {
     return {
       _children: [],
@@ -27,9 +34,10 @@ const cloneNodeWithoutChildren = (node: Node): Node => {
   };
 };
 
-const getFirstChild = (node: Node): Node | null => node._children[0] ?? null;
+export const getFirstChild = (node: Node): Node | null =>
+  node._children[0] ?? null;
 
-const getNextSibling = (node: Node): Node | null => {
+export const getNextSibling = (node: Node): Node | null => {
   const parent = node._parent;
   if (parent == null) return null;
   const siblings = parent._children;
@@ -38,9 +46,26 @@ const getNextSibling = (node: Node): Node | null => {
   return siblings[idx + 1] ?? null;
 };
 
-const insertTextSiblingAfter = (textNode: TextNode): TextNode => {
+/**
+ * Depth-first traversal: the node that comes after `node`, or `null` once the
+ * tree has been walked out of. Nodes inserted while traversing are picked up,
+ * which is what `preprocessTemplate` relies on.
+ */
+export const nextNodeInTree = (node: Node): Node | null => {
+  const firstChild = getFirstChild(node);
+  if (firstChild) return firstChild;
+  let curNode: Node | null = node;
+  while (curNode != null) {
+    const nextSibling = getNextSibling(curNode);
+    if (nextSibling) return nextSibling;
+    curNode = curNode._parent ?? null;
+  }
+  return null;
+};
+
+export const insertTextSiblingAfter = (textNode: TextNode): TextNode => {
   const tNode = textNode._parent;
-  if (!(tNode && !tNode._fTextNode && tNode._tag === 'w:t')) {
+  if (tNode == null || tagOf(tNode) !== WTag.t) {
     throw new TemplateParseError(
       'Template syntax error: text node not within w:t'
     );
@@ -65,7 +90,7 @@ const insertTextSiblingAfter = (textNode: TextNode): TextNode => {
   return newTextNode;
 };
 
-const newNonTextNode = (
+export const newNonTextNode = (
   tag: string,
   attrs = {},
   children: Array<Node> = []
@@ -82,21 +107,40 @@ const newNonTextNode = (
   return node;
 };
 
-const newTextNode = (text: string): TextNode => {
-  const node: TextNode = { _children: [], _fTextNode: true, _text: text };
-  return node;
-};
+export const newTextNode = (text: string): TextNode => ({
+  _children: [],
+  _fTextNode: true,
+  _text: text,
+});
 
-const addChild = (parent: Node, child: Node): Node => {
+export const addChild = (parent: Node, child: Node): Node => {
   parent._children.push(child);
   child._parent = parent;
   return child;
 };
 
+/** One node, as a single line, for the debug log. */
+export const debugPrintNode = (node: Node) =>
+  JSON.stringify(
+    node._fTextNode
+      ? {
+          _ifName: node._ifName,
+          _fTextNode: node._fTextNode,
+          _text: node._text,
+        }
+      : {
+          _ifName: node._ifName,
+          _fTextNode: node._fTextNode,
+          _tag: node._tag,
+          _attrs: node._attrs,
+        }
+  );
+
 // ==========================================
 // Loops
 // ==========================================
-const getCurLoop = (ctx: Context): LoopStatus | null =>
+
+export const getCurLoop = (ctx: Context): LoopStatus | null =>
   ctx.loops[ctx.loops.length - 1] ?? null;
 
 // Whether we're walking through a branch of an IF construct (IF / ELSE-IF / ELSE)
@@ -111,44 +155,98 @@ const isIfBranchSuppressed = (loop: LoopStatus) =>
 // Whether the contents inside the given loop must be skipped, either because
 // the loop is being explored (first pass) or because it's an IF construct and
 // the branch being walked is not the selected one.
-const isLoopSkippingOutput = (loop: LoopStatus) =>
-  loop.idx < 0 || isIfBranchSuppressed(loop);
+export const isLoopSkippingOutput = (loop: LoopStatus) =>
+  loop.idx <= EXPLORATION_PASS || isIfBranchSuppressed(loop);
 
-const isLoopExploring = (ctx: Context) => {
+export const isLoopExploring = (ctx: Context) => {
   const curLoop = getCurLoop(ctx);
   return curLoop != null && isLoopSkippingOutput(curLoop);
 };
 
-const logLoop = (loops: Array<LoopStatus>) => {
+export const logLoop = (loops: Array<LoopStatus>) => {
+  if (!logger.enabled) return;
   const level = loops.length - 1;
   const curLoop = loops[level];
   if (curLoop == null) return;
   const { varName, idx, loopOver, isIf, ifCurrentBranch, ifActiveBranch } =
     curLoop;
-  const idxStr = idx >= 0 ? idx + 1 : 'EXPLORATION';
+  const idxStr = idx > EXPLORATION_PASS ? idx + 1 : 'EXPLORATION';
   const branchStr = isIf
     ? ` [branch ${ifCurrentBranch}, selected: ${ifActiveBranch}]`
     : '';
   logger.debug(
     `${isIf ? 'IF' : 'FOR'} loop ` +
-      `on ${level}:${varName}` +
+      `on ${level}:${varName} ` +
       `${idxStr}/${loopOver.length}${branchStr}`
   );
 };
 
 // ==========================================
-// Public API
+// Paragraphs, rows and cells
 // ==========================================
-export {
-  cloneNodeWithoutChildren,
-  getFirstChild,
-  getNextSibling,
-  insertTextSiblingAfter,
-  newNonTextNode,
-  newTextNode,
-  addChild,
-  getCurLoop,
-  isLoopExploring,
-  isLoopSkippingOutput,
-  logLoop,
+
+/**
+ * The `w:p` a node belongs to — or the `w:tr` around it, when that paragraph
+ * sits in a table row. This is the scope an IF construct may not be nested in
+ * twice; see `checkNoNestedIfInSameScope`.
+ */
+export const findParentPorTrNode = (node: Node): Node | null => {
+  let parentNode = node._parent;
+  while (parentNode != null) {
+    if (tagOf(parentNode) === WTag.p) {
+      const grandParentNode = parentNode._parent?._parent;
+      if (grandParentNode != null && tagOf(grandParentNode) === WTag.tr)
+        return grandParentNode;
+      return parentNode;
+    }
+    parentNode = parentNode._parent;
+  }
+  return null;
+};
+
+/**
+ * The table cell a node belongs to (the node itself, if it is a cell): loop
+ * reference nodes get hoisted up the tree while the loop is being explored, and
+ * can end up being the `w:tc` node.
+ */
+const findCellNode = (node: Node): Node | null => {
+  let curNode: Node | null = node;
+  while (curNode != null) {
+    if (tagOf(curNode) === WTag.tc) return curNode;
+    curNode = curNode._parent ?? null;
+  }
+  return null;
+};
+
+/**
+ * Flags the cell we're walking when the FOR/IF construct the command belongs to
+ * was opened in another cell: such a cell is part of the scaffolding of a
+ * multi-cell construct (see "dynamic columns" in the README), and is deleted if
+ * it renders to nothing.
+ */
+export const markCellIfLoopSpansCells = (
+  ctx: Context,
+  node: Node,
+  loop: LoopStatus
+) => {
+  const cell = ctx.cell;
+  if (cell == null) return;
+  const cmdCell = findCellNode(node);
+  if (cmdCell !== cell.node) return;
+  if (findCellNode(loop.refNode) !== cmdCell) cell.fSpansCells = true;
+};
+
+/**
+ * Whether the commands of the cell we're walking are part of a FOR/IF construct
+ * that spans several cells, either because the construct was opened in the cell
+ * and is still open now that the cell ends, or because one of its commands
+ * referred to a construct opened in another cell.
+ */
+export const doesCellSpanCells = (ctx: Context): boolean => {
+  const cell = ctx.cell;
+  if (cell == null) return false;
+  return (
+    cell.fSpansCells ||
+    ctx.loops.some(loop => findCellNode(loop.refNode) === cell.node)
+  );
 };

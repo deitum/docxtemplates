@@ -1,19 +1,23 @@
+import { type QualifiedAttribute } from 'sax';
+import { type BufferTag } from './ooxml';
+
 // ==========================================
 // Docx nodes
-
-import { type QualifiedAttribute } from 'sax';
-
 // ==========================================
+
 export type Node = TextNode | NonTextNode;
+
 type BaseNode = {
   _parent?: Node;
   _children: Array<Node>;
   _ifName?: string;
 };
+
 export type TextNode = BaseNode & {
   _fTextNode: true;
   _text: string;
 };
+
 export type NonTextNode = BaseNode & {
   _fTextNode: false;
   _tag: string;
@@ -26,10 +30,6 @@ export type NonTextNode = BaseNode & {
   };
 };
 
-// ==========================================
-// Report creator
-// ==========================================
-
 /**
  * Binary contents accepted wherever a docx file (or one of the XML files
  * inside it) is read or written: a `Uint8Array` — which includes a NodeJS
@@ -37,7 +37,74 @@ export type NonTextNode = BaseNode & {
  */
 export type ZipInput = Uint8Array | ArrayBuffer | string;
 
+// ==========================================
+// Commands
+// ==========================================
+
+/**
+ * Every command the template language understands. The values are the names as
+ * they are written in a template (upper-cased before they are matched), and are
+ * the single source of truth for {@link BUILT_IN_COMMANDS}.
+ */
+export enum Command {
+  QUERY = 'QUERY',
+  /**
+   * Not a command a user writes: `preprocessTemplate` leaves it behind in text
+   * nodes it has emptied out, so that they are dropped from the report.
+   */
+  CMD_NODE = 'CMD_NODE',
+  ALIAS = 'ALIAS',
+  FOR = 'FOR',
+  END_FOR = 'END-FOR',
+  IF = 'IF',
+  ELSE_IF = 'ELSE-IF',
+  ELSE = 'ELSE',
+  END_IF = 'END-IF',
+  INS = 'INS',
+  EXEC = 'EXEC',
+  IMAGE = 'IMAGE',
+  LINK = 'LINK',
+  HTML = 'HTML',
+}
+
+/**
+ * The name of a built-in command. Deliberately the union of the *string values*
+ * of {@link Command} rather than the enum type itself, so that user code can
+ * keep comparing `command.type` with plain string literals.
+ */
+export type BuiltInCommand = `${Command}`;
+
+export const BUILT_IN_COMMANDS: readonly BuiltInCommand[] =
+  Object.values(Command);
+
+/** The single character a command may start with instead of naming itself. */
+export enum CommandPrefix {
+  /** `*name` — run the command a previous `ALIAS` defined under `name`. */
+  shorthand = '*',
+  /** `=expression` — shorthand for `INS expression`. */
+  ins = '=',
+  /** `!code` — shorthand for `EXEC code`. */
+  exec = '!',
+}
+
+export type CommandSummary = {
+  raw: string;
+  type: BuiltInCommand;
+  code: string;
+};
+
+/**
+ * A user-provided alias map, compiled for matching: the alias is split into
+ * lowercased words, and the list is sorted longest-alias-first.
+ */
+export type AliasList = Array<{ tokens: string[]; replacement: string }>;
+
+// ==========================================
+// Report creator
+// ==========================================
+
 export type ReportData = any;
+
 export type QueryResolver = (
   query: string | undefined,
   queryVars: any
@@ -191,12 +258,7 @@ export type UserOptions = {
   operatorAliases?: { [alias: string]: string };
 };
 
-/**
- * A user-provided alias map, compiled for matching: the alias is split into
- * lowercased words, and the list is sorted longest-alias-first.
- */
-export type AliasList = Array<{ tokens: string[]; replacement: string }>;
-
+/** `UserOptions` with every default filled in; see `options.ts`. */
 export type CreateReportOptions = {
   cmdDelimiter: [string, string];
   literalXmlDelimiter: string;
@@ -219,12 +281,17 @@ export type CreateReportOptions = {
   operatorAliases: AliasList;
 };
 
+// ==========================================
+// Engine state
+// ==========================================
+
 export type SandBox = {
   __code__: string | undefined;
   __result__: unknown | undefined;
   [k: string]: unknown;
 };
 
+/** The mutable state of one pass over one XML part; see `context.ts`. */
 export type Context = {
   gCntIf: number;
   gCntEndIf: number;
@@ -233,11 +300,7 @@ export type Context = {
   cmd: string;
   fSeekQuery: boolean;
   query?: string;
-  buffers: {
-    'w:p': BufferStatus;
-    'w:tr': BufferStatus;
-    'w:tc': BufferStatus;
-  };
+  buffers: Record<BufferTag, BufferStatus>;
   cell?: CellStatus;
   pendingImageNode?: { image: NonTextNode; caption?: NonTextNode[] };
   imageAndShapeIdIncrement: number;
@@ -256,28 +319,12 @@ export type Context = {
   jsSandbox?: SandBox;
   textRunPropsNode?: NonTextNode;
 
-  // To verfiy we don't have a nested if within the same p or tr tag
+  // To verify we don't have a nested IF within the same `w:p` or `w:tr` tag
   pIfCheckMap: Map<Node, string>;
   trIfCheckMap: Map<Node, string>;
 };
 
-export type Images = { [id: string]: Image };
-export const ImageExtensions = [
-  '.png',
-  '.gif',
-  '.jpg',
-  '.jpeg',
-  '.svg',
-] as const;
-type ImageExtension = (typeof ImageExtensions)[number];
-export type Image = {
-  extension: ImageExtension;
-  data: ZipInput;
-};
-export type Links = { [id: string]: Link };
-type Link = { url: string };
-export type Htmls = { [id: string]: string };
-
+/** The text and the commands seen so far inside a `w:p`, `w:tr` or `w:tc`. */
 type BufferStatus = {
   text: string;
   cmds: string;
@@ -297,11 +344,20 @@ export type CellStatus = {
 };
 
 type VarValue = unknown;
+
+/**
+ * `LoopStatus.idx` while the construct is being explored, i.e. walked once
+ * without rendering anything — which is how empty FOR loops are detected, and
+ * how the branch an IF construct will render gets selected.
+ */
+export const EXPLORATION_PASS = -1;
+
 export type LoopStatus = {
   refNode: Node;
   refNodeLevel: number;
   varName: string;
   loopOver: Array<VarValue>;
+  /** Index of the item being rendered, or {@link EXPLORATION_PASS}. */
   idx: number;
   isIf?: boolean;
 
@@ -318,6 +374,32 @@ export type LoopStatus = {
   /** Index of the final (unconditional) ELSE branch, if it has been seen already. */
   ifElseBranch?: number | undefined;
 };
+
+// ==========================================
+// Embedded resources
+// ==========================================
+
+export const ImageExtensions = [
+  '.png',
+  '.gif',
+  '.jpg',
+  '.jpeg',
+  '.svg',
+] as const;
+
+type ImageExtension = (typeof ImageExtensions)[number];
+
+export type Image = {
+  extension: ImageExtension;
+  data: ZipInput;
+};
+
+export type Images = { [id: string]: Image };
+
+type Link = { url: string };
+export type Links = { [id: string]: Link };
+
+export type Htmls = { [id: string]: string };
 
 export type ImagePars = {
   /**
@@ -366,28 +448,3 @@ export type LinkPars = {
   url: string;
   label?: string;
 };
-
-export type CommandSummary = {
-  raw: string;
-  type: BuiltInCommand;
-  code: string;
-};
-
-export type BuiltInCommand = (typeof BUILT_IN_COMMANDS)[number];
-
-export const BUILT_IN_COMMANDS = [
-  'QUERY',
-  'CMD_NODE',
-  'ALIAS',
-  'FOR',
-  'END-FOR',
-  'IF',
-  'ELSE-IF',
-  'ELSE',
-  'END-IF',
-  'INS',
-  'EXEC',
-  'IMAGE',
-  'LINK',
-  'HTML',
-] as const;

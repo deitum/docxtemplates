@@ -1,15 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { fixturePath, fixturesDir } from './helpers';
 import { zipLoad } from '../zip';
-import {
-  readContentTypes,
-  getMainDoc,
-  getMetadata,
-  parseTemplate,
-} from '../main';
+import { readContentTypes, getMainDoc, parseTemplate } from '../docx/parts';
+import { getMetadata } from '../docx/metadata';
 import fs from 'fs';
 import { setDebugLogSink } from '../debug';
-import { findHighestImgId } from '../processTemplate';
+import { findHighestImgId } from '../commands/media';
 
 if (process.env.DEBUG) setDebugLogSink(console.log);
 

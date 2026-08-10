@@ -54,18 +54,21 @@ type XmlOptions = {
   indentXml: boolean;
 };
 
+const XML_DECLARATION =
+  '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+
+/** Two spaces per level, when `indentXml` is on. */
+const INDENT_STEP = '  ';
+
 function buildXml(
   node: Node,
   options: XmlOptions,
   indent: string = '',
   firstRun: boolean = true
 ): Buffer {
-  const xml =
-    indent.length || !firstRun
-      ? ''
-      : '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
-
-  const xmlBuffers: Buffer[] = [Buffer.from(xml, 'utf-8')];
+  const xmlBuffers: Buffer[] = [
+    Buffer.from(firstRun ? XML_DECLARATION : '', 'utf-8'),
+  ];
   if (node._fTextNode)
     xmlBuffers.push(Buffer.from(sanitizeText(node._text, options)));
   else {
@@ -85,7 +88,12 @@ function buildXml(
     let fLastChildIsNode = false;
     node._children.forEach(child => {
       xmlBuffers.push(
-        buildXml(child, options, options.indentXml ? `${indent}  ` : '', false)
+        buildXml(
+          child,
+          options,
+          options.indentXml ? `${indent}${INDENT_STEP}` : '',
+          false
+        )
       );
       fLastChildIsNode = !child._fTextNode;
     });
@@ -99,32 +107,38 @@ function buildXml(
   return Buffer.concat(xmlBuffers);
 }
 
-const sanitizeText = (str: string, options: XmlOptions) => {
-  let out = '';
-  const segments = str.split(options.literalXmlDelimiter);
-  let fLiteral = false;
-  for (let i = 0; i < segments.length; i++) {
-    let processedSegment = segments[i] ?? '';
-    if (!fLiteral) {
-      processedSegment = processedSegment.replace(/&/g, '&amp;'); // must be the first one
-      processedSegment = processedSegment.replace(/</g, '&lt;');
-      processedSegment = processedSegment.replace(/>/g, '&gt;');
-    }
-    out += processedSegment;
-    fLiteral = !fLiteral;
-  }
-  return out;
+const XML_ENTITIES: { [char: string]: string } = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  "'": '&apos;',
+  '"': '&quot;',
 };
 
-const sanitizeAttr = (attr: string | QualifiedAttribute) => {
-  let out = typeof attr === 'string' ? attr : attr.value;
-  out = out.replace(/&/g, '&amp;'); // must be the first one
-  out = out.replace(/</g, '&lt;');
-  out = out.replace(/>/g, '&gt;');
-  out = out.replace(/'/g, '&apos;');
-  out = out.replace(/"/g, '&quot;');
-  return out;
+// One pass, so that the `&` of an entity this very call produced is not escaped
+// again — which is why the order of the replacements used to matter.
+const escape = (str: string, chars: RegExp) =>
+  str.replace(chars, char => XML_ENTITIES[char] ?? char);
+
+const TEXT_SPECIAL_CHARS = /[&<>]/g;
+const ATTR_SPECIAL_CHARS = /[&<>'"]/g;
+
+/**
+ * Escapes the text of a node, except inside the `literalXmlDelimiter` markers:
+ * that is how a command result gets to inject raw markup (a `w:br`, say).
+ */
+const sanitizeText = (str: string, options: XmlOptions) => {
+  const segments = str.split(options.literalXmlDelimiter);
+  // Every other segment is literal XML, starting with the second one.
+  return segments
+    .map((segment, idx) =>
+      idx % 2 === 0 ? escape(segment, TEXT_SPECIAL_CHARS) : segment
+    )
+    .join('');
 };
+
+const sanitizeAttr = (attr: string | QualifiedAttribute) =>
+  escape(typeof attr === 'string' ? attr : attr.value, ATTR_SPECIAL_CHARS);
 
 // ==========================================
 // Public API
