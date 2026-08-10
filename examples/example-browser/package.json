@@ -1,8 +1,8 @@
 {
-  "name": "example-vm2",
+  "name": "example-browser",
   "private": true,
   "version": "3.1.0",
-  "description": "Template-based docx report creation",
+  "description": "Browser demo using the pre-polyfilled @deitum/docxtemplates bundle",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
   "keywords": [
@@ -22,13 +22,15 @@
     "url": "git+https://github.com/deitum/docxtemplates.git"
   },
   "scripts": {
-    "start": "node . swapi-simple.docx"
+    "build": "cp ./node_modules/@deitum/docxtemplates/dist/browser.mjs public/docxtemplates.mjs",
+    "start": "npm run build && node server"
   },
   "dependencies": {
     "@deitum/docxtemplates": "*",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
     "isomorphic-fetch": "2.2.1",
     "prettier": "^1.18.2",
-    "vm2": "^3.6.10",
     "yaqrcode": "^0.2.1"
   }
 }

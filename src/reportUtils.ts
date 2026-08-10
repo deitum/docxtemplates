@@ -1,4 +1,10 @@
-import { Node, TextNode, NonTextNode, Context, LoopStatus } from './types';
+import {
+  type Node,
+  type TextNode,
+  type NonTextNode,
+  type Context,
+  type LoopStatus,
+} from './types';
 import { TemplateParseError } from './errors';
 import { logger } from './debug';
 
@@ -21,13 +27,15 @@ const cloneNodeWithoutChildren = (node: Node): Node => {
   };
 };
 
+const getFirstChild = (node: Node): Node | null => node._children[0] ?? null;
+
 const getNextSibling = (node: Node): Node | null => {
   const parent = node._parent;
   if (parent == null) return null;
   const siblings = parent._children;
   const idx = siblings.indexOf(node);
   if (idx < 0 || idx >= siblings.length - 1) return null;
-  return siblings[idx + 1];
+  return siblings[idx + 1] ?? null;
 };
 
 const insertTextSiblingAfter = (textNode: TextNode): TextNode => {
@@ -88,10 +96,8 @@ const addChild = (parent: Node, child: Node): Node => {
 // ==========================================
 // Loops
 // ==========================================
-const getCurLoop = (ctx: Context) => {
-  if (!ctx.loops.length) return null;
-  return ctx.loops[ctx.loops.length - 1];
-};
+const getCurLoop = (ctx: Context): LoopStatus | null =>
+  ctx.loops[ctx.loops.length - 1] ?? null;
 
 // Whether we're walking through a branch of an IF construct (IF / ELSE-IF / ELSE)
 // that has not been selected. Its contents must not be rendered, in exactly the
@@ -114,10 +120,11 @@ const isLoopExploring = (ctx: Context) => {
 };
 
 const logLoop = (loops: Array<LoopStatus>) => {
-  if (!loops.length) return;
   const level = loops.length - 1;
+  const curLoop = loops[level];
+  if (curLoop == null) return;
   const { varName, idx, loopOver, isIf, ifCurrentBranch, ifActiveBranch } =
-    loops[level];
+    curLoop;
   const idxStr = idx >= 0 ? idx + 1 : 'EXPLORATION';
   const branchStr = isIf
     ? ` [branch ${ifCurrentBranch}, selected: ${ifActiveBranch}]`
@@ -134,6 +141,7 @@ const logLoop = (loops: Array<LoopStatus>) => {
 // ==========================================
 export {
   cloneNodeWithoutChildren,
+  getFirstChild,
   getNextSibling,
   insertTextSiblingAfter,
   newNonTextNode,

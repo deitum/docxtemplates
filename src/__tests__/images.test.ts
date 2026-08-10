@@ -1,24 +1,32 @@
-/* eslint-env jest */
-
-import path from 'path';
+import { it, expect, beforeEach, afterEach } from 'vitest';
+import { fixturePath } from './helpers';
 import fs from 'fs';
+import MockDate from 'mockdate';
 import { createReport } from '../index';
-import { Image, ImagePars } from '../types';
+import { type Image, type ImagePars } from '../types';
 import { setDebugLogSink } from '../debug';
 import JSZip from 'jszip';
 
 if (process.env.DEBUG) setDebugLogSink(console.log);
 
+// Zip entries carry a DOS timestamp, which only has a two-second resolution.
+// Tests 005 and 006 below generate two reports and compare them byte for byte,
+// so without a fixed clock they fail whenever the two `createReport` calls land
+// in different two-second buckets — rare on a fast machine, routine on a slow
+// CI runner.
+beforeEach(() => {
+  MockDate.set('1/1/2000');
+});
+afterEach(() => {
+  MockDate.reset();
+});
+
 it('001: Issue #61 Correctly renders an SVG image', async () => {
-  const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imagesSVG.docx')
-  );
+  const template = await fs.promises.readFile(fixturePath('imagesSVG.docx'));
 
   // Use a random png file as a thumbnail
   const thumbnail: Image = {
-    data: await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'sample.png')
-    ),
+    data: await fs.promises.readFile(fixturePath('sample.png')),
     extension: '.png',
   };
 
@@ -27,9 +35,7 @@ it('001: Issue #61 Correctly renders an SVG image', async () => {
     data: {},
     additionalJsContext: {
       svgImgFile: async () => {
-        const data = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'sample.svg')
-        );
+        const data = await fs.promises.readFile(fixturePath('sample.svg'));
         return {
           width: 6,
           height: 6,
@@ -61,13 +67,9 @@ it('001: Issue #61 Correctly renders an SVG image', async () => {
 });
 
 it('002: throws when thumbnail is incorrectly provided when inserting an SVG', async () => {
-  const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imagesSVG.docx')
-  );
+  const template = await fs.promises.readFile(fixturePath('imagesSVG.docx'));
   const thumbnail = {
-    data: await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'sample.png')
-    ),
+    data: await fs.promises.readFile(fixturePath('sample.png')),
     // extension: '.png', extension is not given
   };
 
@@ -76,9 +78,7 @@ it('002: throws when thumbnail is incorrectly provided when inserting an SVG', a
     data: {},
     additionalJsContext: {
       svgImgFile: async () => {
-        const data = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'sample.svg')
-        );
+        const data = await fs.promises.readFile(fixturePath('sample.svg'));
         return {
           width: 6,
           height: 6,
@@ -109,18 +109,14 @@ it('002: throws when thumbnail is incorrectly provided when inserting an SVG', a
 });
 
 it('003: can inject an svg without a thumbnail', async () => {
-  const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imagesSVG.docx')
-  );
+  const template = await fs.promises.readFile(fixturePath('imagesSVG.docx'));
 
   const opts = {
     template,
     data: {},
     additionalJsContext: {
       svgImgFile: async () => {
-        const data = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'sample.svg')
-        );
+        const data = await fs.promises.readFile(fixturePath('sample.svg'));
         return {
           width: 6,
           height: 6,
@@ -149,18 +145,14 @@ it('003: can inject an svg without a thumbnail', async () => {
 });
 
 it('004: can inject an image in the document header (regression test for #113)', async () => {
-  const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imageHeader.docx')
-  );
+  const template = await fs.promises.readFile(fixturePath('imageHeader.docx'));
 
   const opts = {
     template,
     data: {},
     additionalJsContext: {
       image: async () => {
-        const data = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'sample.png')
-        );
+        const data = await fs.promises.readFile(fixturePath('sample.png'));
         return {
           width: 6,
           height: 6,
@@ -179,20 +171,13 @@ it('004: can inject an image in the document header (regression test for #113)',
 });
 
 it('005: can inject PNG files using ArrayBuffers without errors (related to issue #166)', async () => {
-  const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imageSimple.docx')
-  );
+  const template = await fs.promises.readFile(fixturePath('imageSimple.docx'));
 
-  const buff = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'sample.png')
-  );
+  const buff = await fs.promises.readFile(fixturePath('sample.png'));
 
   function toArrayBuffer(buf: Buffer): ArrayBuffer {
     const ab = new ArrayBuffer(buf.length);
-    const view = new Uint8Array(ab);
-    for (let i = 0; i < buf.length; ++i) {
-      view[i] = buf[i];
-    }
+    new Uint8Array(ab).set(buf);
     return ab;
   }
 
@@ -231,12 +216,8 @@ it('005: can inject PNG files using ArrayBuffers without errors (related to issu
 });
 
 it('006: can inject an image from the data instead of the additionalJsContext', async () => {
-  const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imageSimple.docx')
-  );
-  const buff = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'sample.png')
-  );
+  const template = await fs.promises.readFile(fixturePath('imageSimple.docx'));
+  const buff = await fs.promises.readFile(fixturePath('sample.png'));
   const reportA = await createReport({
     template,
     data: {
@@ -290,11 +271,9 @@ it('006: can inject an image from the data instead of the additionalJsContext', 
 
 it('007: can inject an image in a document that already contains images (regression test for #144)', async () => {
   const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imageExisting.docx')
+    fixturePath('imageExisting.docx')
   );
-  const buff = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'sample.png')
-  );
+  const buff = await fs.promises.readFile(fixturePath('sample.png'));
   expect(
     await createReport(
       {
@@ -318,11 +297,9 @@ it('007: can inject an image in a document that already contains images (regress
 
 it('008: can inject an image in a shape in the doc footer (regression test for #217)', async () => {
   const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imageInShapeInFooter.docx')
+    fixturePath('imageInShapeInFooter.docx')
   );
-  const thumbnail_data = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'sample.png')
-  );
+  const thumbnail_data = await fs.promises.readFile(fixturePath('sample.png'));
 
   const report = await createReport(
     {
@@ -357,11 +334,9 @@ it('008: can inject an image in a shape in the doc footer (regression test for #
 
 it('009 correctly rotate image', async () => {
   const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imageRotation.docx')
+    fixturePath('imageRotation.docx')
   );
-  const buff = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'sample.png')
-  );
+  const buff = await fs.promises.readFile(fixturePath('sample.png'));
   const opts = {
     template,
     data: {},
@@ -393,11 +368,9 @@ it('009 correctly rotate image', async () => {
 
 it('010: can inject an image in a document that already contains images inserted during an earlier run by createReport (regression test for #259)', async () => {
   const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imageMultiDelimiter.docx')
+    fixturePath('imageMultiDelimiter.docx')
   );
-  const buff = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'sample.png')
-  );
+  const buff = await fs.promises.readFile(fixturePath('sample.png'));
   const reportA = await createReport({
     template,
     cmdDelimiter: '+++',
@@ -449,12 +422,8 @@ it('010: can inject an image in a document that already contains images inserted
 });
 
 it('011 correctly inserts the optional image caption', async () => {
-  const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'imageCaption.docx')
-  );
-  const buff = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'sample.png')
-  );
+  const template = await fs.promises.readFile(fixturePath('imageCaption.docx'));
+  const buff = await fs.promises.readFile(fixturePath('sample.png'));
   const opts = {
     template,
     data: {},
@@ -475,11 +444,9 @@ it('011 correctly inserts the optional image caption', async () => {
 
 it('can inject image in document that already contained image with same extension but uppercase', async () => {
   const template = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'existingUppercaseJPEGExtension.docx')
+    fixturePath('existingUppercaseJPEGExtension.docx')
   );
-  const buff = await fs.promises.readFile(
-    path.join(__dirname, 'fixtures', 'sample.jpg')
-  );
+  const buff = await fs.promises.readFile(fixturePath('sample.jpg'));
 
   const report = await createReport({
     template,

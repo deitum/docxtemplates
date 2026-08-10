@@ -1,7 +1,7 @@
 // ==========================================
 // Docx nodes
 
-import { QualifiedAttribute } from 'sax';
+import { type QualifiedAttribute } from 'sax';
 
 // ==========================================
 export type Node = TextNode | NonTextNode;
@@ -29,6 +29,14 @@ export type NonTextNode = BaseNode & {
 // ==========================================
 // Report creator
 // ==========================================
+
+/**
+ * Binary contents accepted wherever a docx file (or one of the XML files
+ * inside it) is read or written: a `Uint8Array` — which includes a NodeJS
+ * `Buffer` — a raw `ArrayBuffer`, or a string.
+ */
+export type ZipInput = Uint8Array | ArrayBuffer | string;
+
 export type ReportData = any;
 export type QueryResolver = (
   query: string | undefined,
@@ -88,7 +96,7 @@ export type UserOptions = {
    * }
    * ```
    */
-  additionalJsContext?: Object;
+  additionalJsContext?: object;
   /**
    * Whether to fail on the first error encountered in the template. Defaults to true. Can be used to collect all errors in a template (e.g. misspelled commands) before failing.
    */
@@ -194,14 +202,16 @@ export type CreateReportOptions = {
   literalXmlDelimiter: string;
   processLineBreaks: boolean;
   noSandbox: boolean;
-  runJs?: RunJSFunc;
-  additionalJsContext: Object;
+  // Explicit `| undefined`: these are passed straight through from `UserOptions`,
+  // where leaving them out and setting them to `undefined` mean the same thing.
+  runJs?: RunJSFunc | undefined;
+  additionalJsContext: object;
   failFast: boolean;
   rejectNullish: boolean;
   errorHandler: ErrorHandler | null;
   fixSmartQuotes: boolean;
   processLineBreaksAsNewText: boolean;
-  maximumWalkingDepth?: number;
+  maximumWalkingDepth?: number | undefined;
   indentXml: boolean;
   preserveSpace: boolean;
   compressionLevel: number;
@@ -261,7 +271,7 @@ export const ImageExtensions = [
 type ImageExtension = (typeof ImageExtensions)[number];
 export type Image = {
   extension: ImageExtension;
-  data: ArrayBuffer | string;
+  data: ZipInput;
 };
 export type Links = { [id: string]: Link };
 type Link = { url: string };
@@ -283,16 +293,17 @@ export type LoopStatus = {
   isIf?: boolean;
 
   // The following fields are only used by IF loops, to support
-  // IF / ELSE-IF / ELSE / END-IF constructs.
+  // IF / ELSE-IF / ELSE / END-IF constructs. They are reset back to `undefined`
+  // between passes, hence the explicit `| undefined`.
 
   /** Index of the branch that is currently being walked (0 is the IF branch). */
-  ifCurrentBranch?: number;
+  ifCurrentBranch?: number | undefined;
   /** Index of the branch whose condition evaluated truthy (-1 if none). */
-  ifActiveBranch?: number;
+  ifActiveBranch?: number | undefined;
   /** Whether one of the branches has already been selected. */
-  ifBranchTaken?: boolean;
+  ifBranchTaken?: boolean | undefined;
   /** Index of the final (unconditional) ELSE branch, if it has been seen already. */
-  ifElseBranch?: number;
+  ifElseBranch?: number | undefined;
 };
 
 export type ImagePars = {
@@ -307,9 +318,10 @@ export type ImagePars = {
   height: number;
 
   /**
-   * Either an ArrayBuffer or a base64 string with the image data.
+   * The image data, as a Uint8Array (e.g. a NodeJS Buffer), an ArrayBuffer, or
+   * a base64-encoded string.
    */
-  data: ArrayBuffer | string;
+  data: ZipInput;
 
   /**
    * Optional. When injecting an SVG image, a fallback non-SVG (png/jpg/gif, etc.) image can be provided. This thumbnail is used when SVG images are not supported (e.g. older versions of Word) or when the document is previewed by e.g. Windows Explorer. See usage example below.

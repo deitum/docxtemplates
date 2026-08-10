@@ -1,15 +1,10 @@
-/* eslint-env jest */
-
-import path from 'path';
-import fs from 'fs';
+import { describe, it, expect } from 'vitest';
+import { readFixture } from './helpers';
 import { createReport, listCommands } from '../index';
-import { Node } from '../types';
+import { type Node } from '../types';
 import { setDebugLogSink } from '../debug';
 
 if (process.env.DEBUG) setDebugLogSink(console.log);
-
-const readFixture = (name: string) =>
-  fs.promises.readFile(path.join(__dirname, 'fixtures', name));
 
 // Concatenates the text of all the text nodes below the given node
 const nodeText = (node: Node): string =>
@@ -109,10 +104,8 @@ const COMMAND_ALIASES = {
       it('is case-insensitive', async () => {
         // Aliases declared in upper case, used in lower case in the template
         const upperCased: { [alias: string]: string } = {};
-        Object.keys(OPERATOR_ALIASES).forEach(alias => {
-          upperCased[alias.toUpperCase()] = (
-            OPERATOR_ALIASES as { [alias: string]: string }
-          )[alias];
+        Object.entries(OPERATOR_ALIASES).forEach(([alias, replacement]) => {
+          upperCased[alias.toUpperCase()] = replacement;
         });
         expect(
           await render(

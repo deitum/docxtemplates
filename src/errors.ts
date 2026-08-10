@@ -1,4 +1,4 @@
-import { LoopStatus } from './types';
+import { type LoopStatus } from './types';
 
 export function isError(err: unknown): err is Error {
   return (

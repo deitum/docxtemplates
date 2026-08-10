@@ -13,19 +13,19 @@
     "report",
     "template"
   ],
-  "homepage": "https://github.com/guigrpa/docx-templates#readme",
+  "homepage": "https://github.com/deitum/docxtemplates#readme",
   "bugs": {
-    "url": "https://github.com/guigrpa/docx-templates/issues"
+    "url": "https://github.com/deitum/docxtemplates/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/guigrpa/docx-templates.git"
+    "url": "git+https://github.com/deitum/docxtemplates.git"
   },
   "scripts": {
-    "buildWatch": "yarn webpack --mode development -w",
-    "build": "yarn webpack --mode production",
+    "buildWatch": "npm run webpack -- --mode development -w",
+    "build": "npm run webpack -- --mode production",
     "webpack": "webpack --config ./webpackConfig.js --color --progress --display-chunks",
-    "start": "yarn build && node server"
+    "start": "npm run build && node server"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
@@ -36,7 +36,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "body-parser": "^1.19.0",
-    "docx-templates": "*",
+    "@deitum/docxtemplates": "*",
     "express": "^4.17.1",
     "prettier": "^1.18.2",
     "webpack": "^4.39.2",

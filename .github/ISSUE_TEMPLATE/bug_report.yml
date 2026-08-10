@@ -1,0 +1,46 @@
+name: Bug report
+description: Something renders incorrectly or throws where it shouldn't
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect instead, and why is the actual result wrong?
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproducible example
+      description: >-
+        The smallest code snippet that shows the problem, plus the relevant
+        commands from your `.docx` template (or the template itself, attached).
+      render: js
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version of @deitum/docxtemplates
+      placeholder: 1.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime
+      description: Node.js version, browser, Deno, Electron…
+      placeholder: Node.js 22.11.0
+    validations:
+      required: true
+
+  - type: input
+    id: toolchain
+    attributes:
+      label: Build toolchain
+      description: Bundler and version, if the problem shows up in a bundled app.
+      placeholder: Vite 6 / Webpack 5 / none

@@ -1,6 +1,17 @@
-## Unreleased
+# @deitum/docxtemplates
+
+Releases from 1.0.0 onwards are managed with [changesets](https://github.com/changesets/changesets); everything below 4.15.0 is the history inherited from the upstream project.
+
+## 1.0.0
+
+* **Renamed**: the package is now published as `@deitum/docxtemplates`, starting at version 1.0.0. It is a fork of [`docx-templates`](https://github.com/guigrpa/docx-templates) v4.15.0; update your imports from `docx-templates` to `@deitum/docxtemplates`. The API is unchanged. Links to issues and PRs in the entries below refer to the upstream repository.
 * Add `commandAliases` and `operatorAliases` options, so templates can use alternative names for the built-in commands (e.g. `ЕСЛИ` for `IF`) and for JS operators and keywords (e.g. `больше` for `>`, `ИЗ` for the `IN` of `FOR` loops). `listCommands` accepts the same aliases as a third argument.
 * Add `ELSE-IF` and `ELSE` commands, so that `IF`…`END-IF` blocks can define alternative branches. Only the contents of the first branch whose condition is truthy are rendered; commands in the other branches are not evaluated.
+* **Ship both ESM and CommonJS builds behind an `exports` map.** `import createReport from '@deitum/docxtemplates'` now yields the function itself under native Node ESM; previously the package was CommonJS-only, so the default import resolved to the module namespace object instead (the same class of problem as upstream issue [#405](https://github.com/guigrpa/docx-templates/issues/405)).
+* **Build output moved from `lib/` to `dist/`.** The polyfilled browser bundle is now exposed as the `@deitum/docxtemplates/browser` subpath (`dist/browser.mjs`), and is what unpkg/jsDelivr serve by default. Deep imports of `lib/**` no longer work.
+* Only `dist/` and the usual metadata files are published. The previous `.npmignore`-based setup was shipping IDE settings, `tsconfig.json` and the Rollup config to npm.
+* Widened the types of the binary inputs (`template`, `IMAGE` data, `listCommands`) to `Uint8Array | ArrayBuffer | string`, matching what the implementation has always accepted at runtime.
+* Requires Node.js 20 or later.
 
 ## 4.15.0 (2025-12-03)
 * [#432](https://github.com/guigrpa/docx-templates/pull/432): add `indentXml`, `preserveSpace` and `compressionLevel` options to let users trade readability for smaller file size when generating reports.
@@ -177,7 +188,7 @@ The README and examples have also been updated to reflect the above changes.
 * **Breaking change for users of the `vm2` sandbox**: replaced `vm2Sandbox` option (which caused headaches for users in the browser) with `runJs`, a custom hook for JS snippet execution. If you want to use vm2:
 
 ```js
-import createReport from 'docx-templates';
+import createReport from '@deitum/docxtemplates';
 import { VM, VMScript } from 'vm2';
 
 createReport({

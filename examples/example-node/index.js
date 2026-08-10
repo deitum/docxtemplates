@@ -1,9 +1,9 @@
 require('isomorphic-fetch');
 const qrcode = require('yaqrcode');
-const createReport = require('docx-templates').default;
-const fs = require('fs')
+const createReport = require('@deitum/docxtemplates').default;
+const fs = require('fs');
 
-const template = fs.readFileSync(process.argv[2])
+const template = fs.readFileSync(process.argv[2]);
 
 createReport({
   template,
@@ -31,12 +31,17 @@ createReport({
     qr: contents => {
       const dataUrl = qrcode(contents, { size: 500 });
       const data = dataUrl.slice('data:image/gif;base64,'.length);
-      return { width: 6, height: 6, data, extension: '.gif', caption: 'QR Code caption' };
+      return {
+        width: 6,
+        height: 6,
+        data,
+        extension: '.gif',
+        caption: 'QR Code caption',
+      };
     },
   },
-}).then(
-  rendered => fs.writeFileSync(
-    process.argv.length > 3 ? process.argv[3] : null,
-    rendered
-  ))
+})
+  .then(rendered =>
+    fs.writeFileSync(process.argv.length > 3 ? process.argv[3] : null, rendered)
+  )
   .catch(console.log);

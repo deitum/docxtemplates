@@ -1,11 +1,10 @@
-/* eslint-env jest */
-
-import path from 'path';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { fixturePath } from './helpers';
 import fs from 'fs';
 import MockDate from 'mockdate';
 import QR from 'qrcode';
 import { createReport } from '../index';
-import { UserOptions } from '../types';
+import { type UserOptions } from '../types';
 import { setDebugLogSink } from '../debug';
 import JSZip from 'jszip';
 
@@ -31,7 +30,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('01 Probe works', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'noQuery.docx')
+          fixturePath('noQuery.docx')
         );
         const result = await createReport(
           {
@@ -45,9 +44,9 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('02 Extracts a query and calls the resolver', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'simpleQuery.docx')
+          fixturePath('simpleQuery.docx')
         );
-        const queryResolver = jest.fn();
+        const queryResolver = vi.fn();
         const queryVars = { a: 'importantContext' };
         await createReport(
           {
@@ -59,13 +58,15 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
           'JS'
         );
         expect(queryResolver.mock.calls.length).toEqual(1);
-        expect(queryResolver.mock.calls[0][0]).toEqual('exampleQuery');
-        expect(queryResolver.mock.calls[0][1]).toEqual(queryVars);
+        expect(queryResolver.mock.calls[0]).toEqual([
+          'exampleQuery',
+          queryVars,
+        ]);
       });
 
       it("03 Uses the resolver's response to produce the report", async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'simpleQuerySimpleInserts.docx')
+          fixturePath('simpleQuerySimpleInserts.docx')
         );
         const result = await createReport(
           {
@@ -80,7 +81,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('04 Allows replacing the resolver by a data object', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'noQuerySimpleInserts.docx')
+          fixturePath('noQuerySimpleInserts.docx')
         );
         const result = await createReport(
           {
@@ -95,7 +96,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('04b Allows custom left-right delimiters', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'noQueryBrackets.docx')
+          fixturePath('noQueryBrackets.docx')
         );
         const result = await createReport(
           {
@@ -110,9 +111,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('05 Processes 1-level FOR loops', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for1.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('for1.docx'));
         const result = await createReport(
           {
             noSandbox,
@@ -131,9 +130,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('06 Processes 2-level FOR loops', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for2.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('for2.docx'));
         const result = await createReport(
           {
             noSandbox,
@@ -157,9 +154,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('07 Processes 3-level FOR loops', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for3.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('for3.docx'));
         const result = await createReport(
           {
             noSandbox,
@@ -197,7 +192,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('08 Processes 1-level FOR-ROW loops', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for-row1.docx')
+          fixturePath('for-row1.docx')
         );
         const result = await createReport(
           {
@@ -218,7 +213,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('08b Processes 1-level IF-ROW loops', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'if-row1.docx')
+          fixturePath('if-row1.docx')
         );
         const result = await createReport(
           {
@@ -232,7 +227,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('09 Allows scalar arrays in FOR loops', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for1scalars.docx')
+          fixturePath('for1scalars.docx')
         );
         const result = await createReport(
           {
@@ -246,9 +241,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('10 Processes JS snippets to get the array elements', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for1js.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('for1js.docx'));
         const result = await createReport(
           {
             noSandbox,
@@ -269,7 +262,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('11 Processes inline FOR loops', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for1inline.docx')
+          fixturePath('for1inline.docx')
         );
         const result = await createReport(
           {
@@ -290,7 +283,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('12 Processes a more complex inline FOR loop with spaces', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for1inlineWithSpaces.docx')
+          fixturePath('for1inlineWithSpaces.docx')
         );
         const result = await createReport(
           {
@@ -310,9 +303,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('13a Processes 1-level IF', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'if.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('if.docx'));
         const result = await createReport(
           {
             noSandbox,
@@ -324,9 +315,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('13b Processes 2-level IF', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'if2.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('if2.docx'));
         const result = await createReport(
           {
             noSandbox,
@@ -339,7 +328,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('13j Processes inline IF', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'ifInline.docx')
+          fixturePath('ifInline.docx')
         );
         const result = await createReport(
           {
@@ -353,7 +342,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('20 Processes ALIAS commands', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for1alias.docx')
+          fixturePath('for1alias.docx')
         );
         const result = await createReport(
           {
@@ -373,9 +362,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('22 Allows accented characters and such', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for1.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('for1.docx'));
         const result = await createReport(
           {
             noSandbox,
@@ -390,9 +377,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('23 Allows characters that conflict with XML', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for1.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('for1.docx'));
         const result = await createReport(
           {
             noSandbox,
@@ -412,7 +397,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('23b Allows insertion of literal XML', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'literalXml.docx')
+          fixturePath('literalXml.docx')
         );
         const result = await createReport(
           {
@@ -427,7 +412,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('23c Allows insertion of literal XML with custom delimiter', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'literalXml.docx')
+          fixturePath('literalXml.docx')
         );
         const result = await createReport(
           {
@@ -443,7 +428,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('24 Allows Word to split commands arbitrarily, incl. delimiters', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'splitDelimiters.docx')
+          fixturePath('splitDelimiters.docx')
         );
         const result = await createReport(
           {
@@ -458,7 +443,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('25 Adds line breaks by default', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'longText.docx')
+          fixturePath('longText.docx')
         );
         const result = await createReport(
           {
@@ -473,7 +458,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('25b Allows disabling line break processing', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'longText.docx')
+          fixturePath('longText.docx')
         );
         const result = await createReport(
           {
@@ -489,7 +474,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('30 Processes simple JS snippets in an INS', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'insJsSimple.docx')
+          fixturePath('insJsSimple.docx')
         );
         const result = await createReport(
           {
@@ -503,7 +488,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('31 Processes more complex JS snippets in an INS', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'insJsComplex.docx')
+          fixturePath('insJsComplex.docx')
         );
         const result = await createReport(
           {
@@ -518,7 +503,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('32 Provides access to loop indices (JS)', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'insJsWithLoops.docx')
+          fixturePath('insJsWithLoops.docx')
         );
         const result = await createReport(
           {
@@ -538,9 +523,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('33 Processes EXEC commands (JS)', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'exec.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('exec.docx'));
         const result = await createReport(
           {
             noSandbox,
@@ -554,7 +537,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('33b Processes EXEC with shorthand (!)', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'execShorthand.docx')
+          fixturePath('execShorthand.docx')
         );
         const result = await createReport(
           {
@@ -569,7 +552,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('33c Processes EXEC when a promise is returned', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'execPromise.docx')
+          fixturePath('execPromise.docx')
         );
         const result = await createReport(
           {
@@ -584,7 +567,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('34 Processes INS with shorthand (=)', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'insShorthand.docx')
+          fixturePath('insShorthand.docx')
         );
         const result = await createReport(
           {
@@ -605,7 +588,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('34b Processes INS omitting the command name', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'insOmitted.docx')
+          fixturePath('insOmitted.docx')
         );
         const result = await createReport(
           {
@@ -626,7 +609,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('35 Processes all snippets in the same sandbox', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'execAndIns.docx')
+          fixturePath('execAndIns.docx')
         );
         const result = await createReport(
           {
@@ -647,7 +630,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('36 Processes all snippets without sandbox', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'execAndIns.docx')
+          fixturePath('execAndIns.docx')
         );
         const result = await createReport(
           {
@@ -668,7 +651,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('36b Processes a snippet with additional context', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'execWithContext.docx')
+          fixturePath('execWithContext.docx')
         );
         const result = await createReport(
           {
@@ -693,7 +676,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       it('38b Processes IMAGE commands with base64 data', async () => {
         MockDate.set('1/1/2000');
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'imageBase64.docx')
+          fixturePath('imageBase64.docx')
         );
         const options: UserOptions = {
           noSandbox,
@@ -714,7 +697,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       it('38c Processes IMAGE commands with alt text', async () => {
         MockDate.set('1/1/2000');
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'imageBase64.docx')
+          fixturePath('imageBase64.docx')
         );
         const options = {
           noSandbox,
@@ -739,9 +722,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('39 Processes LINK commands', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'links.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('links.docx'));
         const result = await createReport(
           {
             noSandbox,
@@ -754,9 +735,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('3A Processes HTML commands', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'htmls.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('htmls.docx'));
         const opts = {
           noSandbox,
           template,
@@ -788,7 +767,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('40 Throws on invalid command', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'invalidCommand.docx')
+          fixturePath('invalidCommand.docx')
         );
         return expect(
           createReport(
@@ -810,7 +789,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('41 Throws on invalid for logic', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'invalidFor.docx')
+          fixturePath('invalidFor.docx')
         );
         return expect(
           createReport(
@@ -833,7 +812,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('41b Throws on invalid if logic (bad nesting)', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'invalidIf.docx')
+          fixturePath('invalidIf.docx')
         );
         return expect(
           createReport(
@@ -855,7 +834,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('70 Allows customisation of cmd delimiter', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'for1customDelimiter.docx')
+          fixturePath('for1customDelimiter.docx')
         );
         const result = await createReport(
           {
@@ -876,16 +855,14 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       });
 
       it('80 Copes with a more complex example: WBS', async () => {
-        const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'wbs.docx')
-        );
+        const template = await fs.promises.readFile(fixturePath('wbs.docx'));
         const result = await createReport(
           {
             noSandbox,
             template,
             data: {
               project: {
-                name: 'docx-templates',
+                name: '@deitum/docxtemplates',
                 workPackages: [
                   {
                     acronym: 'WP1',
@@ -912,7 +889,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('83 LINK inside FOR loop: regression test for issue #83', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'link-regression-issue-83.docx')
+          fixturePath('link-regression-issue-83.docx')
         );
 
         const opts = {
@@ -936,7 +913,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('regression test for issue #133 (and #83): LINK inside FOR loop', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'link-regression-issue-133.docx')
+          fixturePath('link-regression-issue-133.docx')
         );
 
         const opts = {
@@ -956,7 +933,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('112a failFast: false lists all errors in the document before failing.', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'invalidMultipleErrors.docx')
+          fixturePath('invalidMultipleErrors.docx')
         );
         return expect(
           createReport(
@@ -979,7 +956,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('112b failFast: true has the same behaviour as when failFast is undefined', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'invalidMultipleErrors.docx')
+          fixturePath('invalidMultipleErrors.docx')
         );
         return expect(
           createReport(
@@ -1002,7 +979,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('avoids confusion between variable name and built-in command', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'confusingCommandNames.docx')
+          fixturePath('confusingCommandNames.docx')
         );
         const opts = {
           noSandbox,
@@ -1034,7 +1011,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
             {
               noSandbox,
               template: await fs.promises.readFile(
-                path.join(__dirname, 'fixtures', 'nonAlphaCommandNames1.docx')
+                fixturePath('nonAlphaCommandNames1.docx')
               ),
               data,
             },
@@ -1054,7 +1031,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
             {
               noSandbox,
               template: await fs.promises.readFile(
-                path.join(__dirname, 'fixtures', 'nonAlphaCommandNames2.docx')
+                fixturePath('nonAlphaCommandNames2.docx')
               ),
               data,
               cmdDelimiter: ['{', '}'],
@@ -1067,7 +1044,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       it('131 correctly handles Office 365 .docx files', async () => {
         // These files tend to contain a differently named document.xml (like document2.xml)
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'office365.docx')
+          fixturePath('office365.docx')
         );
         const result = await createReport(
           {
@@ -1088,7 +1065,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
       it('iterate over object properties and keys in FOR loop', async () => {
         // Example to answer question posed in issue #149
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'forOverObjectKeys.docx')
+          fixturePath('forOverObjectKeys.docx')
         );
         const result = await createReport(
           {
@@ -1109,7 +1086,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('fixSmartQuotes flag (see PR #152)', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'fixSmartQuotes.docx')
+          fixturePath('fixSmartQuotes.docx')
         );
 
         // The default behaviour should return an error when smart quotes (curly quotes) are present in the command,
@@ -1137,7 +1114,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('works with macro-enabled (docm) templates', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'macroEnabledTemplate.docm')
+          fixturePath('macroEnabledTemplate.docm')
         );
         const result = await createReport(
           {
@@ -1152,7 +1129,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('INS command is an array (see issue #214)', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'insertArray.docx')
+          fixturePath('insertArray.docx')
         );
         expect(
           await createReport(
@@ -1170,7 +1147,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('HTML in table (see PR #233)', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'tableWithHTML.docx')
+          fixturePath('tableWithHTML.docx')
         );
         expect(
           await createReport(
@@ -1186,7 +1163,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('INS in header and footer', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'insertInHeaderAndFooter.docx')
+          fixturePath('insertInHeaderAndFooter.docx')
         );
         expect(
           await createReport(
@@ -1206,11 +1183,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('treats existing text near nested FOR loops correctly', async () => {
         const template = await fs.promises.readFile(
-          path.join(
-            __dirname,
-            'fixtures',
-            'nestedInlineForLoopWithSurroundingText.docx'
-          )
+          fixturePath('nestedInlineForLoopWithSurroundingText.docx')
         );
         const opts: UserOptions = {
           noSandbox,
@@ -1226,7 +1199,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('newline character inside variable issue #143 not rendered properly in LibreOffice/GDrive', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'newlineInVariableIssue143.docx')
+          fixturePath('newlineInVariableIssue143.docx')
         );
         const headline = 'I am a line\n\nAnd so am I!';
         const opts = {
@@ -1241,7 +1214,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('Processes FOR loops with Text Box', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'forLoopWithTextBox.docx')
+          fixturePath('forLoopWithTextBox.docx')
         );
         const result = await createReport(
           {
@@ -1262,7 +1235,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('Access current element index from FOR loop', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'forWithIdx.docx')
+          fixturePath('forWithIdx.docx')
         );
         const opts: UserOptions = {
           noSandbox,
@@ -1283,7 +1256,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('Nested IF statements on same line', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'ifStatementsOnSameLine.docx')
+          fixturePath('ifStatementsOnSameLine.docx')
         );
 
         const result = createReport(
@@ -1300,7 +1273,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('Nested IF statements on same row1', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'ifStatementsOnSameRow1.docx')
+          fixturePath('ifStatementsOnSameRow1.docx')
         );
 
         const result = createReport(
@@ -1317,7 +1290,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('Nested IF statements on same row2', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'ifStatementsOnSameRow2.docx')
+          fixturePath('ifStatementsOnSameRow2.docx')
         );
 
         const result = createReport(
@@ -1334,7 +1307,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('Dynamic table columns', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'dynamic-columns.docx')
+          fixturePath('dynamic-columns.docx')
         );
         const result = await createReport(
           {
@@ -1351,11 +1324,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('Dynamic table columns with dynamic rows', async () => {
         const template = await fs.promises.readFile(
-          path.join(
-            __dirname,
-            'fixtures',
-            'dynamic-columns-with-dynamic-rows.docx'
-          )
+          fixturePath('dynamic-columns-with-dynamic-rows.docx')
         );
         const result = await createReport(
           {
@@ -1373,7 +1342,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('Preserves anchored elements on empty paragraph', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'anchor-empty.docx')
+          fixturePath('anchor-empty.docx')
         );
 
         const result = await createReport(
@@ -1388,7 +1357,7 @@ Morbi dignissim consequat ex, non finibus est faucibus sodales. Integer sed just
 
       it('Removes everything within a block that evaluates to false', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'falsy-block.docx')
+          fixturePath('falsy-block.docx')
         );
 
         const result = await createReport(

@@ -1,4 +1,5 @@
-import path from 'path';
+import { describe, it, expect } from 'vitest';
+import { fixturePath } from './helpers';
 import fs from 'fs';
 import QR from 'qrcode';
 import { createReport } from '../index';
@@ -7,7 +8,6 @@ import {
   isError,
   NullishCommandResultError,
   CommandExecutionError,
-  InvalidCommandError,
 } from '../errors';
 
 if (process.env.DEBUG) setDebugLogSink(console.log);
@@ -30,7 +30,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
     describe('rejectNullish setting', () => {
       it('INS', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'rejectNullishINS.docx')
+          fixturePath('rejectNullishINS.docx')
         );
 
         // When not explicitly set, rejectNullish should be considered 'false' so this case should resolve.
@@ -74,7 +74,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
       it('IMAGE', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'rejectNullishIMAGE.docx')
+          fixturePath('rejectNullishIMAGE.docx')
         );
         await expect(
           createReport({
@@ -122,7 +122,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
         expect.assertions(3);
 
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'rejectNullishINS.docx')
+          fixturePath('rejectNullishINS.docx')
         );
 
         const result = await createReport(
@@ -147,7 +147,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
       it('handles arbitrary errors occurring in command execution', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'commandExecutionError.docx')
+          fixturePath('commandExecutionError.docx')
         );
 
         // First check whether the CommandExecutionError is triggered correctly
@@ -162,7 +162,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
               noSandbox,
               template,
               data: {},
-              errorHandler: (err, code) => 'no problem dude',
+              errorHandler: () => 'no problem dude',
             },
             'XML'
           )
@@ -171,7 +171,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
       it('properly handles InvalidCommandError', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'invalidCommand.docx')
+          fixturePath('invalidCommand.docx')
         );
 
         const errs: Error[] = [];
@@ -181,7 +181,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
               noSandbox,
               template,
               data: {},
-              errorHandler: (err, code) => {
+              errorHandler: err => {
                 errs.push(err);
                 return `${err}`;
               },
@@ -195,7 +195,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
       it('handler can decide to re-throw the error, crashing the render', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'invalidCommand.docx')
+          fixturePath('invalidCommand.docx')
         );
 
         await expect(
@@ -203,7 +203,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
             noSandbox,
             template,
             data: {},
-            errorHandler: (err, code) => {
+            errorHandler: () => {
               throw new Error('yeah, no!');
             },
           })
@@ -212,7 +212,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
       it('properly handles nested InvalidCommandError from invalid FOR', async () => {
         const template = await fs.promises.readFile(
-          path.join(__dirname, 'fixtures', 'invalidForCmd.docx')
+          fixturePath('invalidForCmd.docx')
         );
 
         const errs: Error[] = [];
@@ -241,7 +241,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
   it('throw when user tries to iterate over non-array', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'forOverObject.docx')
+      fixturePath('forOverObject.docx')
     );
     await expect(
       createReport({
@@ -260,7 +260,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
   it('throw when result of INS command is an object', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'objectCommandResultError.docx')
+      fixturePath('objectCommandResultError.docx')
     );
     await expect(
       createReport({
@@ -279,7 +279,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
   it('attaches the result to ObjectCommandResultError', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'objectCommandResultError.docx')
+      fixturePath('objectCommandResultError.docx')
     );
 
     await expect(
@@ -303,7 +303,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
   it('Incomplete conditional statement: missing END-IF', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'missingEndIf.docx')
+      fixturePath('missingEndIf.docx')
     );
     await expect(
       createReport({
@@ -320,7 +320,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
   it('Incomplete conditional statement: missing IF statement', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'unmatchedEndIf.docx')
+      fixturePath('unmatchedEndIf.docx')
     );
     await expect(
       createReport({
@@ -336,7 +336,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
   it('Incomplete loop statement: unmatched END-FOR', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'unmatchedEndFor.docx')
+      fixturePath('unmatchedEndFor.docx')
     );
     await expect(
       createReport({
@@ -351,7 +351,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
   it('Incomplete loop statement: missing END-FOR', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'missingEndFor.docx')
+      fixturePath('missingEndFor.docx')
     );
     await expect(
       createReport({
@@ -366,7 +366,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 
   it('Incomplete loop statement: invalid FOR', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'invalidForCmd.docx')
+      fixturePath('invalidForCmd.docx')
     );
     await expect(
       createReport({
@@ -381,7 +381,7 @@ const getError = async <TError>(call: () => unknown): Promise<TError> => {
 describe('errors from different realms', () => {
   it('sandbox', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'referenceError.docx')
+      fixturePath('referenceError.docx')
     );
 
     const error = await getError(() =>
@@ -401,7 +401,7 @@ describe('errors from different realms', () => {
 
   it('noSandbox', async () => {
     const template = await fs.promises.readFile(
-      path.join(__dirname, 'fixtures', 'referenceError.docx')
+      fixturePath('referenceError.docx')
     );
 
     const error = await getError(() =>

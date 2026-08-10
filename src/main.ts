@@ -11,19 +11,20 @@ import {
   findHighestImgId,
 } from './processTemplate';
 import {
-  UserOptions,
-  Htmls,
-  CreateReportOptions,
-  Images,
-  Links,
-  Node,
-  NonTextNode,
-  CommandSummary,
-  BuiltInCommand,
+  type UserOptions,
+  type Htmls,
+  type CreateReportOptions,
+  type Images,
+  type Links,
+  type Node,
+  type NonTextNode,
+  type CommandSummary,
+  type BuiltInCommand,
+  type ZipInput,
 } from './types';
 import { addChild, newNonTextNode } from './reportUtils';
 import { compileAliases, compileCommandAliases } from './aliases';
-import JSZip from 'jszip';
+import type JSZip from 'jszip';
 import { TemplateParseError } from './errors';
 import { logger } from './debug';
 
@@ -33,7 +34,7 @@ const CONTENT_TYPES_PATH = '[Content_Types].xml' as const;
 const TEMPLATE_PATH = 'word' as const;
 const XML_FILE_REGEX = new RegExp(`${TEMPLATE_PATH}\\/[^\\/]+\\.xml`);
 
-export async function parseTemplate(template: ArrayBuffer) {
+export async function parseTemplate(template: ZipInput) {
   logger.debug('Unzipping...');
   const zip = await zipLoad(template);
 
@@ -175,9 +176,8 @@ async function createReport(
     indentXml: createOptions.indentXml,
   };
 
-  const { jsTemplate, mainDocument, zip, contentTypes } = await parseTemplate(
-    template
-  );
+  const { jsTemplate, mainDocument, zip, contentTypes } =
+    await parseTemplate(template);
 
   logger.debug('Preprocessing template...');
   const prepped_template = preprocessTemplate(
@@ -187,7 +187,7 @@ async function createReport(
   );
 
   // Fetch the data that will fill in the template
-  let queryResult = null;
+  let queryResult;
   if (typeof data === 'function') {
     logger.debug('Looking for the query in the template...');
     const query = await extractQuery(prepped_template, createOptions);
@@ -205,7 +205,7 @@ async function createReport(
 
   // Find the highest image IDs by scanning the main document and all secondary XMLs.
   const highest_img_id = Math.max(
-    ...prepped_secondaries.map(([s, _]) => findHighestImgId(s)),
+    ...prepped_secondaries.map(([s]) => findHighestImgId(s)),
     findHighestImgId(prepped_template)
   );
 
@@ -260,7 +260,7 @@ async function createReport(
     numHtmls += Object.keys(htmls2).length;
 
     const segments = filePath.split('/');
-    const documentComponent = segments[segments.length - 1];
+    const documentComponent = segments[segments.length - 1] ?? filePath;
     await processImages(
       images2,
       documentComponent,
@@ -336,7 +336,7 @@ async function createReport(
  * @param aliasOptions the command/operator aliases used by the template, if any
  */
 export async function listCommands(
-  template: ArrayBuffer,
+  template: ZipInput,
   delimiter?: string | [string, string],
   aliasOptions?: Pick<UserOptions, 'commandAliases' | 'operatorAliases'>
 ): Promise<CommandSummary[]> {
@@ -362,7 +362,7 @@ export async function listCommands(
 
   const { jsTemplate, mainDocument, zip } = await parseTemplate(template);
   const secondaries = await prepSecondaryXMLs(zip, mainDocument, opts);
-  const xmls = [jsTemplate, ...secondaries.map(([js, path]) => js)];
+  const xmls = [jsTemplate, ...secondaries.map(([js]) => js)];
   const commands: CommandSummary[] = [];
   for (const js of xmls) {
     const prepped = preprocessTemplate(
@@ -371,7 +371,7 @@ export async function listCommands(
       opts.preserveSpace
     );
     const ctx = newContext(opts);
-    await walkTemplate(undefined, prepped, ctx, async (data, node, ctx) => {
+    await walkTemplate(undefined, prepped, ctx, async (_data, _node, ctx) => {
       const raw = getCommand(ctx.cmd, ctx.shorthands, ctx.options);
       ctx.cmd = ''; // flush the context
       const { cmdName, cmdRest: code } = splitCommand(
@@ -397,7 +397,7 @@ export async function listCommands(
  * Extract metadata from a document, such as the number of pages or words.
  * @param template the docx template as a Buffer-like object
  */
-export async function getMetadata(template: ArrayBuffer) {
+export async function getMetadata(template: ZipInput) {
   const app_xml_path = `docProps/app.xml`;
   const core_xml_path = `docProps/core.xml`;
   const zip = await zipLoad(template);
@@ -406,8 +406,8 @@ export async function getMetadata(template: ArrayBuffer) {
   // TODO: extract custom.xml as well?
 
   function getText(t: Node): string | undefined {
-    if (t._children.length === 0) return undefined;
     const n = t._children[0];
+    if (n == null) return undefined;
     if (n._fTextNode) return n._text;
     throw new Error(`Not a text node`);
   }
@@ -498,8 +498,9 @@ const processImages = async (
   logger.debug('Completing document.xml.rels...');
   const relsPath = `${TEMPLATE_PATH}/_rels/${documentComponent}.rels`;
   const rels = await getRelsFromZip(zip, relsPath);
-  for (const imageId of imageIds) {
-    const { extension, data: imgData } = images[imageId];
+  for (const [imageId, { extension, data: imgData }] of Object.entries(
+    images
+  )) {
     const imgName = `template_${documentComponent}_${imageId}${extension}`;
     logger.debug(`Writing image ${imageId} (${imgName})...`);
     const imgPath = `${TEMPLATE_PATH}/media/${imgName}`;
@@ -536,8 +537,7 @@ const processLinks = async (
     logger.debug('Completing document.xml.rels...');
     const relsPath = `${TEMPLATE_PATH}/_rels/${documentComponent}.rels`;
     const rels = await getRelsFromZip(zip, relsPath);
-    for (const linkId of linkIds) {
-      const { url } = links[linkId];
+    for (const [linkId, { url }] of Object.entries(links)) {
       addChild(
         rels,
         newNonTextNode('Relationship', {
@@ -570,8 +570,7 @@ const processHtmls = async (
     const htmlFiles = [];
     const relsPath = `${TEMPLATE_PATH}/_rels/${documentComponent}.rels`;
     const rels = await getRelsFromZip(zip, relsPath);
-    for (const htmlId of htmlIds) {
-      const htmlData = htmls[htmlId];
+    for (const [htmlId, htmlData] of Object.entries(htmls)) {
       // Replace all period characters in the filename to play nice with more picky parsers (like Docx4j)
       const htmlName = `template_${documentComponent.replace(
         /\./g,
