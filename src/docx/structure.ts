@@ -15,6 +15,7 @@
 import { WTag, WpTag } from '../ooxml';
 import { doesCellSpanCells, tagOf } from '../reportUtils';
 import { type BufferTag } from '../ooxml';
+import { type PendingKind } from '../resources';
 import { type Context, type Node } from '../types';
 
 // ==========================================
@@ -60,14 +61,11 @@ export function fillRequiredChildren(node: Node): void {
 // Where a command's node is spliced in
 // ==========================================
 
-/** A node a command built, and whatever should follow it. */
-type PendingNode = { node: Node; extra?: Node[] };
-
 export type PendingSlot = {
   /** The output node this replaces, identified by the tag being closed. */
   tag: string;
-  /** Collects what the command parked on the context, clearing it. */
-  take: (ctx: Context) => PendingNode | undefined;
+  /** Which command's parked node belongs at this level. */
+  kind: PendingKind;
 };
 
 /**
@@ -77,35 +75,9 @@ export type PendingSlot = {
  * the whole `w:r`, an HTML chunk for the `w:p`.
  */
 export const PENDING_SLOTS: readonly PendingSlot[] = [
-  {
-    tag: WTag.t,
-    take: ctx => {
-      const pending = ctx.pendingImageNode;
-      if (pending == null) return undefined;
-      delete ctx.pendingImageNode;
-      return pending.caption
-        ? { node: pending.image, extra: pending.caption }
-        : { node: pending.image };
-    },
-  },
-  {
-    tag: WTag.r,
-    take: ctx => {
-      const pending = ctx.pendingLinkNode;
-      if (pending == null) return undefined;
-      delete ctx.pendingLinkNode;
-      return { node: pending };
-    },
-  },
-  {
-    tag: WTag.p,
-    take: ctx => {
-      const pending = ctx.pendingHtmlNode;
-      if (pending == null) return undefined;
-      delete ctx.pendingHtmlNode;
-      return { node: pending };
-    },
-  },
+  { tag: WTag.t, kind: 'image' },
+  { tag: WTag.r, kind: 'link' },
+  { tag: WTag.p, kind: 'html' },
 ];
 
 // ==========================================

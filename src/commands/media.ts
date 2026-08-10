@@ -30,9 +30,6 @@ import {
 
 const node = newNonTextNode;
 
-/** Relationship id prefixes, one counter per kind of embedded resource. */
-const REL_ID_PREFIX = { image: 'img', link: 'link', html: 'html' } as const;
-
 /** The extension SVG images are recognised by. */
 const SVG_EXTENSION = '.svg' as const;
 
@@ -97,13 +94,10 @@ function validateImagePars(pars: ImagePars) {
   if (pars.thumbnail) validateImage(pars.thumbnail);
 }
 
-/** Registers an image on the context and returns its relationship id. */
+/** Validates an image and registers it, returning its relationship id. */
 const imageToContext = (ctx: Context, img: Image): string => {
   validateImage(img);
-  ctx.imageAndShapeIdIncrement += 1;
-  const relId = `${REL_ID_PREFIX.image}${ctx.imageAndShapeIdIncrement}`;
-  ctx.images[relId] = img;
-  return relId;
+  return ctx.resources.addImage(img);
 };
 
 function getImageData(imagePars: ImagePars): Image {
@@ -136,7 +130,7 @@ function buildImageExtensions(
     ]),
   ];
 
-  if (ctx.images[imgRelId]?.extension !== SVG_EXTENSION) {
+  if (ctx.resources.images[imgRelId]?.extension !== SVG_EXTENSION) {
     return { extNodes, renderedRelId: imgRelId };
   }
 
@@ -162,7 +156,7 @@ export const processImage = (ctx: Context, imagePars: ImagePars) => {
   const cy = (imagePars.height * EMU_PER_CM).toFixed(0);
 
   const relId = imageToContext(ctx, getImageData(imagePars));
-  const id = String(ctx.imageAndShapeIdIncrement);
+  const id = String(ctx.resources.lastShapeId);
   const alt = imagePars.alt || '';
   const rot = imagePars.rotation
     ? (imagePars.rotation * ROTATION_UNITS_PER_DEGREE).toString()
@@ -230,13 +224,17 @@ export const processImage = (ctx: Context, imagePars: ImagePars) => {
     ]),
   ]);
 
-  ctx.pendingImageNode = { image: drawing };
-  if (imagePars.caption) {
-    ctx.pendingImageNode.caption = [
-      node(WTag.br),
-      node(WTag.t, {}, [newTextNode(imagePars.caption)]),
-    ];
-  }
+  ctx.resources.park('image', {
+    node: drawing,
+    ...(imagePars.caption
+      ? {
+          extra: [
+            node(WTag.br),
+            node(WTag.t, {}, [newTextNode(imagePars.caption)]),
+          ],
+        }
+      : {}),
+  });
 };
 
 /**
@@ -269,27 +267,29 @@ export function findHighestImgId(mainDoc: Node): number {
 
 export const processLink = (ctx: Context, linkPars: LinkPars) => {
   const { url, label = url } = linkPars;
-  ctx.linkId += 1;
-  const relId = `${REL_ID_PREFIX.link}${ctx.linkId}`;
-  ctx.links[relId] = { url };
-  const { textRunPropsNode } = ctx;
-  ctx.pendingLinkNode = node(
-    WTag.hyperlink,
-    { [RAttr.id]: relId, [WAttr.history]: LINK_KEEP_HISTORY },
-    [
-      node(WTag.r, {}, [
-        // A link with no formatting of its own gets the conventional underline
-        textRunPropsNode ||
-          node(WTag.rPr, {}, [node(WTag.u, { [WAttr.val]: UNDERLINE_SINGLE })]),
-        node(WTag.t, {}, [newTextNode(label)]),
-      ]),
-    ]
-  );
+  const relId = ctx.resources.addLink(url);
+  const { textRunProps } = ctx.resources;
+  ctx.resources.park('link', {
+    node: node(
+      WTag.hyperlink,
+      { [RAttr.id]: relId, [WAttr.history]: LINK_KEEP_HISTORY },
+      [
+        node(WTag.r, {}, [
+          // A link with no formatting of its own gets the conventional underline
+          textRunProps ||
+            node(WTag.rPr, {}, [
+              node(WTag.u, { [WAttr.val]: UNDERLINE_SINGLE }),
+            ]),
+          node(WTag.t, {}, [newTextNode(label)]),
+        ]),
+      ]
+    ),
+  });
 };
 
 export const processHtml = (ctx: Context, data: string) => {
-  ctx.htmlId += 1;
-  const relId = `${REL_ID_PREFIX.html}${ctx.htmlId}`;
-  ctx.htmls[relId] = data;
-  ctx.pendingHtmlNode = node(WTag.altChunk, { [RAttr.id]: relId });
+  const relId = ctx.resources.addHtml(data);
+  ctx.resources.park('html', {
+    node: node(WTag.altChunk, { [RAttr.id]: relId }),
+  });
 };

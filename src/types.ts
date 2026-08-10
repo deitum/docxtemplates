@@ -1,4 +1,5 @@
 import { type QualifiedAttribute } from 'sax';
+import { type Resources } from './resources';
 // Type-only, so that nothing pulls `node:vm` into the browser bundle.
 import type { Script } from 'node:vm';
 import { type BufferTag } from './ooxml';
@@ -114,7 +115,26 @@ export type QueryResolver = (
 
 type ErrorHandler = (e: Error, raw_code?: string) => any;
 
-type RunJSFunc = (o: { sandbox: SandBox; ctx: Context }) => {
+/**
+ * The `ctx` a custom `runJs` sandbox receives.
+ *
+ * Deliberately a subset of the engine's own context rather than the whole of
+ * it: the rest is the walk's business and changes as the engine does. The
+ * fields kept are flat, and named as they were when `runJs` was handed the
+ * entire context, so code that reads them keeps working.
+ */
+export type RunJsContext = {
+  /** The report options, with every default filled in. */
+  options: CreateReportOptions;
+  /** Loop variables, exposed to snippets with a `$` prefix. */
+  vars: { [name: string]: VarValue };
+  /** The FOR/IF constructs currently open, innermost last. */
+  loops: Array<LoopStatus>;
+  /** The sandbox as it was left by the previous snippet. */
+  jsSandbox: SandBox | undefined;
+};
+
+type RunJSFunc = (o: { sandbox: SandBox; ctx: RunJsContext }) => {
   modifiedSandbox: SandBox;
   result: unknown;
 };
@@ -302,45 +322,72 @@ export type SandboxRuntime = {
   scripts: Map<string, Script>;
 };
 
-/** The mutable state of one pass over one XML part; see `context.ts`. */
+/**
+ * The mutable state of one pass over one XML part; see `context.ts`.
+ *
+ * Split three ways, because it was one flat bag of twenty-seven fields mixing
+ * four unrelated concerns. Ten of them belonged to three commands
+ * (IMAGE/LINK/HTML) yet were declared on the engine's own type and incremented
+ * from wherever, which is what {@link Resources} now hides.
+ */
 export type Context = {
-  gCntIf: number;
-  gCntEndIf: number;
-  level: number;
-  fCmd: boolean;
-  cmd: string;
-  fSeekQuery: boolean;
-  query?: string;
-  buffers: Record<BufferTag, BufferStatus>;
-  cell?: CellStatus;
-  pendingImageNode?: { image: NonTextNode; caption?: NonTextNode[] };
-  imageAndShapeIdIncrement: number;
-  images: Images;
-  pendingLinkNode?: NonTextNode;
-  linkId: number;
-  links: Links;
-  pendingHtmlNode?: TextNode | NonTextNode;
-  htmlId: number;
-  htmls: Htmls;
-  vars: { [name: string]: VarValue };
-  loops: Array<LoopStatus>;
-  fJump: boolean;
-  shorthands: { [shorthand: string]: string };
   options: CreateReportOptions;
-  jsSandbox?: SandBox;
-  jsRuntime?: SandboxRuntime;
-  textRunPropsNode?: NonTextNode;
+  /** Where the cursor is and what it has seen; see {@link WalkState}. */
+  walk: WalkState;
+  /** The data and definitions commands are evaluated against. */
+  scope: Scope;
+  /** What IMAGE/LINK/HTML have accumulated. */
+  resources: Resources;
+};
 
-  // To verify we don't have a nested IF within the same `w:p` or `w:tr` tag
-  pIfCheckMap: Map<Node, string>;
-  trIfCheckMap: Map<Node, string>;
+/** Where the walk is, and what it has collected on the way. */
+export type WalkState = {
+  /** Depth in the input tree. */
+  level: number;
+  /** Whether a command asked to jump back to a loop's reference node. */
+  jumpRequested: boolean;
+  /** Text and commands seen so far in the enclosing `w:p` / `w:tr` / `w:tc`. */
+  buffers: Record<BufferTag, BufferStatus>;
+  /** The table cell being walked, if any. */
+  cell?: CellStatus;
+
+  /** Whether the cursor is between an opening and a closing delimiter. */
+  isCollectingCommand: boolean;
+  /** The command collected so far. */
+  command: string;
+  /** Whether this pass is only looking for the QUERY command. */
+  seekingQuery: boolean;
+  /** The QUERY command's payload, once found. */
+  query?: string;
+
+  /** How many IF and END-IF commands have been seen, which must agree. */
+  openIfCount: number;
+  closedIfCount: number;
+  /** The IF constructs open on each `w:p` / `w:tr`; two on one is an error. */
+  ifByParagraph: Map<Node, string>;
+  ifByTableRow: Map<Node, string>;
+};
+
+/** What a command's JavaScript is evaluated against. */
+export type Scope = {
+  /** Loop variables, exposed to snippets with a `$` prefix. */
+  vars: { [name: string]: VarValue };
+  /** The FOR/IF constructs currently open, innermost last. */
+  loops: Array<LoopStatus>;
+  /** Names defined by ALIAS, and the commands they stand for. */
+  shorthands: { [shorthand: string]: string };
+  /** The sandbox as it was left by the last snippet. */
+  jsSandbox?: SandBox;
+  /** The evaluation context snippets of this part share; see `jsSandbox.ts`. */
+  jsRuntime?: SandboxRuntime;
 };
 
 /** The text and the commands seen so far inside a `w:p`, `w:tr` or `w:tc`. */
-type BufferStatus = {
+export type BufferStatus = {
   text: string;
   cmds: string;
-  fInsertedText: boolean;
+  /** Whether a command inserted text here, which keeps the node alive. */
+  hasInsertedText: boolean;
 };
 
 /** The table cell (`w:tc`) that is currently being walked. */
@@ -352,7 +399,7 @@ export type CellStatus = {
    * or ends in another cell (as in the dynamic-columns pattern). Only such a
    * cell is deleted when it renders to nothing.
    */
-  fSpansCells: boolean;
+  spansCells: boolean;
 };
 
 type VarValue = unknown;

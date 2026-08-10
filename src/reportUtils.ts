@@ -165,7 +165,7 @@ export const debugPrintNode = (node: Node) =>
 // ==========================================
 
 export const getCurLoop = (ctx: Context): LoopStatus | null =>
-  ctx.loops[ctx.loops.length - 1] ?? null;
+  ctx.scope.loops[ctx.scope.loops.length - 1] ?? null;
 
 // Whether we're walking through a branch of an IF construct (IF / ELSE-IF / ELSE)
 // that has not been selected. Its contents must not be rendered, in exactly the
@@ -253,11 +253,11 @@ export const markCellIfLoopSpansCells = (
   node: Node,
   loop: LoopStatus
 ) => {
-  const cell = ctx.cell;
+  const cell = ctx.walk.cell;
   if (cell == null) return;
   const cmdCell = findCellNode(node);
   if (cmdCell !== cell.node) return;
-  if (findCellNode(loop.refNode) !== cmdCell) cell.fSpansCells = true;
+  if (findCellNode(loop.refNode) !== cmdCell) cell.spansCells = true;
 };
 
 /**
@@ -267,10 +267,10 @@ export const markCellIfLoopSpansCells = (
  * referred to a construct opened in another cell.
  */
 export const doesCellSpanCells = (ctx: Context): boolean => {
-  const cell = ctx.cell;
+  const cell = ctx.walk.cell;
   if (cell == null) return false;
   return (
-    cell.fSpansCells ||
-    ctx.loops.some(loop => findCellNode(loop.refNode) === cell.node)
+    cell.spansCells ||
+    ctx.scope.loops.some(loop => findCellNode(loop.refNode) === cell.node)
   );
 };

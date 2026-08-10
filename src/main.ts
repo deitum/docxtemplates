@@ -129,7 +129,7 @@ async function createReport(
       throw withPart(err, part.name);
     }
     if (result.status === 'errors') throw withPart(result.errors, part.name);
-    lastImageAndShapeId = ctx.imageAndShapeIdIncrement;
+    lastImageAndShapeId = ctx.resources.lastShapeId;
 
     // The probes are a testing shortcut into the main document, and return
     // before the package is assembled.
@@ -206,8 +206,8 @@ export async function listCommands(
 
   const commands: CommandSummary[] = [];
   const collectCommand: CommandProcessor = async (_data, _node, ctx) => {
-    const raw = getCommand(ctx.cmd, ctx.shorthands, ctx.options);
-    ctx.cmd = ''; // flush the context
+    const raw = getCommand(ctx.walk.command, ctx.scope.shorthands, ctx.options);
+    ctx.walk.command = ''; // flush the context
     const { cmdName, cmdRest: code } = splitCommand(
       raw,
       ctx.options.operatorAliases

@@ -96,7 +96,7 @@ const processAlias = ({ ctx, cmd, rest }: CommandArgs): void => {
   const [, aliasName, fullCmd] = aliasMatch ?? [];
   if (aliasName == null || fullCmd == null)
     throw new InvalidCommandError('Invalid ALIAS command', cmd);
-  ctx.shorthands[aliasName] = fullCmd;
+  ctx.scope.shorthands[aliasName] = fullCmd;
   logger.debug(`Defined alias '${aliasName}' for: ${fullCmd}`);
 };
 
@@ -195,8 +195,8 @@ const processForIf = async ({
   let varName: string;
   if (isIf) {
     if (!node._ifName) {
-      node._ifName = `${IF_VAR_PREFIX}${ctx.gCntIf}`;
-      ctx.gCntIf += 1;
+      node._ifName = `${IF_VAR_PREFIX}${ctx.walk.openIfCount}`;
+      ctx.walk.openIfCount += 1;
     }
     varName = node._ifName;
   } else {
@@ -212,7 +212,7 @@ const processForIf = async ({
     // We're revisiting the IF command on the second pass (the one that renders
     // the selected branch); start again from the first branch.
     if (isIf) restartIfBranches(curLoop);
-    logLoop(ctx.loops);
+    logLoop(ctx.scope.loops);
     return;
   }
 
@@ -249,9 +249,9 @@ const processForIf = async ({
       );
   }
 
-  ctx.loops.push({
+  ctx.scope.loops.push({
     refNode: node,
-    refNodeLevel: ctx.level,
+    refNodeLevel: ctx.walk.level,
     varName,
     loopOver,
     isIf,
@@ -260,7 +260,7 @@ const processForIf = async ({
     idx: EXPLORATION_PASS,
     ...(isIf ? { ifCurrentBranch: 0, ifActiveBranch, ifBranchTaken } : {}),
   });
-  logLoop(ctx.loops);
+  logLoop(ctx.scope.loops);
 };
 
 /**
@@ -273,9 +273,9 @@ const checkNoNestedIfInSameScope = (ctx: Context, node: Node, cmd: string) => {
   const tag = tagOf(scopeNode);
   const seen =
     tag === WTag.p
-      ? ctx.pIfCheckMap
+      ? ctx.walk.ifByParagraph
       : tag === WTag.tr
-        ? ctx.trIfCheckMap
+        ? ctx.walk.ifByTableRow
         : null;
   if (seen == null) return;
   if (seen.has(scopeNode) && seen.get(scopeNode) !== cmd) {
@@ -339,11 +339,11 @@ const processElse = async ({
     if (isElseIf) {
       // Evaluate the expression as if we were outside of the IF loop, so that
       // e.g. `$idx` refers to the enclosing FOR loop, just like in an IF command
-      const ifLoop = ctx.loops.pop();
+      const ifLoop = ctx.scope.loops.pop();
       try {
         shouldRun = !!(await runUserJsAndGetRaw(data, rest, ctx));
       } finally {
-        if (ifLoop) ctx.loops.push(ifLoop);
+        if (ifLoop) ctx.scope.loops.push(ifLoop);
       }
     }
     if (shouldRun) {
@@ -351,7 +351,7 @@ const processElse = async ({
       curLoop.ifActiveBranch = branch;
     }
   }
-  logLoop(ctx.loops);
+  logLoop(ctx.scope.loops);
 };
 
 // END-FOR [varName]
@@ -371,15 +371,15 @@ const processEndForIf = ({ node, ctx, cmd, name, rest }: CommandArgs): void => {
   const scopeNode = findParentPorTrNode(node);
   if (scopeNode != null) {
     const tag = tagOf(scopeNode);
-    if (tag === WTag.p) ctx.pIfCheckMap.delete(scopeNode);
-    else if (tag === WTag.tr) ctx.trIfCheckMap.delete(scopeNode);
+    if (tag === WTag.p) ctx.walk.ifByParagraph.delete(scopeNode);
+    else if (tag === WTag.tr) ctx.walk.ifByTableRow.delete(scopeNode);
   }
 
   // First time we visit an END-IF node, we assign it the arbitrary name
   // generated when the IF was processed
   if (isIf && !node._ifName) {
     node._ifName = curLoop.varName;
-    ctx.gCntEndIf += 1;
+    ctx.walk.closedIfCount += 1;
   }
 
   // Is this the END-IF/END-FOR we're expecting? If not:
@@ -388,7 +388,7 @@ const processEndForIf = ({ node, ctx, cmd, name, rest }: CommandArgs): void => {
   //   the current loop's paragraph shows up here legitimately.
   const varName = isIf ? node._ifName : rest;
   if (curLoop.varName !== varName) {
-    if (ctx.loops.find(o => o.varName === varName) == null) {
+    if (ctx.scope.loops.find(o => o.varName === varName) == null) {
       logger.debug(
         `Ignoring ${cmd} (${varName}, but we're expecting ${curLoop.varName})`
       );
@@ -411,12 +411,12 @@ const processEndForIf = ({ node, ctx, cmd, name, rest }: CommandArgs): void => {
   const nextItem = curLoop.loopOver[nextIdx];
   if (nextItem != null) {
     // Next iteration: jump back to the node the construct opened on
-    ctx.vars[varName] = nextItem;
-    ctx.fJump = true;
+    ctx.scope.vars[varName] = nextItem;
+    ctx.walk.jumpRequested = true;
     curLoop.idx = nextIdx;
     if (isIf) restartIfBranches(curLoop);
   } else {
-    ctx.loops.pop();
+    ctx.scope.loops.pop();
   }
 };
 

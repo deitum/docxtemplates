@@ -6,8 +6,8 @@ import {
   BUILT_IN_COMMANDS,
   Command,
   CommandPrefix,
-  type Context,
   type CreateReportOptions,
+  type Scope,
 } from '../types';
 import { EXPRESSION_COMMANDS } from './registry';
 
@@ -53,7 +53,7 @@ type PrefixExpansion = (args: {
   rest: string;
   /** The whole command, prefix included, for error messages. */
   cmd: string;
-  shorthands: Context['shorthands'];
+  shorthands: Scope['shorthands'];
   options: Pick<CreateReportOptions, 'commandAliases'>;
 }) => string;
 
@@ -76,7 +76,7 @@ const PREFIX_EXPANSIONS: { [prefix: string]: PrefixExpansion } = {
  */
 export function getCommand(
   command: string,
-  shorthands: Context['shorthands'],
+  shorthands: Scope['shorthands'],
   options: Pick<CreateReportOptions, 'fixSmartQuotes' | 'commandAliases'>
 ): string {
   let cmd = command.trim();

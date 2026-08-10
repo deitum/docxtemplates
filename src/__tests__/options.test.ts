@@ -3,7 +3,7 @@ import JSZip from 'jszip';
 import { makeDocx, reportText } from './helpers';
 import { createReport } from '../index';
 import { InternalError } from '../errors';
-import { type Context, type SandBox } from '../types';
+import { type RunJsContext, type SandBox } from '../types';
 import { setDebugLogSink } from '../debug';
 
 if (process.env.DEBUG) setDebugLogSink(console.log);
@@ -11,7 +11,13 @@ if (process.env.DEBUG) setDebugLogSink(console.log);
 describe('runJs (custom sandbox)', () => {
   it('runs every snippet through the user-provided sandbox', async () => {
     const seen: { code: string | undefined; hasCtx: boolean }[] = [];
-    const runJs = ({ sandbox, ctx }: { sandbox: SandBox; ctx: Context }) => {
+    const runJs = ({
+      sandbox,
+      ctx,
+    }: {
+      sandbox: SandBox;
+      ctx: RunJsContext;
+    }) => {
       seen.push({ code: sandbox.__code__, hasCtx: ctx.options != null });
       return { modifiedSandbox: sandbox, result: `<${sandbox.__code__}>` };
     };
@@ -176,5 +182,48 @@ describe('data as a resolver function', () => {
     expect(resolver).toHaveBeenCalledTimes(1);
     expect(resolver.mock.calls[0]).toEqual([undefined, undefined]);
     expect(reportText(report)).toEqual('some text\nJohn\nmore text');
+  });
+});
+
+describe('runJs receives a narrowed context', () => {
+  it('exposes the options, the loop variables and the carried sandbox', async () => {
+    // `ctx` holds live references to the engine's state, exactly as it did when
+    // the whole context was handed over, so anything read out of it has to be
+    // read while the call is happening.
+    const seen: { keys: string[]; loopVar?: string; delimiter: string }[] = [];
+    const runJs = ({
+      sandbox,
+      ctx,
+    }: {
+      sandbox: SandBox;
+      ctx: RunJsContext;
+    }) => {
+      seen.push({
+        keys: Object.keys(ctx).sort(),
+        ...(ctx.loops[0] ? { loopVar: ctx.loops[0].varName } : {}),
+        delimiter: ctx.options.cmdDelimiter[0],
+      });
+      // A real sandbox has to evaluate: `FOR` needs an actual array back.
+      const result = new Function(
+        's',
+        `with (s) { return (${String(sandbox.__code__)}); }`
+      )(sandbox);
+      return { modifiedSandbox: sandbox, result };
+    };
+
+    const template = await makeDocx({
+      body: ['+++FOR item IN items+++', '+++$item+++', '+++END-FOR item+++'],
+    });
+    const report = await createReport(
+      { template, data: { items: ['a', 'b'] }, runJs },
+      'JS'
+    );
+
+    expect(reportText(report)).toEqual('a\nb');
+    // The keys are the ones `runJs` was given back when it received the whole
+    // context, so code reading them did not have to change.
+    expect(seen[0]?.keys).toEqual(['jsSandbox', 'loops', 'options', 'vars']);
+    expect(seen[0]?.delimiter).toEqual('+++');
+    expect(seen.map(s => s.loopVar)).toContain('item');
   });
 });

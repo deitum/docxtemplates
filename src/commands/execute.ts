@@ -23,16 +23,16 @@ export type CommandProcessor = (
 export const processCmd: CommandProcessor = async (data, node, ctx) => {
   // Deliberately outside the `try`: a template naming an alias that nothing has
   // defined is broken in a way the `errorHandler` is not meant to paper over.
-  const cmd = getCommand(ctx.cmd, ctx.shorthands, ctx.options);
-  ctx.cmd = ''; // flush the context
+  const cmd = getCommand(ctx.walk.command, ctx.scope.shorthands, ctx.options);
+  ctx.walk.command = ''; // flush the context
   const { cmdName, cmdRest } = splitCommand(cmd, ctx.options.operatorAliases);
 
   try {
     if (cmdName !== Command.CMD_NODE) logger.debug(`Processing cmd: ${cmd}`);
 
     // While seeking the QUERY, no other command may run.
-    if (ctx.fSeekQuery) {
-      if (cmdName === Command.QUERY) ctx.query = cmdRest;
+    if (ctx.walk.seekingQuery) {
+      if (cmdName === Command.QUERY) ctx.walk.query = cmdRest;
       return;
     }
 

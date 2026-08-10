@@ -3,6 +3,7 @@ import { getCurLoop } from './reportUtils';
 import {
   type ReportData,
   type Context,
+  type RunJsContext,
   type SandBox,
   type SandboxRuntime,
 } from './types';
@@ -47,13 +48,13 @@ const newSandbox = (): SandBox => ({
 });
 
 const getRuntime = (ctx: Context): SandboxRuntime => {
-  const existing = ctx.jsRuntime;
+  const existing = ctx.scope.jsRuntime;
   if (existing != null) return existing;
   // `createContext` hands the very object back, contextified; `vm` types it as
   // a bare dictionary, but it is the sandbox we just built.
   const context = vm.createContext(newSandbox()) as SandBox;
   const runtime: SandboxRuntime = { context, scripts: new Map() };
-  ctx.jsRuntime = runtime;
+  ctx.scope.jsRuntime = runtime;
   return runtime;
 };
 
@@ -83,11 +84,19 @@ function prepareSandbox(
   // of the innermost loop
   const curLoop = getCurLoop(ctx);
   if (curLoop) sandbox[SandboxKey.loopIndex] = curLoop.idx;
-  for (const varName of Object.keys(ctx.vars)) {
-    sandbox[`${SandboxKey.varPrefix}${varName}`] = ctx.vars[varName];
+  for (const varName of Object.keys(ctx.scope.vars)) {
+    sandbox[`${SandboxKey.varPrefix}${varName}`] = ctx.scope.vars[varName];
   }
   return sandbox;
 }
+
+/** The subset of the engine's context a custom sandbox is handed. */
+const runJsContextOf = (ctx: Context): RunJsContext => ({
+  options: ctx.options,
+  vars: ctx.scope.vars,
+  loops: ctx.scope.loops,
+  jsSandbox: ctx.scope.jsSandbox,
+});
 
 /**
  * A `vm.Script` is independent of the context it runs in, so a template that
@@ -121,7 +130,7 @@ export async function runUserJsAndGetRaw(
   const sandbox = prepareSandbox(
     usesSharedContext
       ? getRuntime(ctx).context
-      : { ...(ctx.jsSandbox ?? newSandbox()) },
+      : { ...(ctx.scope.jsSandbox ?? newSandbox()) },
     data,
     code,
     ctx
@@ -132,7 +141,7 @@ export async function runUserJsAndGetRaw(
   let result;
   try {
     if (ctx.options.runJs) {
-      const temp = ctx.options.runJs({ sandbox, ctx });
+      const temp = ctx.options.runJs({ sandbox, ctx: runJsContextOf(ctx) });
       context = temp.modifiedSandbox;
       result = await temp.result;
     } else if (ctx.options.noSandbox) {
@@ -164,7 +173,7 @@ export async function runUserJsAndGetRaw(
   }
 
   // Save the sandbox for later use, omitting the reserved properties.
-  ctx.jsSandbox = {
+  ctx.scope.jsSandbox = {
     ...context,
     [SandboxKey.code]: undefined,
     [SandboxKey.result]: undefined,
