@@ -32,6 +32,7 @@ Contributions are welcome!
   - [Browser template compatibility caveat](#browser-template-compatibility-caveat)
   - [Running within a Web Worker](#running-within-a-web-worker)
 - [Writing templates](#writing-templates)
+  - [Authoring templates with Claude Code](#authoring-templates-with-claude-code)
   - [Custom command delimiters](#custom-command-delimiters)
   - [Supported commands](#supported-commands)
     - [`QUERY`](#query)
@@ -282,6 +283,24 @@ You can find several template examples in this repo:
 - [SWAPI](https://github.com/deitum/docxtemplates/tree/master/examples/example-node), a good example of what you can achieve embedding a template (GraphQL in this case) in your report, including a simple script for report generation. Uses the freak-ish online [Star Wars GraphQL API](https://github.com/graphql/swapi-graphql).
 - [Dynamic images](https://github.com/deitum/docxtemplates/tree/master/examples/example-node): with examples of images that are dynamically downloaded or created. Check out the _images-many-tiles_ example for a taste of this powerful feature.
 - Browser-based examples [using Webpack](https://github.com/deitum/docxtemplates/tree/master/examples/example-webpack) and [plain browser scripts](https://github.com/deitum/docxtemplates/tree/master/examples/example-browser).
+
+## Authoring templates with Claude Code
+
+Writing a template by hand means opening Word, retyping commands and hoping they
+render. This repo ships a [Claude Code](https://claude.com/claude-code) skill
+that does it from filled-out documents instead: give it two signed contracts, or
+one contract plus the data behind it, and it works out what varies, writes the
+template, and — because the skill lives inside the render engine — renders it
+with sample data to prove it works.
+
+```
+/plugin marketplace add deitum/docxtemplates
+/plugin install docx-template@deitum
+```
+
+Then `/docx-template path/to/document.docx`. The skill lives in
+[`skills/docx-template/`](./skills/docx-template) and works in any project, not
+just this one.
 
 ## Custom command delimiters
 
@@ -591,6 +610,12 @@ And let you dynamically generate columns:
 | +++ END-FOR row+++            |                    |                        |
 +-------------------------------+--------------------+------------------------+
 ```
+
+The cells holding the `FOR` and `END-FOR` commands above are deleted, which is what
+makes the generated columns line up. This only happens to cells whose loop (or `IF`
+construct) spans several cells: a cell containing a complete `FOR`…`END-FOR` (or
+`IF`…`END-IF`) is kept, even when it renders to nothing, so that the other cells of
+the row stay in their columns.
 
 Finally, you can nest loops (this example assumes a different data set):
 

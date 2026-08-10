@@ -1,0 +1,15 @@
+{
+  "name": "deitum",
+  "description": "Claude Code plugins from the @deitum/docxtemplates project",
+  "owner": {
+    "name": "deitum",
+    "url": "https://github.com/deitum"
+  },
+  "plugins": [
+    {
+      "name": "docx-template",
+      "source": "./",
+      "description": "Turn filled-out .docx files into @deitum/docxtemplates templates, and render them with sample data to prove they work"
+    }
+  ]
+}

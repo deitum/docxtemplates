@@ -1,27 +1,22 @@
 import { describe, it, expect } from 'vitest';
-import { fixturePath } from './helpers';
+import { fixturePath, getError, makeDocx, readFixture } from './helpers';
 import fs from 'fs';
 import QR from 'qrcode';
-import { createReport } from '../index';
+import { createReport, getMetadata } from '../index';
 import { setDebugLogSink } from '../debug';
 import {
   isError,
   NullishCommandResultError,
   CommandExecutionError,
+  CommandSyntaxError,
+  ImageError,
+  IncompleteConditionalStatementError,
+  InvalidCommandError,
+  ObjectCommandResultError,
+  TemplateParseError,
 } from '../errors';
 
 if (process.env.DEBUG) setDebugLogSink(console.log);
-
-class NoErrorThrownError extends Error {}
-
-const getError = async <TError>(call: () => unknown): Promise<TError> => {
-  try {
-    await call();
-    throw new NoErrorThrownError();
-  } catch (error: unknown) {
-    return error as TError;
-  }
-};
 
 ['noSandbox', 'sandbox'].forEach(sbStatus => {
   const noSandbox = sbStatus === 'sandbox' ? false : true;
@@ -436,5 +431,258 @@ describe('isError', () => {
 
   it('primitive is not an error', () => {
     expect(isError(1)).toBeFalsy();
+  });
+});
+
+describe('malformed commands', () => {
+  const render = async (body: string[], options = {}) =>
+    createReport({ template: await makeDocx({ body }), data: {}, ...options });
+
+  it('CommandSyntaxError on a command that looks built-in but is not', async () => {
+    // `IF-NOT` starts with the built-in `IF`, so it is not treated as an
+    // implicit INS, but there is no command to run either.
+    const error = await getError<CommandSyntaxError>(() =>
+      render(['+++IF-NOT foo+++'])
+    );
+    expect(error).toBeInstanceOf(CommandSyntaxError);
+    expect(error.message).toEqual('Invalid command syntax: IF-NOT foo');
+    expect(error.command).toEqual('IF-NOT foo');
+  });
+
+  it('InvalidCommandError on an ALIAS without a definition', async () => {
+    await expect(render(['+++ALIAS foo+++'])).rejects.toThrow(
+      'Invalid ALIAS command: ALIAS foo'
+    );
+  });
+
+  it('InvalidCommandError on an unknown shorthand', async () => {
+    const error = await getError<InvalidCommandError>(() =>
+      render(['+++ALIAS known INS 1+++', '+++*unknown+++'])
+    );
+    expect(error).toBeInstanceOf(InvalidCommandError);
+    expect(error.message).toEqual('Unknown alias: *unknown');
+  });
+
+  it('InvalidCommandError on an ELSE-IF without a condition', async () => {
+    await expect(
+      render(['+++IF false+++', 'x', '+++ELSE-IF+++', 'y', '+++END-IF+++'])
+    ).rejects.toThrow('Invalid ELSE-IF command (missing condition): ELSE-IF');
+  });
+
+  it('IncompleteConditionalStatementError on a missing END-IF (failFast)', async () => {
+    await expect(
+      render(['+++IF true+++', 'x'], { failFast: true })
+    ).rejects.toBeInstanceOf(IncompleteConditionalStatementError);
+  });
+
+  it('collects an unterminated FOR loop when failFast is false', async () => {
+    await expect(
+      render(['+++FOR c IN [1, 2]+++', '+++$c+++'], { failFast: false })
+    ).rejects.toEqual([
+      expect.objectContaining({
+        message:
+          "Unterminated FOR-loop ('FOR c'). Make sure each FOR loop has a corresponding END-FOR command.",
+      }),
+    ]);
+  });
+});
+
+['noSandbox', 'sandbox'].forEach(sbStatus => {
+  const noSandbox = sbStatus === 'sandbox' ? false : true;
+
+  describe(`${sbStatus}`, () => {
+    describe('IMAGE parameter validation', () => {
+      const renderImage = async (img: unknown) =>
+        createReport({
+          noSandbox,
+          template: await makeDocx({ body: ['+++IMAGE img()+++'] }),
+          data: {},
+          additionalJsContext: { img: () => img },
+        });
+
+      const validPng = async () => ({
+        width: 6,
+        height: 6,
+        data: await readFixture('sample.png'),
+        extension: '.png',
+      });
+
+      it('rejects a non-numeric width or height', async () => {
+        const error = await getError<ImageError>(async () =>
+          renderImage({ ...(await validPng()), width: 'wide' })
+        );
+        expect(error).toBeInstanceOf(ImageError);
+        expect(error.message).toContain('invalid image width: wide (in cm)');
+
+        await expect(
+          renderImage({ ...(await validPng()), height: NaN })
+        ).rejects.toThrow('invalid image height: NaN (in cm)');
+      });
+
+      it('rejects image data that is not binary or base64', async () => {
+        await expect(
+          renderImage({ ...(await validPng()), data: 42 })
+        ).rejects.toThrow(/image .data property needs to be provided as/);
+      });
+
+      it('rejects an unsupported extension', async () => {
+        await expect(
+          renderImage({ ...(await validPng()), extension: '.tiff' })
+        ).rejects.toThrow(/An extension \(one of .*\) needs to be provided/);
+      });
+
+      it('rejects a thumbnail without an extension', async () => {
+        await expect(
+          renderImage({
+            ...(await validPng()),
+            extension: '.svg',
+            thumbnail: { data: await readFixture('sample.png') },
+          })
+        ).rejects.toThrow(/An extension \(one of .*\) needs to be provided/);
+      });
+
+      it('accepts a base64-encoded string', async () => {
+        const report = await renderImage({
+          width: 6,
+          height: 6,
+          data: (await readFixture('sample.png')).toString('base64'),
+          extension: '.png',
+        });
+        expect(report).toBeInstanceOf(Uint8Array);
+      });
+    });
+
+    describe('snippets that throw a non-Error', () => {
+      it('are still reported as a CommandExecutionError', async () => {
+        const template = await makeDocx({
+          body: [`+++!(() => { throw 'just a string' })()+++`],
+        });
+        const error = await getError<CommandExecutionError>(() =>
+          createReport({ noSandbox, template, data: {} })
+        );
+        expect(error).toBeInstanceOf(CommandExecutionError);
+        expect(error.err.message).toEqual('just a string');
+        expect(error.message).toContain('just a string');
+      });
+    });
+
+    describe('ObjectCommandResultError', () => {
+      it('can be handled by a custom errorHandler', async () => {
+        const seen: Error[] = [];
+        const xml = await createReport(
+          {
+            noSandbox,
+            template: await makeDocx({ body: ['+++obj+++'] }),
+            data: { obj: { a: 1 } },
+            errorHandler: err => {
+              seen.push(err);
+              return 'REPLACED';
+            },
+          },
+          'XML'
+        );
+        expect(xml).toContain('REPLACED');
+        expect(seen).toHaveLength(1);
+        expect(seen[0]).toBeInstanceOf(ObjectCommandResultError);
+        expect((seen[0] as ObjectCommandResultError).result).toEqual({ a: 1 });
+      });
+    });
+  });
+});
+
+describe('broken templates', () => {
+  it('rejects a zip without a [Content_Types].xml', async () => {
+    const template = await makeDocx({
+      body: ['hi'],
+      files: { '[Content_Types].xml': null },
+    });
+    await expect(createReport({ template, data: {} })).rejects.toThrow(
+      TemplateParseError
+    );
+  });
+
+  it('rejects a [Content_Types].xml that lists no main document', async () => {
+    const template = await makeDocx({
+      body: ['hi'],
+      files: {
+        '[Content_Types].xml': `<?xml version="1.0"?>
+          <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+            <Default Extension="xml" ContentType="application/xml"/>
+          </Types>`,
+      },
+    });
+    await expect(createReport({ template, data: {} })).rejects.toThrow(
+      /Could not find main document/
+    );
+  });
+
+  it('rejects when the main document is missing from the zip', async () => {
+    const template = await makeDocx({
+      body: ['hi'],
+      files: { 'word/document.xml': null },
+    });
+    await expect(createReport({ template, data: {} })).rejects.toThrow(
+      'document.xml could not be found'
+    );
+  });
+
+  it('rejects a malformed main document', async () => {
+    const template = await makeDocx({
+      files: { 'word/document.xml': '<w:document><w:body>' },
+    });
+    await expect(createReport({ template, data: {} })).rejects.toThrow(
+      /Unclosed root tag/
+    );
+  });
+});
+
+describe('getMetadata on unusual documents', () => {
+  const APP_XML = (body: string) =>
+    `<?xml version="1.0"?><Properties>${body}</Properties>`;
+  const CORE_XML = `<?xml version="1.0"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties"/>`;
+
+  it('rejects a document without metadata parts', async () => {
+    await expect(getMetadata(await makeDocx({ body: ['hi'] }))).rejects.toThrow(
+      'docProps/app.xml could not be read'
+    );
+  });
+
+  it('rejects a document with an app.xml but no core.xml', async () => {
+    const template = await makeDocx({
+      body: ['hi'],
+      files: { 'docProps/app.xml': APP_XML('<Pages>3</Pages>') },
+    });
+    await expect(getMetadata(template)).rejects.toThrow(
+      'docProps/core.xml could not be read'
+    );
+  });
+
+  it('returns undefined for missing, empty and non-numeric fields', async () => {
+    const template = await makeDocx({
+      body: ['hi'],
+      files: {
+        'docProps/app.xml': APP_XML(
+          '<Pages>lots</Pages><Words>4</Words><Company/>'
+        ),
+        'docProps/core.xml': CORE_XML,
+      },
+    });
+    const metadata = await getMetadata(template);
+    expect(metadata.pages).toBeUndefined(); // not a number
+    expect(metadata.words).toEqual(4);
+    expect(metadata.company).toBeUndefined(); // empty element
+    expect(metadata.lines).toBeUndefined(); // absent element
+    expect(metadata.title).toBeUndefined(); // absent from core.xml
+  });
+
+  it('rejects a metadata field that holds markup instead of text', async () => {
+    const template = await makeDocx({
+      body: ['hi'],
+      files: {
+        'docProps/app.xml': APP_XML('<Pages><nested/></Pages>'),
+        'docProps/core.xml': CORE_XML,
+      },
+    });
+    await expect(getMetadata(template)).rejects.toThrow('Not a text node');
   });
 });

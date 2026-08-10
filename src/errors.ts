@@ -70,7 +70,9 @@ export class CommandExecutionError extends Error {
   err: Error;
   constructor(err: Error, command: string) {
     super(`Error executing command '${command}': ${err.name}: ${err.message}`);
-    Object.setPrototypeOf(this, CommandExecutionError.prototype);
+    // `new.target`, not `CommandExecutionError`, so that subclasses (e.g.
+    // `ImageError`) keep their own prototype and `instanceof` works for them.
+    Object.setPrototypeOf(this, new.target.prototype);
     this.command = command;
     this.err = err;
   }

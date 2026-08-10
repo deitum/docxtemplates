@@ -238,6 +238,7 @@ export type Context = {
     'w:tr': BufferStatus;
     'w:tc': BufferStatus;
   };
+  cell?: CellStatus;
   pendingImageNode?: { image: NonTextNode; caption?: NonTextNode[] };
   imageAndShapeIdIncrement: number;
   images: Images;
@@ -281,6 +282,18 @@ type BufferStatus = {
   text: string;
   cmds: string;
   fInsertedText: boolean;
+};
+
+/** The table cell (`w:tc`) that is currently being walked. */
+export type CellStatus = {
+  /** The cell node, in the input tree. */
+  node: Node;
+  /**
+   * Whether the commands in the cell are part of a FOR/IF construct that starts
+   * or ends in another cell (as in the dynamic-columns pattern). Only such a
+   * cell is deleted when it renders to nothing.
+   */
+  fSpansCells: boolean;
 };
 
 type VarValue = unknown;

@@ -202,6 +202,47 @@ const findParentPorTrNode = (node: Node) => {
   return resultNode;
 };
 
+// The table cell a node belongs to (the node itself, if it is a cell): loop
+// reference nodes get hoisted up the tree while the loop is being explored, and
+// can end up being the `w:tc` node.
+const findCellNode = (node: Node): Node | null => {
+  let curNode: Node | null = node;
+  while (curNode != null) {
+    if (!curNode._fTextNode && curNode._tag === 'w:tc') return curNode;
+    curNode = curNode._parent ?? null;
+  }
+  return null;
+};
+
+// Flag the cell we're walking when the FOR/IF construct the command belongs to
+// was opened in another cell: such a cell is part of the scaffolding of a
+// multi-cell construct (see "dynamic columns" in the README), and is deleted if
+// it renders to nothing.
+const markCellIfLoopSpansCells = (
+  ctx: Context,
+  node: Node,
+  loop: LoopStatus
+) => {
+  const cell = ctx.cell;
+  if (cell == null) return;
+  const cmdCell = findCellNode(node);
+  if (cmdCell !== cell.node) return;
+  if (findCellNode(loop.refNode) !== cmdCell) cell.fSpansCells = true;
+};
+
+// Whether the commands of the cell we're walking are part of a FOR/IF construct
+// that spans several cells, either because the construct was opened in the cell
+// and is still open now that the cell ends, or because one of its commands
+// referred to a construct opened in another cell.
+const doesCellSpanCells = (ctx: Context): boolean => {
+  const cell = ctx.cell;
+  if (cell == null) return false;
+  return (
+    cell.fSpansCells ||
+    ctx.loops.some(loop => findCellNode(loop.refNode) === cell.node)
+  );
+};
+
 export async function walkTemplate(
   data: ReportData | undefined,
   template: Node,
@@ -327,14 +368,18 @@ export async function walkTemplate(
             ).length !== 1;
         }
 
-        // If the last generated output node is a table column, and it is set to be deleted,
-        // don't delete if it has a table as a child
+        // A table cell that only contains commands is deleted only when those
+        // commands are part of a FOR/IF construct spanning several cells (see
+        // "dynamic columns" in the README). A construct that opens and closes
+        // within the cell leaves an empty cell behind: deleting it would shift
+        // the rest of the row into the wrong columns. Cells containing a nested
+        // table are never deleted.
         if (tag === 'w:tc' && fRemoveNode) {
-          fRemoveNode = !(
-            nodeOut._children.filter(
+          fRemoveNode =
+            doesCellSpanCells(ctx) &&
+            !nodeOut._children.some(
               child => !child._fTextNode && child._tag === 'w:tbl'
-            ).length > 0
-          );
+            );
         }
       }
 
@@ -480,6 +525,7 @@ export async function walkTemplate(
       const tag = nodeIn._fTextNode ? null : nodeIn._tag;
       if (tag === 'w:p' || tag === 'w:tr' || tag === 'w:tc') {
         ctx.buffers[tag] = { text: '', cmds: '', fInsertedText: false };
+        if (tag === 'w:tc') ctx.cell = { node: nodeIn, fSpansCells: false };
       }
 
       // Clone input node and append to output tree
@@ -670,7 +716,7 @@ const processCmd: CommandProcessor = async (
       // ELSE-IF <expression>
       // ELSE
     } else if (cmdName === 'ELSE-IF' || cmdName === 'ELSE') {
-      await processElse(data, ctx, cmd, cmdName, cmdRest);
+      await processElse(data, node, ctx, cmd, cmdName, cmdRest);
 
       // END-FOR
       // END-IF
@@ -974,6 +1020,7 @@ const restartIfBranches = (loop: LoopStatus) => {
 // ELSE
 const processElse = async (
   data: ReportData | undefined,
+  node: Node,
   ctx: Context,
   cmd: string,
   cmdName: string,
@@ -996,6 +1043,7 @@ const processElse = async (
       `Unexpected ${cmdName} after an ELSE command`,
       cmd
     );
+  markCellIfLoopSpansCells(ctx, node, curLoop);
 
   // Move on to the next branch of the IF construct
   const branch = (curLoop.ifCurrentBranch ?? 0) + 1;
@@ -1077,6 +1125,7 @@ const processEndForIf = (
     }
     throw new InvalidCommandError('Invalid command', cmd);
   }
+  markCellIfLoopSpansCells(ctx, node, curLoop);
 
   // All branches of the IF construct have now been explored: if one of them was
   // selected, run a second pass through the construct to render it

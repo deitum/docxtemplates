@@ -1,29 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { readFixture } from './helpers';
+import { makeDocx, readFixture, reportText } from './helpers';
 import { createReport } from '../index';
-import { type Node } from '../types';
 import { setDebugLogSink } from '../debug';
 
 if (process.env.DEBUG) setDebugLogSink(console.log);
-
-// Concatenates the text of all the text nodes below the given node
-const nodeText = (node: Node): string =>
-  node._fTextNode ? node._text : node._children.map(nodeText).join('');
-
-// Returns the text of the report, one line per (non-empty) paragraph
-const reportText = (node: Node): string => {
-  const lines: string[] = [];
-  const walk = (n: Node) => {
-    if (!n._fTextNode && n._tag === 'w:p') {
-      const text = nodeText(n).trim();
-      if (text !== '') lines.push(text);
-      return;
-    }
-    n._children.forEach(walk);
-  };
-  walk(node);
-  return lines.join('\n');
-};
 
 const render = async (
   fixture: string,
@@ -153,6 +133,48 @@ const render = async (
         await expect(
           createReport({ noSandbox, template, data: { value: true } }, 'JS')
         ).rejects.toThrow('Unexpected ELSE after an ELSE command: ELSE');
+      });
+
+      it('throws on an ELSE-IF after an ELSE', async () => {
+        const template = await makeDocx({
+          body: [
+            '+++IF false+++',
+            'a',
+            '+++ELSE+++',
+            'b',
+            '+++ELSE-IF true+++',
+            'c',
+            '+++END-IF+++',
+          ],
+        });
+        await expect(
+          createReport({ noSandbox, template, data: {} }, 'JS')
+        ).rejects.toThrow('Unexpected ELSE-IF after an ELSE command: ELSE-IF');
+      });
+
+      it('evaluates ELSE-IF conditions in the scope of the enclosing FOR loop', async () => {
+        // `$idx` inside an ELSE-IF condition must refer to the FOR loop, not to
+        // the IF construct the branch belongs to.
+        const template = await makeDocx({
+          body: [
+            '+++FOR item IN items+++',
+            '+++IF $idx === 0+++',
+            'first: +++$item+++',
+            '+++ELSE-IF $idx === 1+++',
+            'second: +++$item+++',
+            '+++ELSE+++',
+            'rest: +++$item+++',
+            '+++END-IF+++',
+            '+++END-FOR item+++',
+          ],
+        });
+        const report = await createReport(
+          { noSandbox, template, data: { items: ['a', 'b', 'c', 'd'] } },
+          'JS'
+        );
+        expect(reportText(report)).toEqual(
+          ['first: a', 'second: b', 'rest: c', 'rest: d'].join('\n')
+        );
       });
     });
   });

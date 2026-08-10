@@ -21,7 +21,7 @@ $ npm test
 | `npm run typecheck`     | Type-checks the whole project (`tsc --noEmit`)               |
 | `npm run lint`          | Lints with ESLint (`npm run lint:fix` to autofix)            |
 | `npm run format`        | Formats with Prettier (`npm run format:check` to only check) |
-| `npm run build`         | Builds `dist/` with Rollup                                   |
+| `npm run build`         | Builds `dist/` and the skill's agent tools with Rollup       |
 | `npm run check:package` | Validates the published package (`publint` + `attw`)         |
 | `npm run verify`        | Everything above, in the same order CI runs it               |
 
@@ -37,6 +37,21 @@ render a fixture template and compare the result against a snapshot.
 - If a change intentionally alters rendered output, update the snapshots with
   `npx vitest run -u` and **review the resulting diff** — a snapshot diff is the
   main signal that the templating engine changed behaviour.
+
+## The `docx-template` skill
+
+`skills/docx-template/` is a Claude Code plugin that generates templates from
+filled-out documents. Its four agent tools are written in TypeScript under
+`skills/docx-template/agent/` and bundled by the same Rollup config as the
+library, into `agent/dist/*.mjs`.
+
+**Those bundles are committed to git**, so that the plugin runs straight after
+installation with nothing to `npm install`. After changing anything under
+`agent/`, run `npm run build` and commit the regenerated `dist/` files — CI
+fails if they are out of date.
+
+Its tests live in `skills/docx-template/agent/__tests__/` and run as part of
+`npm test`.
 
 ## Changesets
 
