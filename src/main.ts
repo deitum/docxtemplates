@@ -10,6 +10,7 @@ import {
   type TemplatePart,
 } from './docx/parts';
 import { writePartResources } from './docx/relationships';
+import { withPart } from './errors';
 import { PackagePath, partPathOf } from './ooxml';
 import { resolveOptions } from './options';
 import preprocessTemplate from './preprocessTemplate';
@@ -117,8 +118,17 @@ async function createReport(
     logger.debug(`Generating report for ${part.name}...`);
     // A fresh context per part: only the image/shape ids carry over.
     const ctx = newContext(createOptions, lastImageAndShapeId);
-    const result = await produceJsReport(queryResult, part.template, ctx);
-    if (result.status === 'errors') throw result.errors;
+    // The one place that knows which part is being rendered, and so the one
+    // place that can say which part an error came from. A report is built from
+    // `document.xml` plus every header and footer, and with `failFast: false`
+    // their errors all end up in the same array.
+    let result;
+    try {
+      result = await produceJsReport(queryResult, part.template, ctx);
+    } catch (err) {
+      throw withPart(err, part.name);
+    }
+    if (result.status === 'errors') throw withPart(result.errors, part.name);
     lastImageAndShapeId = ctx.imageAndShapeIdIncrement;
 
     // The probes are a testing shortcut into the main document, and return

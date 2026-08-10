@@ -20,6 +20,7 @@ describe('public surface', () => {
     expect(surfaceOf(mainEntry)).toMatchInlineSnapshot(`
       "CommandExecutionError: function
       CommandSyntaxError: function
+      ErrorId: object
       ImageError: function
       IncompleteConditionalStatementError: function
       InternalError: function
@@ -27,6 +28,7 @@ describe('public surface', () => {
       InvalidCommandError: function
       NullishCommandResultError: function
       ObjectCommandResultError: function
+      TemplateError: function
       TemplateParseError: function
       UnterminatedForLoopError: function
       createReport: function
@@ -41,6 +43,7 @@ describe('public surface', () => {
     expect(surfaceOf(browserEntry)).toMatchInlineSnapshot(`
       "CommandExecutionError: function
       CommandSyntaxError: function
+      ErrorId: object
       ImageError: function
       IncompleteConditionalStatementError: function
       InternalError: function
@@ -48,6 +51,7 @@ describe('public surface', () => {
       InvalidCommandError: function
       NullishCommandResultError: function
       ObjectCommandResultError: function
+      TemplateError: function
       TemplateParseError: function
       UnterminatedForLoopError: function
       createReport: function
