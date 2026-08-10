@@ -8,6 +8,11 @@
  */
 import { type CommandProcessor, processCmd } from './commands/execute';
 import { newContext } from './context';
+import {
+  DROP_RULES,
+  fillRequiredChildren,
+  PENDING_SLOTS,
+} from './docx/structure';
 import { BUFFER_TAGS, DrawAttr, isBufferTag, VTag, WpTag, WTag } from './ooxml';
 import { DEFAULT_MAXIMUM_WALKING_DEPTH } from './options';
 import { logger } from './debug';
@@ -19,7 +24,6 @@ import {
 import {
   cloneNodeWithoutChildren,
   debugPrintNode,
-  doesCellSpanCells,
   getCurLoop,
   getFirstChild,
   getNextSibling,
@@ -245,6 +249,8 @@ function advance({
  * Removes the output node we have just finished building, in the cases where it
  * should never have been emitted: nodes produced while exploring a loop, and
  * paragraphs, rows or cells that held nothing but commands.
+ *
+ * Which of the latter survive anyway is stated in `DROP_RULES`, not here.
  */
 function dropDeadOutputNode(nodeIn: Node, nodeOut: Node, ctx: Context): void {
   const tag = tagOf(nodeOut);
@@ -256,44 +262,18 @@ function dropDeadOutputNode(nodeIn: Node, nodeOut: Node, ctx: Context): void {
     fRemoveNode = true;
   } else if (isBufferTag(tag)) {
     const buffers = ctx.buffers[tag];
-    fRemoveNode =
+    const heldOnlyCommands =
       buffers.text === '' && buffers.cmds !== '' && !buffers.fInsertedText;
-
-    if (fRemoveNode && tag === WTag.p) {
-      // A paragraph anchoring a drawing carries content even with no text.
-      fRemoveNode = !hasDrawingElements(nodeOut);
-    }
-    if (fRemoveNode && tag === WTag.tr) {
-      // Keep a row that wraps exactly one nested row (i.e. a nested table).
-      const nestedRows = nodeIn._children.filter(
-        child => tagOf(child) === WTag.tr
-      );
-      fRemoveNode = nestedRows.length !== 1;
-    }
-    if (fRemoveNode && tag === WTag.tc) {
-      // A cell holding only commands is deleted only when those commands are
-      // part of a FOR/IF construct spanning several cells (see "dynamic
-      // columns" in the README). A construct that opens and closes within the
-      // cell leaves an empty cell behind: deleting it would shift the rest of
-      // the row into the wrong columns. Cells containing a nested table are
-      // never deleted.
-      fRemoveNode =
-        doesCellSpanCells(ctx) &&
-        !nodeOut._children.some(child => tagOf(child) === WTag.tbl);
-    }
+    const rule = DROP_RULES[tag];
+    fRemoveNode = heldOnlyCommands && !rule.keep({ nodeIn, nodeOut, ctx });
+    if (heldOnlyCommands && !fRemoveNode && logger.enabled)
+      logger.debug(`Keeping empty ${tag}: ${rule.name}`);
   }
 
   // The node leaves the output, but keeps its parent link, so that the walk can
   // still move up the tree through it.
   if (fRemoveNode && nodeOut._parent != null) nodeOut._parent._children.pop();
 }
-
-const hasDrawingElements = (node: Node): boolean => {
-  const tag = tagOf(node);
-  if (tag === WpTag.anchor || tag === WpTag.inline || tag === WTag.drawing)
-    return true;
-  return node._children.some(hasDrawingElements);
-};
 
 /**
  * Moves the output cursor up one level, and finishes off the node being left
@@ -321,35 +301,16 @@ function moveOutputUp(
   nodeOut = nodeOutParent;
 
   const tag = tagOf(nodeOut);
-  if (ctx.pendingImageNode && tag === WTag.t) {
-    const { image, caption } = ctx.pendingImageNode;
-    replaceOutputNode(nodeOut, ctx, image, caption);
-    delete ctx.pendingImageNode;
-  }
-  if (ctx.pendingLinkNode && tag === WTag.r) {
-    replaceOutputNode(nodeOut, ctx, ctx.pendingLinkNode);
-    delete ctx.pendingLinkNode;
-  }
-  if (ctx.pendingHtmlNode && tag === WTag.p) {
-    replaceOutputNode(nodeOut, ctx, ctx.pendingHtmlNode);
-    delete ctx.pendingHtmlNode;
+
+  // Splice in whatever an IMAGE/LINK/HTML command parked for this level.
+  for (const slot of PENDING_SLOTS) {
+    if (tag !== slot.tag) continue;
+    const pending = slot.take(ctx);
+    if (pending != null)
+      replaceOutputNode(nodeOut, ctx, pending.node, pending.extra);
   }
 
-  // A `w:tc` may not be left without a `w:p` or `w:altChunk` child
-  if (
-    tag === WTag.tc &&
-    !nodeOut._children.some(
-      o => tagOf(o) === WTag.p || tagOf(o) === WTag.altChunk
-    )
-  ) {
-    nodeOut._children.push({
-      _parent: nodeOut,
-      _children: [],
-      _fTextNode: false,
-      _tag: WTag.p,
-      _attrs: {},
-    });
-  }
+  fillRequiredChildren(nodeOut);
 
   // Remember the last `w:rPr` seen, so that a LINK can inherit its formatting
   if (tag === WTag.rPr) ctx.textRunPropsNode = nodeOut as NonTextNode;
