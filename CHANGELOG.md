@@ -1,5 +1,134 @@
 # @deitum/docxtemplates
 
+## 1.1.0
+
+### Minor Changes
+
+- 1dc49f2: Reject options of the wrong type instead of ignoring them.
+
+  The motivating case:
+
+  ```ts
+  errorHandler: typeof options.errorHandler === 'function' ? options.errorHandler : null,
+  ```
+
+  Pass anything but a function and the handler simply never ran — no error, no
+  warning, and a report full of the failures it was meant to catch. `template` was
+  not checked at all, so passing the wrong thing surfaced as an opaque complaint
+  from JSZip about not finding the end of a central directory.
+
+  Every documented option is now checked against its type, and a mismatch throws
+  the new `InvalidOptionError`, which names the option, what it expected and what
+  it got:
+
+  ```
+  Option 'errorHandler' must be a function, but received a string
+  ```
+
+  **This can break code that is passing a bad value today** and getting the
+  default behaviour by accident — hence the minor. Setting an option to
+  `undefined` is still the same as leaving it out.
+
+  Unknown option names are _not_ rejected: they go to the debug log. TypeScript
+  already catches a typo for anyone who has types, and in plain JavaScript an
+  extra key on a shared options object is more often deliberate than not.
+
+- 0676640: Give every error a `properties` object saying where it came from.
+
+  A report is rendered from `word/document.xml` plus every header and footer, and
+  with `failFast: false` the errors come back as one flat array. Until now nothing
+  in an error said which of those files it came from, or carried a code you could
+  branch on without matching against the message text.
+
+  ```js
+  try {
+    await createReport({ template, data, failFast: false });
+  } catch (errors) {
+    for (const e of errors) {
+      console.log(e.properties.part); // 'header1.xml'
+      console.log(e.properties.id); // 'command_execution'
+      console.log(e.properties.command); // 'user.fullName'
+      console.log(e.properties.explanation); // what to do about it
+    }
+  }
+  ```
+
+  `id` values are listed in the exported `ErrorId` and are stable across releases;
+  prefer them to `message`, which is prose. Every error class now descends from the
+  exported `TemplateError`, so they can all be caught as one type.
+
+  Nothing existing changes: the class names, the messages, the fields the classes
+  already had (`command`, `alias`, `result`, `err`) and the array thrown when
+  `failFast` is off are all exactly as they were.
+
+  `src/index.ts` also lists its error exports explicitly instead of re-exporting
+  the whole module, so internal helpers cannot drift into the public API. The
+  exported names are unchanged apart from the additions above.
+
+### Patch Changes
+
+- c8aedee: Narrow the `ctx` a custom `runJs` sandbox receives.
+
+  `runJs` was handed the engine's entire internal context — twenty-seven fields of
+  walk state, output buffers and half-built resources, none of which a sandbox has
+  any business with, and all of which change as the engine does. It now gets four:
+
+  ```ts
+  runJs: ({ sandbox, ctx }) => {
+    ctx.options; // the report options, with defaults filled in
+    ctx.vars; // loop variables, as `$name` in snippets
+    ctx.loops; // the FOR/IF constructs currently open
+    ctx.jsSandbox; // the sandbox as the previous snippet left it
+    // ...
+  };
+  ```
+
+  Those four keep the names and the shapes they had, and are still live references
+  to the engine's own state, so a sandbox reading any of them works unchanged. A
+  sandbox reaching further in will no longer type-check — in TypeScript at the call
+  site, in JavaScript not at all — which is the point: those fields were never
+  meant to be part of the contract.
+
+- f3ef93f: Make report generation substantially faster, and fix two sandbox bugs that fell
+  out of the way it used to work.
+
+  Every command used to get a brand new JS evaluation context: `vm.createContext`
+  ran once per command, per loop iteration. Contextifying an object is by far the
+  most expensive thing `vm` does, so on a template with loops it accounted for
+  almost all of the generation time. Each document part now evaluates its snippets
+  in one context, and compiled snippets are cached. A report with a 2000-iteration
+  `FOR` and three insertions per row went from 784 ms to 35 ms.
+
+  Two consequences of the old behaviour are fixed by this, both cases where a
+  snippet could not see what an earlier snippet had done:
+
+  - A function defined in one snippet closed over the context it was defined in,
+    so calling it from a later snippet updated variables nobody could read again.
+    `EXEC bump = () => (counter += 1)` followed by `EXEC bump()` now increments the
+    `counter` that the rest of the template sees.
+  - Values built in one snippet were made with that context's built-ins, so
+    `items instanceof Array` answered `false` in the next snippet. It now answers
+    `true`.
+
+  Serialising the output tree also stopped concatenating buffers per node, which
+  copied every byte once per level of nesting, and looking up a node's next
+  sibling no longer scans the parent's children — quadratic on the tens of
+  thousands of children a long document hangs off `w:body`. Together those cut a
+  20 000-paragraph document from 204 ms to 157 ms.
+
+  No change to the generated .docx: the whole fixture corpus renders byte for byte
+  as before.
+
+- f6673b5: Fix relationships generated for header and footer parts. `LINK` and `HTML`
+  commands used in a header or footer registered their relationship in
+  `word/_rels/document.xml.rels` instead of the part's own `.rels`, so Word could
+  not resolve the `r:id` and refused to open the report. Two headers (or a header
+  and the main document) using `HTML` also overwrote each other's chunk file,
+  because both were named after the main document.
+
+  Each part now writes its images, hyperlinks and HTML chunks into its own
+  relationships, as images already did.
+
 ## 1.0.1
 
 ### Patch Changes

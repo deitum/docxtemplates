@@ -1,6 +1,6 @@
 {
   "name": "@deitum/docxtemplates",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Template-based docx report creation",
   "type": "commonjs",
   "main": "./dist/index.cjs",
