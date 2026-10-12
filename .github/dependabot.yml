@@ -9,6 +9,24 @@ updates:
       dev-dependencies:
         dependency-type: development
         update-types: [minor, patch]
+    # Major versions that cannot be taken yet, each with what would change that.
+    ignore:
+      # The package supports Node 20 (`engines`), so it is typed against Node 20:
+      # newer types would let the code use APIs that Node 20 does not have.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
+      # vitest 5 needs Node 22.12 or later, and the tests also run on Node 20.
+      - dependency-name: 'vitest'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@vitest/coverage-v8'
+        update-types: ['version-update:semver-major']
+      # @changesets/cli 3 needs Node 22 or later, and the release runs on the
+      # Node of `.nvmrc`. To be taken together with changesets/action v2 below.
+      - dependency-name: '@changesets/cli'
+        update-types: ['version-update:semver-major']
+      # typescript-eslint supports TypeScript below 6.1.
+      - dependency-name: 'typescript'
+        versions: ['>= 6.1']
 
   - package-ecosystem: github-actions
     directory: /
@@ -17,3 +35,9 @@ updates:
     groups:
       actions:
         patterns: ['*']
+    ignore:
+      # v2 changes how the release authenticates (tokens move from `env` to
+      # inputs, or to trusted publishing), which only a release can check. To be
+      # taken together with @changesets/cli 3 above.
+      - dependency-name: 'changesets/action'
+        update-types: ['version-update:semver-major']
