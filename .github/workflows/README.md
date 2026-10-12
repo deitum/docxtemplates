@@ -9,7 +9,8 @@
 
 Dependency bumps are proposed by Dependabot, configured in
 [`../dependabot.yml`](../dependabot.yml): npm weekly (dev-dependency minor and
-patch updates grouped into one PR), GitHub Actions monthly.
+patch updates grouped into one PR), GitHub Actions monthly. Major versions that
+cannot be taken yet are ignored there, each with the reason next to it.
 
 > **The two security workflows only run on a public repository.** Both code
 > scanning and the dependency graph they rely on require GitHub Advanced
@@ -77,7 +78,7 @@ files boring to review:
 - Declare a least-privilege top-level `permissions:` block (start from
   `contents: read` and add per job only what that job needs).
 - Set a `concurrency:` group.
-- Pin actions to a major tag (`actions/checkout@v4`); Dependabot keeps them
+- Pin actions to a major tag (`actions/checkout@v7`); Dependabot keeps them
   current.
 - Take the Node version from `.nvmrc` via `node-version-file` rather than
   hard-coding it, except in the test matrix where the version is the point.
