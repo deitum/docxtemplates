@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import commonjs from '@rollup/plugin-commonjs';
 import node from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
-import MagicString from 'magic-string';
+import { MagicString } from 'magic-string';
 import { defineConfig } from 'rollup';
 import dtsPlugin from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
