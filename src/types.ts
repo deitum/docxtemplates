@@ -358,9 +358,18 @@ export type WalkState = {
   /** How many IF and END-IF commands have been seen, which must agree. */
   openIfCount: number;
   closedIfCount: number;
-  /** The IF constructs open on each `w:p` / `w:tr`; two on one is an error. */
+  /**
+   * The IF constructs open on each `w:p` / `w:tr`; two on one is an error,
+   * unless the second can be shown to be harmless (`ifEnds`).
+   */
   ifByParagraph: Map<Node, string>;
   ifByTableRow: Map<Node, string>;
+  /**
+   * The text node holding the END-IF of each IF construct of the part, keyed
+   * by the one holding its IF; see `findIfEnds`. Worked out on first use: only
+   * an IF nested into another one on the same line or table row needs it.
+   */
+  ifEnds: () => ReadonlyMap<Node, Node>;
   /**
    * The internal name each IF / END-IF node has been given, assigned the first
    * time the node is reached. Kept here rather than on the node itself: a
@@ -414,6 +423,11 @@ type VarValue = unknown;
 export const EXPLORATION_PASS = -1;
 
 export type LoopStatus = {
+  /**
+   * The text node the construct's opening command was found in. `refNode`
+   * starts out there, but moves up the tree while the construct is explored.
+   */
+  openNode: Node;
   refNode: Node;
   refNodeLevel: number;
   varName: string;

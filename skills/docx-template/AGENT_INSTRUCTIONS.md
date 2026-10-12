@@ -177,11 +177,15 @@ Word, and the expression stops being valid JavaScript. Prefer expressions
 without string literals. `verify` flags curly quotes it finds; the caller can
 also pass `fixSmartQuotes: true` to `createReport`.
 
-### 5. A whole `IF` block cannot nest inside one paragraph or row
+### 5. An `IF` nested in one paragraph or row must end close by
 
 An inline `IF … END-IF` may live in a single paragraph
-(`Status: +++IF ok+++fine+++ELSE+++not so fine+++END-IF+++`), but two nested
-ones in the same paragraph or table row are rejected.
+(`Status: +++IF ok+++fine+++ELSE+++not so fine+++END-IF+++`), and may be nested
+in another `IF` of the same paragraph or table row. The inner block must then end
+inside the largest element (paragraph, cell or row) holding its own `IF` but not
+the outer one — in its own paragraph is always safe — or the template is
+rejected. Templates that use `*shorthands` get no such leeway: there, two nested
+`IF`s in one paragraph or row are always rejected.
 
 ### 6. `END-FOR` must name its loop variable
 

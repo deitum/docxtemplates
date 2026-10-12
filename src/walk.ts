@@ -29,6 +29,7 @@ import {
   isLoopExploring,
   tagOf,
 } from './reportUtils';
+import { findIfEnds } from './template/structure';
 import {
   type Context,
   type Htmls,
@@ -79,6 +80,9 @@ export async function walkTemplate(
   ctx: Context,
   processor: CommandProcessor
 ): Promise<ReportOutput> {
+  let ifEnds: ReadonlyMap<Node, Node> | undefined;
+  ctx.walk.ifEnds = () => (ifEnds ??= findIfEnds(template, ctx.options));
+
   const out: Node = cloneNodeWithoutChildren(template);
   let nodeIn: Node = template;
   let nodeOut: Node = out;

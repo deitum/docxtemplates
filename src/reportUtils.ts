@@ -207,7 +207,7 @@ export const logLoop = (loops: Array<LoopStatus>) => {
 /**
  * The `w:p` a node belongs to — or the `w:tr` around it, when that paragraph
  * sits in a table row. This is the scope an IF construct may not be nested in
- * twice; see `checkNoNestedIfInSameScope`.
+ * twice, unless that is harmless; see `checkNoNestedIfInSameScope`.
  */
 export const findParentPorTrNode = (node: Node): Node | null => {
   let parentNode = node._parent;
@@ -221,6 +221,16 @@ export const findParentPorTrNode = (node: Node): Node | null => {
     parentNode = parentNode._parent;
   }
   return null;
+};
+
+/** Whether `node` is `ancestor` itself, or somewhere below it. */
+export const isInside = (node: Node, ancestor: Node): boolean => {
+  let curNode: Node | undefined = node;
+  while (curNode != null) {
+    if (curNode === ancestor) return true;
+    curNode = curNode._parent;
+  }
+  return false;
 };
 
 /**

@@ -13,7 +13,7 @@ import { isError } from '../errors';
 import { resolveOptions } from '../options';
 import preprocessTemplate from '../preprocessTemplate';
 import { compileTemplate } from '../template/compile';
-import { analyzeStructure } from '../template/structure';
+import { analyzeStructure, findIfEnds } from '../template/structure';
 import { Command, type CreateReportOptions, type Node } from '../types';
 import { parseXml } from '../xml';
 import { caseName, CORPUS } from './corpus';
@@ -165,6 +165,68 @@ describe('analyzeStructure', () => {
     ]);
     expect(problems).toEqual([]);
     expect(constructs).toEqual([]);
+  });
+});
+
+describe('findIfEnds', () => {
+  /** The text nodes of the template's commands, in document order. */
+  const ifEnds = async (lines: string[]) => {
+    const options = resolveOptions({});
+    const template = await parseBody(lines, options);
+    const nodes = compileTemplate(template, options.cmdDelimiter).commands.map(
+      site => site.node
+    );
+    return { ends: findIfEnds(template, options), nodes };
+  };
+
+  it('pairs each IF with the text node of its END-IF', async () => {
+    const { ends, nodes } = await ifEnds([
+      '+++IF a+++',
+      '+++FOR item IN items+++',
+      '+++IF b+++',
+      '+++ELSE+++',
+      '+++END-IF+++',
+      '+++END-FOR item+++',
+      '+++END-IF+++',
+    ]);
+    expect(ends.size).toBe(2);
+    expect(ends.get(nodes[0] as Node)).toBe(nodes[6]);
+    expect(ends.get(nodes[2] as Node)).toBe(nodes[4]);
+  });
+
+  it('lists nothing for a part whose IFs do not add up', async () => {
+    const { ends } = await ifEnds(['+++IF a+++', '+++IF b+++', '+++END-IF+++']);
+    expect(ends.size).toBe(0);
+  });
+
+  it('lists nothing for a part with a shorthand it cannot resolve', async () => {
+    // The shorthand could stand for an END-IF
+    const { ends } = await ifEnds([
+      '+++ALIAS name INS $x+++',
+      '+++IF a+++',
+      '+++*name+++',
+      '+++END-IF+++',
+    ]);
+    expect(ends.size).toBe(0);
+  });
+
+  it('leaves out a text node holding several IFs', async () => {
+    // `preprocessTemplate` gives every command a text node of its own; without
+    // it, both IFs below end up in one
+    const options = resolveOptions({});
+    const template = await parseXml(
+      `<w:document ${W_NS}><w:body>` +
+        `<w:p><w:r><w:t>+++IF a++++++IF b+++</w:t></w:r></w:p>` +
+        `<w:p><w:r><w:t>+++END-IF+++</w:t></w:r></w:p>` +
+        `<w:p><w:r><w:t>+++IF c+++</w:t></w:r></w:p>` +
+        `<w:p><w:r><w:t>+++END-IF++++++END-IF+++</w:t></w:r></w:p>` +
+        `</w:body></w:document>`
+    );
+    const nodes = compileTemplate(template, options.cmdDelimiter).commands.map(
+      site => site.node
+    );
+    const ends = findIfEnds(template, options);
+    expect([...ends.keys()]).toEqual([nodes[3]]);
   });
 });
 

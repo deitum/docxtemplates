@@ -11,8 +11,13 @@
  * throwing: the engine's own diagnosis stays the authority on what a template
  * is allowed to do, for the reasons set out in `analyzeStructure` below.
  */
-import { Command, type CreateReportOptions } from '../types';
-import { type CommandSite, resolveSite, type TemplateProgram } from './compile';
+import { Command, type CreateReportOptions, type Node } from '../types';
+import {
+  type CommandSite,
+  compileTemplate,
+  resolveSite,
+  type TemplateProgram,
+} from './compile';
 
 /** A FOR or IF construct, and where its parts are. */
 export type Construct = {
@@ -194,6 +199,41 @@ export function analyzeStructure(
   }
 
   return { constructs, problems };
+}
+
+/**
+ * The text node holding the END-IF of each IF construct of a part, keyed by
+ * the one holding its IF. The engine needs to know this when an IF opens, to
+ * tell whether one nested into another IF on the same line or table row can
+ * render; see `jumpsBackClear`.
+ *
+ * Only what can be told for certain is listed. A text node holding several IFs
+ * is left out, and so is every IF of a part whose structure does not add up or
+ * that uses a `*shorthand`: an END-IF hidden behind a shorthand, or a missing
+ * one, would pair up the IFs that follow it with the wrong END-IF.
+ */
+export function findIfEnds(
+  template: Node,
+  options: CreateReportOptions
+): Map<Node, Node> {
+  const ends = new Map<Node, Node>();
+  const program = compileTemplate(template, options.cmdDelimiter);
+  if (program.commands.some(site => nameOf(site, options).name == null))
+    return ends;
+  const { constructs, problems } = analyzeStructure(program, options);
+  if (problems.length > 0) return ends;
+
+  const sharedNodes = new Set<Node>();
+  for (const construct of constructs) {
+    if (construct.kind !== Command.IF || construct.close == null) continue;
+    const ifNode = program.commands[construct.open]?.node;
+    const endNode = program.commands[construct.close]?.node;
+    if (ifNode == null || endNode == null) continue;
+    if (ends.has(ifNode)) sharedNodes.add(ifNode);
+    ends.set(ifNode, endNode);
+  }
+  for (const node of sharedNodes) ends.delete(node);
+  return ends;
 }
 
 const resolveRest = (
