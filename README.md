@@ -676,8 +676,26 @@ single paragraph or table cell:
 Status: +++IF ok+++fine+++ELSE+++not so fine+++END-IF+++
 ```
 
-(as was already the case for `IF`…`END-IF`, such inline blocks cannot be nested within the same
-paragraph or table row.)
+Blocks can be nested within one paragraph or table row as well, with one restriction on where the
+inner block ends. To render it, the engine goes back to where it starts, and must not run into the
+outer `IF` on the way. So the inner block has to end inside the largest element (paragraph, table
+cell or row) that holds its own `IF` but not the outer one. Closing it in the paragraph it starts in
+is always fine, as is closing it in the same table cell when it starts in a paragraph of its own:
+
+```
++----------------------------------------------------------------------------+
+| +++IF company.type === 'LLC'+++                                            |
+| +++company.name+++                                                         |
+| Represented by: +++IF signer.byProxy+++proxy+++ELSE+++director+++END-IF+++ |
+| +++END-IF+++                                                               |
++----------------------------------------------------------------------------+
+```
+
+An inner block that ends further away — in another cell while the outer `IF` is in the same cell,
+say, or in another paragraph while the outer `IF` is in the same paragraph — is rejected with an
+`InvalidCommandError`. So is any `IF` nested within one paragraph or row of a template that uses
+`*shorthands` (see `ALIAS` below): a shorthand might stand for an `END-IF`, and then it cannot be
+told where the blocks end.
 
 ### `ALIAS` (and alias resolution with `*`)
 

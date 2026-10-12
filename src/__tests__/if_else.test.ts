@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { makeDocx, readFixture, reportText } from './helpers';
+import {
+  makeDocx,
+  readFixture,
+  reportText,
+  tableCells,
+  tableXml,
+} from './helpers';
 import { createReport } from '../index';
 import { setDebugLogSink } from '../debug';
 
@@ -174,6 +180,156 @@ const render = async (
         );
         expect(reportText(report)).toEqual(
           ['first: a', 'second: b', 'rest: c', 'rest: d'].join('\n')
+        );
+      });
+    });
+
+    // Rejected outright until 1.1.0, for fear of upstream issue #340: an IF
+    // jumping back over the IF it is nested into, and opening it again. Only
+    // the ones that would actually do that are rejected now.
+    describe('IF nested into another IF on the same line or table row', () => {
+      const renderTable = async (rows: string[][][], data: object) => {
+        const template = await makeDocx({ bodyXml: tableXml(rows) });
+        return tableCells(
+          await createReport({ noSandbox, template, data }, 'JS')
+        );
+      };
+
+      it('renders an IF closed in its own paragraph of the cell', async () => {
+        const rows = [
+          [
+            ['name'],
+            ['+++IF a+++', 'A', '+++IF b+++B+++END-IF+++', '+++END-IF+++'],
+          ],
+        ];
+        expect(await renderTable(rows, { a: true, b: true })).toEqual([
+          ['name', 'AB'],
+        ]);
+        expect(await renderTable(rows, { a: true, b: false })).toEqual([
+          ['name', 'A'],
+        ]);
+        expect(await renderTable(rows, { a: false, b: true })).toEqual([
+          ['name', ''],
+        ]);
+      });
+
+      it('renders an IF spanning several paragraphs of the cell', async () => {
+        const rows = [
+          [
+            ['name'],
+            [
+              '+++IF a+++',
+              'A',
+              '+++IF b+++',
+              'B',
+              '+++END-IF+++',
+              '+++END-IF+++',
+            ],
+          ],
+        ];
+        expect(await renderTable(rows, { a: true, b: true })).toEqual([
+          ['name', 'AB'],
+        ]);
+        expect(await renderTable(rows, { a: true, b: false })).toEqual([
+          ['name', 'A'],
+        ]);
+      });
+
+      it('renders an IF opened in another cell of the row', async () => {
+        const rows = [
+          [
+            ['+++IF a+++', 'A'],
+            ['+++IF b+++', 'B', '+++END-IF+++', '+++END-IF+++'],
+          ],
+        ];
+        expect(await renderTable(rows, { a: true, b: true })).toEqual([
+          ['A', 'B'],
+        ]);
+        expect(await renderTable(rows, { a: true, b: false })).toEqual([
+          ['A', ''],
+        ]);
+      });
+
+      it('renders an ELSE branch of the nested IF', async () => {
+        const rows = [
+          [
+            [
+              '+++IF a+++',
+              'A',
+              '+++IF b+++B+++ELSE+++not B+++END-IF+++',
+              '+++END-IF+++',
+            ],
+          ],
+        ];
+        expect(await renderTable(rows, { a: true, b: false })).toEqual([
+          ['Anot B'],
+        ]);
+      });
+
+      it('renders an IF in a FOR loop in an IF of the same cell', async () => {
+        const rows = [
+          [
+            [
+              '+++IF a+++',
+              '+++FOR x IN xs+++',
+              '+++IF $x > 1++++++$x++++++END-IF+++',
+              '+++END-FOR x+++',
+              '+++END-IF+++',
+            ],
+          ],
+        ];
+        expect(await renderTable(rows, { a: true, xs: [1, 2, 3] })).toEqual([
+          ['23'],
+        ]);
+      });
+
+      it('renders nested IFs within a single paragraph', async () => {
+        const template = await makeDocx({
+          body: ['+++IF a+++A+++IF b+++B+++END-IF++++++END-IF+++'],
+        });
+        const render = async (data: object) =>
+          reportText(await createReport({ noSandbox, template, data }, 'JS'));
+        expect(await render({ a: true, b: true })).toEqual('AB');
+        expect(await render({ a: true, b: false })).toEqual('A');
+        expect(await render({ a: false, b: true })).toEqual('');
+      });
+
+      it('rejects an IF that closes in another cell', async () => {
+        // Jumping back to its cell would run into `IF a` again
+        const template = await makeDocx({
+          bodyXml: tableXml([
+            [
+              ['+++IF a+++', '+++IF b+++'],
+              ['+++END-IF+++', '+++END-IF+++'],
+            ],
+          ]),
+        });
+        await expect(
+          createReport(
+            { noSandbox, template, data: { a: true, b: true } },
+            'JS'
+          )
+        ).rejects.toThrow(
+          'Invalid IF command nested into another IF command on the same table row: IF b'
+        );
+      });
+
+      it('rejects it when it cannot be told where the IF closes', async () => {
+        // A `*shorthand` might stand for an END-IF, which makes pairing up the
+        // IFs and END-IFs of the part guesswork
+        const template = await makeDocx({
+          body: ['+++ALIAS one INS 1+++', '+++*one+++'],
+          bodyXml: tableXml([
+            [['+++IF a+++', 'A', '+++IF b+++B+++END-IF+++', '+++END-IF+++']],
+          ]),
+        });
+        await expect(
+          createReport(
+            { noSandbox, template, data: { a: true, b: true } },
+            'JS'
+          )
+        ).rejects.toThrow(
+          'Invalid IF command nested into another IF command on the same table row: IF b'
         );
       });
     });

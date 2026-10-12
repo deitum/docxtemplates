@@ -23,6 +23,7 @@ import { WTag, XML_SPACE_PRESERVE, XmlAttr } from '../ooxml';
 import {
   findParentPorTrNode,
   getCurLoop,
+  isInside,
   isLoopSkippingOutput,
   logLoop,
   markCellIfLoopSpansCells,
@@ -252,6 +253,7 @@ const processForIf = async ({
   }
 
   ctx.scope.loops.push({
+    openNode: node,
     refNode: node,
     refNodeLevel: ctx.walk.level,
     varName,
@@ -266,8 +268,10 @@ const processForIf = async ({
 };
 
 /**
- * Two IF constructs on the same paragraph or table row would fight over the
- * same node when the walk jumps back, and loop forever. Upstream issue #340.
+ * Two IF constructs on the same paragraph or table row can fight over the same
+ * node when the walk jumps back, and loop forever (upstream issue #340). So an
+ * IF nested into another one there is rejected, unless `jumpsBackClear` can
+ * show it to be harmless.
  */
 const checkNoNestedIfInSameScope = (ctx: Context, node: Node, cmd: string) => {
   const scopeNode = findParentPorTrNode(node);
@@ -280,7 +284,11 @@ const checkNoNestedIfInSameScope = (ctx: Context, node: Node, cmd: string) => {
         ? ctx.walk.ifByTableRow
         : null;
   if (seen == null) return;
-  if (seen.has(scopeNode) && seen.get(scopeNode) !== cmd) {
+  if (
+    seen.has(scopeNode) &&
+    seen.get(scopeNode) !== cmd &&
+    !jumpsBackClear(ctx, node)
+  ) {
     throw new InvalidCommandError(
       `Invalid IF command nested into another IF command on the same ${
         tag === WTag.p ? 'line' : 'table row'
@@ -289,6 +297,29 @@ const checkNoNestedIfInSameScope = (ctx: Context, node: Node, cmd: string) => {
     );
   }
   seen.set(scopeNode, cmd);
+};
+
+/**
+ * Whether the IF at `node` can jump back without running into the opening
+ * command of a construct that encloses it.
+ *
+ * To render the branch it has selected, an IF jumps back to where it started
+ * and walks that part of the tree again. Where it started grows while the
+ * construct is explored: from the text node of the IF, up to the outermost
+ * element that does not also hold its END-IF. Any opening command in there is
+ * met again, and the construct it opens is opened a second time — that is the
+ * loop of #340. An IF closed in its own paragraph, though, jumps back no further
+ * than that paragraph, and is harmless however it is nested.
+ *
+ * When it cannot be told where the IF closes, the answer is no.
+ */
+const jumpsBackClear = (ctx: Context, node: Node): boolean => {
+  const endNode = ctx.walk.ifEnds().get(node);
+  if (endNode == null) return false;
+  let jumpTarget = node;
+  while (jumpTarget._parent != null && !isInside(endNode, jumpTarget._parent))
+    jumpTarget = jumpTarget._parent;
+  return !ctx.scope.loops.some(loop => isInside(loop.openNode, jumpTarget));
 };
 
 /**

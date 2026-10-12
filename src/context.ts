@@ -41,6 +41,9 @@ function newWalkState(): WalkState {
     // To verify we don't have a nested IF within the same `w:p` or `w:tr` tag
     ifByParagraph: new Map(),
     ifByTableRow: new Map(),
+    // Replaced by `walkTemplate`. Left empty, every IF nested into another
+    // one on the same line or table row is rejected.
+    ifEnds: () => new Map(),
     ifNames: new Map(),
   };
 }

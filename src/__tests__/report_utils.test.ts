@@ -158,8 +158,16 @@ describe('logLoop', () => {
     const refNode: TextNode = newTextNode('');
     expect(() =>
       logLoop([
-        { refNode, refNodeLevel: 1, varName: 'c', loopOver: [1, 2], idx: 0 },
         {
+          openNode: refNode,
+          refNode,
+          refNodeLevel: 1,
+          varName: 'c',
+          loopOver: [1, 2],
+          idx: 0,
+        },
+        {
+          openNode: refNode,
           refNode,
           refNodeLevel: 2,
           varName: '__if_0',
