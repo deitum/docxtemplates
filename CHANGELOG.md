@@ -1,5 +1,13 @@
 # @deitum/docxtemplates
 
+## 1.2.1
+
+### Patch Changes
+
+- 673e5fd: Require jszip 3.10.2, which recognises binary data (`Uint8Array`,
+  `ArrayBuffer`) created in another realm — an iframe, say — and reads a `Blob`
+  through `blob.arrayBuffer()` where there is no `FileReader`, as in Node.
+
 ## 1.2.0
 
 ### Minor Changes
