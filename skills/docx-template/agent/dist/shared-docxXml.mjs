@@ -2432,6 +2432,14 @@ const findParentPorTrNode = (node) => {
   }
   return null;
 };
+const isInside = (node, ancestor) => {
+  let curNode = node;
+  while (curNode != null) {
+    if (curNode === ancestor) return true;
+    curNode = curNode._parent;
+  }
+  return false;
+};
 const findCellNode = (node) => {
   let curNode = node;
   while (curNode != null) {
@@ -2677,6 +2685,9 @@ function newWalkState() {
     // To verify we don't have a nested IF within the same `w:p` or `w:tr` tag
     ifByParagraph: /* @__PURE__ */ new Map(),
     ifByTableRow: /* @__PURE__ */ new Map(),
+    // Replaced by `walkTemplate`. Left empty, every IF nested into another
+    // one on the same line or table row is rejected.
+    ifEnds: () => /* @__PURE__ */ new Map(),
     ifNames: /* @__PURE__ */ new Map()
   };
 }
@@ -18182,6 +18193,7 @@ const processForIf = async ({
       );
   }
   ctx.scope.loops.push({
+    openNode: node,
     refNode: node,
     refNodeLevel: ctx.walk.level,
     varName,
@@ -18200,13 +18212,21 @@ const checkNoNestedIfInSameScope = (ctx, node, cmd) => {
   const tag = tagOf(scopeNode);
   const seen = tag === WTag.p ? ctx.walk.ifByParagraph : tag === WTag.tr ? ctx.walk.ifByTableRow : null;
   if (seen == null) return;
-  if (seen.has(scopeNode) && seen.get(scopeNode) !== cmd) {
+  if (seen.has(scopeNode) && seen.get(scopeNode) !== cmd && !jumpsBackClear(ctx, node)) {
     throw new InvalidCommandError(
       `Invalid IF command nested into another IF command on the same ${tag === WTag.p ? "line" : "table row"}`,
       cmd
     );
   }
   seen.set(scopeNode, cmd);
+};
+const jumpsBackClear = (ctx, node) => {
+  const endNode = ctx.walk.ifEnds().get(node);
+  if (endNode == null) return false;
+  let jumpTarget = node;
+  while (jumpTarget._parent != null && !isInside(endNode, jumpTarget._parent))
+    jumpTarget = jumpTarget._parent;
+  return !ctx.scope.loops.some((loop) => isInside(loop.openNode, jumpTarget));
 };
 const restartIfBranches = (loop) => {
   loop.ifCurrentBranch = 0;
@@ -18552,11 +18572,136 @@ const DROP_RULES = {
   }
 };
 
+const nameOf = (site, options) => {
+  try {
+    const { name, raw } = resolveSite(site, options);
+    return { name, raw };
+  } catch {
+    return { name: void 0, raw: site.raw };
+  }
+};
+function analyzeStructure(program, options) {
+  const constructs = [];
+  const problems = [];
+  const open = [];
+  const sawElse = [];
+  const innermost = () => {
+    const idx = open[open.length - 1];
+    return idx == null ? void 0 : constructs[idx];
+  };
+  program.commands.forEach((site, at) => {
+    const { name, raw } = nameOf(site, options);
+    switch (name) {
+      case Command.FOR:
+      case Command.IF: {
+        const varName = /^(\S+)\s+IN\s+/i.exec(resolveRest(site, options))?.[1];
+        constructs.push({
+          kind: name === Command.FOR ? Command.FOR : Command.IF,
+          open: at,
+          close: null,
+          branches: [],
+          depth: open.length,
+          ...name === Command.FOR && varName != null ? { varName } : {}
+        });
+        open.push(constructs.length - 1);
+        sawElse.push(false);
+        return;
+      }
+      case Command.ELSE_IF:
+      case Command.ELSE: {
+        const current = innermost();
+        if (current == null || current.kind !== Command.IF) {
+          problems.push({ id: "else_outside_if", at, command: raw });
+          return;
+        }
+        if (sawElse[sawElse.length - 1]) {
+          problems.push({ id: "else_after_else", at, command: raw });
+          return;
+        }
+        current.branches.push(at);
+        if (name === Command.ELSE) sawElse[sawElse.length - 1] = true;
+        return;
+      }
+      case Command.END_FOR: {
+        const varName = resolveRest(site, options).trim();
+        const current = innermost();
+        if (current == null) {
+          problems.push({ id: "unexpected_end", at, command: raw });
+          return;
+        }
+        if (current.kind === Command.FOR && current.varName === varName) {
+          current.close = at;
+          open.pop();
+          sawElse.pop();
+          return;
+        }
+        if (open.some(
+          (idx) => constructs[idx]?.kind === Command.FOR && constructs[idx]?.varName === varName
+        )) {
+          problems.push({ id: "unexpected_end", at, command: raw });
+        }
+        return;
+      }
+      case Command.END_IF: {
+        const current = innermost();
+        if (current == null || current.kind !== Command.IF) {
+          problems.push({ id: "unexpected_end", at, command: raw });
+          return;
+        }
+        current.close = at;
+        open.pop();
+        sawElse.pop();
+        return;
+      }
+      default:
+        return;
+    }
+  });
+  for (const idx of open) {
+    const construct = constructs[idx];
+    if (construct == null) continue;
+    problems.push({
+      id: construct.kind === Command.FOR ? "unclosed_for" : "unclosed_if",
+      at: construct.open,
+      command: program.commands[construct.open]?.raw ?? ""
+    });
+  }
+  return { constructs, problems };
+}
+function findIfEnds(template, options) {
+  const ends = /* @__PURE__ */ new Map();
+  const program = compileTemplate(template, options.cmdDelimiter);
+  if (program.commands.some((site) => nameOf(site, options).name == null))
+    return ends;
+  const { constructs, problems } = analyzeStructure(program, options);
+  if (problems.length > 0) return ends;
+  const sharedNodes = /* @__PURE__ */ new Set();
+  for (const construct of constructs) {
+    if (construct.kind !== Command.IF || construct.close == null) continue;
+    const ifNode = program.commands[construct.open]?.node;
+    const endNode = program.commands[construct.close]?.node;
+    if (ifNode == null || endNode == null) continue;
+    if (ends.has(ifNode)) sharedNodes.add(ifNode);
+    ends.set(ifNode, endNode);
+  }
+  for (const node of sharedNodes) ends.delete(node);
+  return ends;
+}
+const resolveRest = (site, options) => {
+  try {
+    return resolveSite(site, options).code;
+  } catch {
+    return "";
+  }
+};
+
 async function produceJsReport(data, template, ctx) {
   return walkTemplate(data, template, ctx, processCmd);
 }
 const isTextNodeInsideWt = (node) => node._fTextNode && tagOf(node._parent) === WTag.t;
 async function walkTemplate(data, template, ctx, processor) {
+  let ifEnds;
+  ctx.walk.ifEnds = () => ifEnds ??= findIfEnds(template, ctx.options);
   const out = cloneNodeWithoutChildren(template);
   let nodeIn = template;
   let nodeOut = out;
