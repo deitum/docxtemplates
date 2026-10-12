@@ -121,5 +121,12 @@
     "util": "^0.12.5",
     "vitest": "^4.1.11",
     "vm-browserify": "^1.1.2"
+  },
+  "overrides": {
+    "read-yaml-file": {
+      "js-yaml": {
+        "argparse": "^2.0.1"
+      }
+    }
   }
 }
