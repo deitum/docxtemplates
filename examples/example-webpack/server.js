@@ -8,10 +8,6 @@ const port = 30000;
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.sendFile('index.html');
-});
-
 app.listen(port, err => {
   if (err) {
     console.error('something bad happened', err);
