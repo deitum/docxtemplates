@@ -11,10 +11,6 @@ const port = 30000;
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.sendFile('index.html');
-});
-
 app.post('/swapi', (req, res) => {
   fetch('https://swapi-graphql.netlify.app/.netlify/functions/index', {
     method: 'POST',
