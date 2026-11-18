@@ -112,6 +112,30 @@ function compile(ctx: Context, code: string): vm.Script {
   return script;
 }
 
+/**
+ * The code that runs for `code`: what `transformCode` makes of it, or `code`
+ * itself when there is no transform. Remembered per part, as compiled scripts
+ * are, so that a loop does not rewrite its snippets on every iteration.
+ */
+function sourceOf(ctx: Context, code: string): string {
+  const transform = ctx.options.transformCode;
+  if (transform == null) return code;
+  const cache = (ctx.scope.transformedCode ??= new Map());
+  let source = cache.get(code);
+  if (source == null) {
+    source = transform(code);
+    // Unchecked, a stray `undefined` would compile to a snippet that quietly
+    // evaluates to `undefined`, and the command would render as empty.
+    if (typeof source !== 'string') {
+      throw new TypeError(
+        `transformCode must return a string, but returned ${typeof source}`
+      );
+    }
+    cache.set(code, source);
+  }
+  return source;
+}
+
 // Runs a user snippet in a sandbox, and returns the result.
 // The snippet can return a Promise, which is then awaited.
 // The sandbox is kept for the execution of snippets later on
@@ -140,6 +164,9 @@ export async function runUserJsAndGetRaw(
   let context;
   let result;
   try {
+    // Rewritten inside the `try`, so that a transform that throws fails its
+    // command the way the snippet itself would. Errors keep quoting `code`.
+    sandbox[SandboxKey.code] = sourceOf(ctx, code);
     if (ctx.options.runJs) {
       const temp = ctx.options.runJs({ sandbox, ctx: runJsContextOf(ctx) });
       context = temp.modifiedSandbox;

@@ -263,6 +263,7 @@ describe('option validation', () => {
     ['compressionLevel', '9'],
     ['commandAliases', { ЕСЛИ: 5 }],
     ['operatorAliases', []],
+    ['transformCode', 'code => code'],
   ])('rejects %s of the wrong type', async (option, value) => {
     await expect(
       createReport({ template: await template(), [option]: value } as never)
