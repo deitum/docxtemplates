@@ -80,5 +80,6 @@ export function resolveOptions(
       options.compressionLevel ?? OPTION_DEFAULTS.compressionLevel,
     commandAliases: compileCommandAliases(options.commandAliases),
     operatorAliases: compileAliases(options.operatorAliases),
+    transformCode: options.transformCode,
   };
 }

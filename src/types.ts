@@ -114,6 +114,8 @@ export type QueryResolver = (
 
 type ErrorHandler = (e: Error, raw_code?: string) => any;
 
+type CodeTransform = (code: string) => string;
+
 /**
  * The `ctx` a custom `runJs` sandbox receives.
  *
@@ -277,6 +279,25 @@ export type UserOptions = {
    * ```
    */
   operatorAliases?: { [alias: string]: string };
+
+  /**
+   * Rewrites the JavaScript of a command before it is evaluated: the expression
+   * of `INS`, `IF`, `ELSE-IF`, `FOR`, `IMAGE`, `LINK` and `HTML`, and the code of
+   * `EXEC`. It receives that code once `fixSmartQuotes` and `operatorAliases`
+   * have been applied, and returns the code to run instead. It applies whatever
+   * the sandbox: `runJs` and `noSandbox` get the rewritten code too.
+   *
+   * It must be a pure function of its argument: the result is reused every time
+   * the same code is evaluated again within a document part, e.g. on each
+   * iteration of a loop. Errors and `errorHandler` still quote the code as the
+   * template has it.
+   *
+   * ```js
+   * // `a > b` → `compare(a, '>', b)`, with `compare` in additionalJsContext
+   * transformCode: code => rewriteComparisons(code),
+   * ```
+   */
+  transformCode?: CodeTransform;
 };
 
 /** `UserOptions` with every default filled in; see `options.ts`. */
@@ -300,6 +321,7 @@ export type CreateReportOptions = {
   compressionLevel: number;
   commandAliases: AliasList;
   operatorAliases: AliasList;
+  transformCode?: CodeTransform | undefined;
 };
 
 // ==========================================
@@ -391,6 +413,8 @@ export type Scope = {
   jsSandbox?: SandBox;
   /** The evaluation context snippets of this part share; see `jsSandbox.ts`. */
   jsRuntime?: SandboxRuntime;
+  /** What `transformCode` made of each snippet of this part, by snippet. */
+  transformedCode?: Map<string, string>;
 };
 
 /** The text and the commands seen so far inside a `w:p`, `w:tr` or `w:tc`. */

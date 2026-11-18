@@ -81,6 +81,7 @@ const OPTION_CHECKS: { [K in keyof Required<UserOptions>]: Check } = {
   compressionLevel: check('a number', isNumber),
   commandAliases: ALIAS_MAP,
   operatorAliases: ALIAS_MAP,
+  transformCode: check('a function', isFunction),
 };
 
 const KNOWN_OPTIONS = new Set(Object.keys(OPTION_CHECKS));

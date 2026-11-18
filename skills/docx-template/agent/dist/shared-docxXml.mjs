@@ -17836,7 +17836,8 @@ const OPTION_CHECKS = {
   preserveSpace: check("a boolean", isBoolean),
   compressionLevel: check("a number", isNumber),
   commandAliases: ALIAS_MAP,
-  operatorAliases: ALIAS_MAP
+  operatorAliases: ALIAS_MAP,
+  transformCode: check("a function", isFunction)
 };
 const KNOWN_OPTIONS = new Set(Object.keys(OPTION_CHECKS));
 const describe$1 = (value) => {
@@ -17913,7 +17914,8 @@ function resolveOptions(options) {
     preserveSpace: options.preserveSpace ?? OPTION_DEFAULTS.preserveSpace,
     compressionLevel: options.compressionLevel ?? OPTION_DEFAULTS.compressionLevel,
     commandAliases: compileCommandAliases(options.commandAliases),
-    operatorAliases: compileAliases(options.operatorAliases)
+    operatorAliases: compileAliases(options.operatorAliases),
+    transformCode: options.transformCode
   };
 }
 
@@ -18039,6 +18041,22 @@ function compile(ctx, code) {
   }
   return script;
 }
+function sourceOf(ctx, code) {
+  const transform = ctx.options.transformCode;
+  if (transform == null) return code;
+  const cache = ctx.scope.transformedCode ??= /* @__PURE__ */ new Map();
+  let source = cache.get(code);
+  if (source == null) {
+    source = transform(code);
+    if (typeof source !== "string") {
+      throw new TypeError(
+        `transformCode must return a string, but returned ${typeof source}`
+      );
+    }
+    cache.set(code, source);
+  }
+  return source;
+}
 async function runUserJsAndGetRaw(data, code, ctx) {
   const usesSharedContext = !ctx.options.runJs && !ctx.options.noSandbox;
   const sandbox = prepareSandbox(
@@ -18050,6 +18068,7 @@ async function runUserJsAndGetRaw(data, code, ctx) {
   let context;
   let result;
   try {
+    sandbox[SandboxKey.code] = sourceOf(ctx, code);
     if (ctx.options.runJs) {
       const temp = ctx.options.runJs({ sandbox, ctx: runJsContextOf(ctx) });
       context = temp.modifiedSandbox;

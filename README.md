@@ -186,6 +186,12 @@ const report = await createReport({
    * See "Localizing commands and operators".
    */
   operatorAliases: { больше: '>', 'больше или равно': '>=' },
+
+  /**
+   * Rewrites the JavaScript of a command before it is evaluated.
+   * See "Rewriting the code of commands".
+   */
+  transformCode: code => code,
 });
 ```
 
@@ -796,6 +802,39 @@ const commands = await listCommands(template, undefined, {
   operatorAliases,
 });
 ```
+
+## Rewriting the code of commands
+
+`transformCode` receives the JavaScript of every command that runs some — the
+expression of `INS`, `IF`, `ELSE-IF`, `FOR`, `IMAGE`, `LINK` and `HTML`, and the
+code of `EXEC` — and returns the code to run instead. It sees that code once
+`fixSmartQuotes` and `operatorAliases` have been applied, and it applies whatever
+the sandbox, `runJs` and `noSandbox` included.
+
+It is the place for what no other option covers. JavaScript compares
+`'01.02.2024' > '15.01.2024'` as strings, for instance, which gets dates in the
+`dd.mm.yyyy` format wrong; routing every comparison through a helper fixes that
+without touching the templates:
+
+```js
+const report = await createReport({
+  template,
+  data,
+  // `a > b` → `compare(a, '>', b)`, typically done with a JS parser such as acorn
+  transformCode: code => rewriteComparisons(code),
+  additionalJsContext: {
+    // compares two dd.mm.yyyy strings as dates, anything else as JS would
+    compare: (a, operator, b) => {
+      /* ... */
+    },
+  },
+});
+```
+
+The transform must be a pure function of its argument: its result is reused
+whenever the same code is evaluated again within a document part, e.g. on every
+iteration of a loop. Errors, and the code `errorHandler` receives, still quote the
+command as the template has it, and `listCommands` is not affected.
 
 ## Inserting literal XML
 

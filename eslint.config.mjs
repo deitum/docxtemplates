@@ -93,6 +93,7 @@ export default tseslint.config(
     files: [
       'src/__tests__/golden_corpus.test.ts',
       'src/__tests__/sandbox.test.ts',
+      'src/__tests__/transform_code.test.ts',
     ],
     rules: { 'vitest/valid-title': 'off' },
   },
